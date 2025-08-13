@@ -5,8 +5,10 @@
     min-width: 160px;
     border-radius: 5px;
     margin-left: 10px;
+    transition: transform 1s ease-in;
 }
 .adopcionPelea {
     position: absolute;
     transform: translateX(0%);
+    
 }
