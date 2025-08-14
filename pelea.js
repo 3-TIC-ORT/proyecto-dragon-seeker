@@ -4,6 +4,5 @@ let MenuAtaques = document.getElementById("menudeataques");
 function desplegarMenu(){
     MenuAtaques.style.transform = "translateX(0%)";
     BotonPelea.style.transform = "translateX(-200%)";
-    BotonAdopcion.style.transform = "translateX(-200%)";
 }
 BotonPelea.addEventListener("click", desplegarMenu);
