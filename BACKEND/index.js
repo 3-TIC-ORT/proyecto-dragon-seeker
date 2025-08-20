@@ -1,0 +1,16 @@
+export * as autorizacion from './auth.js';
+export * as datousuario from './userData.js';
+export * as progresousuario from './saveLoad.js';
+export * as customizacion from './customization.js';
+export * as unlocks from './unlocks.js';
+export * as dragons from './dragons.js';
+export * as zones from './zones.js';
+export * as inventory from './inventory.js';
+export * as items from './items.js';
+export * as shop from './shop.js';
+export * as quests from './quests.js';
+export * as achievements from './achievements.js';
+export * as battles from './battles.js';
+export * as leaderboard from './leaderboard.js';
+export * as notifications from './notifications.js';
+export * as settings from './settings.js';
