@@ -9,7 +9,8 @@ let chimuelo = {
     defense: 9,
     speed: 6,
   };
-  
+  console.log(chimuelo)
+  console.log(amarillo)
   let amarillo = {
     name: 'amarillo',
     health: 100,
@@ -19,6 +20,8 @@ let chimuelo = {
   };
   function ataquechimuelo (){
    
+
+    console.log(amarillo)
   }
   whoGoFirst(chimuelo, amarillo);
   document.querySelector('ataque1').addEventListener('click', ataquechimuelo () {
