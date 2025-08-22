@@ -1,0 +1,21 @@
+{
+  "name": "proyecto-dragon-seeker",
+  "version": "1.0.0",
+  "description": "1. Lucas Waisbaum\r 2. Franco Aleksic\r 3. Pedro Gutman\r 4. Nicolas Nuñes Valcarce\r ## Documento de drive con toda la info: https://docs.google.com/document/d/1gkWM0dew_2sIpDUZzJRUbAuPQxFES91ocVQAwGnNJCI/edit?usp=sharing\r ## proyecto-dragon-seeker created by GitHub Classroom\r Figma: https://www.figma.com/design/Z2r4JW9HVGL6GZJBEB1d6l/Sin-t%C3%ADtulo?node-id=0-1&p=f&t=lfjzHacHV2d26kXN-0\r # Documento de drive con la infromacion y tareas del BACKEND (para mayor organizacion): https://docs.google.com/document/d/1nJl0TfwT4092PZ882abpaG6oBNvePaZpVUTSW0IJl1k/edit?usp=sharing",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3-TIC-ORT/proyecto-dragon-seeker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/3-TIC-ORT/proyecto-dragon-seeker/issues"
+  },
+  "homepage": "https://github.com/3-TIC-ORT/proyecto-dragon-seeker#readme"
+}
