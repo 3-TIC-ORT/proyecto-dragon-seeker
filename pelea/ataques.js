@@ -2,17 +2,18 @@ let ataque1 = document.getElementById("ataque1");
 let ataque2 = document.getElementById("ataque2");
 let ataque3 = document.getElementById("ataque3");
 let ataque4 = document.getElementById("ataque4");
-let vidaChimuelo = document.getElementById("vida_chimuelo")
-let vidaAmarillo = document.getElementById("vida_amarillo")
+let barravidaChimuelo = document.getElementById("vida_chimuelo")
+let barravidaAmarillo = document.getElementById("vida_amarillo")
 let amarillo = document.getElementById("amarillo")
-let chimuelo = document.getElementById("chimuelo")
+let imagenchimuelo = document.getElementById("chimuelo")
+let gifChimuelo = document.getElementById("AtaqueChimuelo")
 
-vidaChimuelo.innerHTML = "100"
-vidaAmarillo.innerHTML = "100"
+barravidaChimuelo.innerHTML = "100"
+barravidaAmarillo.innerHTML = "100"
 
 chimuelo = {
     name: 'chimuelo',
-    health: 100,
+    viddaChimuelo: 100,
     strength: 10,
     defense: 9,
     speed: 6,
@@ -21,14 +22,16 @@ chimuelo = {
   console.log(amarillo)
 amarillo = {
     name: 'amarillo',
-    health: 100,
+    vidaAmarillo: 100,
     strength: 8,
     defense: 7,
     speed: 7,
   };
   function ataquechimuelo (){
+    gifChimuelo.style.display = "block";
+    imagenchimuelo.style.display = "none";
     vidaAmarillo - 30;
-    console.log(vidaAmarillo)
+    console.log(amarillo)
   }
   
   ataque1.addEventListener('click', ataquechimuelo);

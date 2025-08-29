@@ -10,5 +10,16 @@
 .adopcionPelea {
     position: absolute;
     transform: translateX(0%);
-    
 }
+.ataquechimuelo {
+    position: absolute;
+    display: flex;
+    display: none;
+}
+.chimuelo {
+    position: absolute;
+    display: flex;
+    display: block;
+}
+
+
