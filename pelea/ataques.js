@@ -4,12 +4,12 @@ let ataque3 = document.getElementById("ataque3");
 let ataque4 = document.getElementById("ataque4");
 let barravidaChimuelo = document.getElementById("vida_chimuelo")
 let barravidaAmarillo = document.getElementById("vida_amarillo")
-let amarillo = document.getElementById("amarillo")
+let imagenamarillo = document.getElementById("amarillo")
 let imagenchimuelo = document.getElementById("chimuelo")
 let gifChimuelo = document.getElementById("AtaqueChimuelo")
 
-barravidaChimuelo.innerHTML = "100"
-barravidaAmarillo.innerHTML = "100"
+barravidaChimuelo.innerHTML = 100
+barravidaAmarillo.innerHTML = 100
 
 chimuelo = {
     name: 'chimuelo',
@@ -30,8 +30,9 @@ amarillo = {
   function ataquechimuelo (){
     gifChimuelo.style.display = "block";
     imagenchimuelo.style.display = "none";
-    vidaAmarillo - 30;
-    console.log(amarillo)
+    amarillo.vidaAmarillo -= 30;
+    console.log(amarillo);
+    barravidaAmarillo.innerText -= 30;
   }
   
   ataque1.addEventListener('click', ataquechimuelo);
