@@ -5,6 +5,7 @@ let ataque4 = document.getElementById("ataque4");
 let barravidaChimuelo = document.getElementById("vida_chimuelo")
 let barravidaAmarillo = document.getElementById("vida_amarillo")
 let imagenamarillo = document.getElementById("amarillo")
+let gifAmarillo = document.getElementById ("AtaqueAmarillo")
 let imagenchimuelo = document.getElementById("chimuelo")
 let gifChimuelo = document.getElementById("AtaqueChimuelo")
 
@@ -33,6 +34,21 @@ amarillo = {
     amarillo.vidaAmarillo -= 30;
     console.log(amarillo);
     barravidaAmarillo.innerText -= 30;
+    terminarTurno()
+  }
+  function ataqueEnemigo (){
+    gifAmarillo.style.display = "block";
+    imagenamarillo.style.display = "none";
+    chimuelo.viddaChimuelo -= 20;
+    console.log(chimuelo);
+    barravidaChimuelo.innerText -= 20;
+    terminarTurno()
+  }
+  function terminarTurno (){
+    gifChimuelo.style.display = "none";
+    imagenchimuelo.style.display = "block";
+    console.log ("termino el ataque")
+    ataqueEnemigo()
   }
   
   ataque1.addEventListener('click', ataquechimuelo);
