@@ -1,0 +1,125 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "C:/Users/50233513/Downloads/prueba 2.tmj",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "Todos los archivos (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/50233513/Downloads/json mapa1.tmj": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 502.66666666666663,
+                "y": 378.66666666666663
+            }
+        },
+        "C:/Users/50233513/Downloads/prueba 2.tmj": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 401.3333333333333,
+                "y": 395.33333333333326
+            }
+        },
+        "E:/Phaser/RPG prueba/RPG 1/assets/2.tsx": {
+            "scaleInDock": 1
+        },
+        "E:/Phaser/RPG prueba/RPG 1/assets/Woods.tsx": {
+            "scaleInDock": 1
+        },
+        "E:/Phaser/RPG prueba/RPG 1/assets/mapa1.json": {
+            "scale": 0.54898753894081,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 480.88523194779407,
+                "y": 507.2974890055327
+            }
+        },
+        "Pokemon.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.5
+        },
+        "Suelo.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Woods.tsj": {
+            "scaleInDock": 1
+        },
+        "Woods.tsx": {
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        },
+        "pokemon.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "prueba 1.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 401.3333333333333,
+                "y": 350.66666666666663
+            }
+        },
+        "rocas.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "sin nombre.tmx": {
+            "scale": 2.6125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 199.80861244019138,
+                "y": 16.076555023923447
+            }
+        }
+    },
+    "last.exportedFilePath": "C:/Users/50233513/Downloads",
+    "last.externalTilesetPath": "E:/Tiled",
+    "last.imagePath": "E:/Tiled",
+    "lastUsedTilesetExportFilter": "Archivos de conjuntos de patrones Tiled (*.tsx *.xml)",
+    "map.height": 1,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "json",
+    "map.orientation": "1",
+    "map.tileWidth": 400,
+    "map.width": 1,
+    "openFiles": [
+        "C:/Users/50233513/Downloads/prueba 2.tmj",
+        "Woods.tsx"
+    ],
+    "project": "Prueba 1.tiled-project",
+    "recentFiles": [
+        "Woods.tsx",
+        "C:/Users/50233513/Downloads/prueba 2.tmj",
+        "E:/Phaser/RPG prueba/RPG 1/assets/mapa1.json",
+        "2.tsx",
+        "C:/Users/50233513/Downloads/json mapa1.tmj",
+        "prueba 1.tmx",
+        "Pokemon.tsx",
+        "pokemon.tsx",
+        "sin nombre.tmx",
+        "Tiles.tsx",
+        "Suelo.tsx",
+        "rocas.tsx"
+    ],
+    "tileset.lastUsedFilter": "Todos los archivos (*)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 1,
+    "tileset.spacing": 0
+}

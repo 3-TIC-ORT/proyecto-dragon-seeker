@@ -1,0 +1,72 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "prueba 1.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "Todos los archivos (*)",
+    "fileStates": {
+        "": {
+            "scaleInEditor": 1
+        },
+        "Bosque.tsx": {
+            "scaleInDock": 0.9474,
+            "scaleInEditor": 1
+        },
+        "C:/Users/50233513/Downloads/phaser-games/pokemon-map/map-lab/mapa2.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 960.5,
+                "y": 640
+            }
+        },
+        "C:/Users/50233513/Downloads/phaser-games/pokemon-map/map-lab/mapa2.tmx#archer": {
+            "scaleInDock": 1
+        },
+        "C:/Users/50233513/Downloads/phaser-games/pokemon-map/map-lab/mapa2.tmx#tileSet": {
+            "scaleInDock": 1
+        },
+        "Woods.tsj": {
+            "scaleInDock": 1
+        },
+        "Woods.tsx": {
+            "scaleInDock": 1
+        },
+        "prueba 1.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 771,
+                "y": 444
+            }
+        },
+        "prueba 1.tmx#Woods": {
+            "scaleInDock": 1
+        },
+        "prueba 1.tmx#archer": {
+            "scaleInDock": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/50233513/Downloads/Proyecto Pedro/Tiled",
+    "last.externalTilesetPath": "C:/Users/50233513/Downloads/Proyecto Pedro/Tiled",
+    "last.imagePath": "C:/Users/50233513/Downloads/Proyecto Pedro/Tiled",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "openFiles": [
+        "Bosque.tsx",
+        "prueba 1.tmx",
+        "C:/Users/50233513/Downloads/phaser-games/pokemon-map/map-lab/mapa2.tmx"
+    ],
+    "project": "Mapa 1.tiled-project",
+    "recentFiles": [
+        "Bosque.tsx",
+        "C:/Users/50233513/Downloads/phaser-games/pokemon-map/map-lab/mapa2.tmx",
+        "prueba 1.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}
