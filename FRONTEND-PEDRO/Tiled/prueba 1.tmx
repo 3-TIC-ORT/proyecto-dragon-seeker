@@ -4,9 +4,9 @@
   <export target="mapa embebido.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="Woods" tilewidth="32" tileheight="32" spacing="1" tilecount="90" columns="9">
-  <image source="../../town_forest_tiles.png" width="320" height="352"/>
+  <image source="town_forest_tiles.png" width="320" height="352"/>
  </tileset>
- <tileset firstgid="91" name="archer" tilewidth="128" tileheight="128" tilecount="6" columns="6">
+ <tileset firstgid="91" name="archer" tilewidth="128" tileheight="128" tilecount="1" columns="6">
   <image source="../../phaser-games/pokemon-map/assets/Archer/Idle.png" width="768" height="128"/>
   <tile id="0">
    <animation>

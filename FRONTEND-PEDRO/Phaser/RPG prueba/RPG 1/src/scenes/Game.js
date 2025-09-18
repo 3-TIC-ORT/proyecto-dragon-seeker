@@ -13,14 +13,14 @@ export class Game extends Phaser.Scene {
         
         const ground = map.createLayer("suelo", tileset, 0, 0);
         const camino = map.createLayer("camino", tileset, 0, 0);
-        const coliders = map.createLayer("coliders", tileset, 0, 0);
+        const obstaculos = map.createLayer("coliders", tileset, 0, 0);
         const decorado = map.createLayer("Decorado", tileset, 0, 0);
 
         this.player = this.physics.add.sprite(0, 96, 'dude'); 
 
         this.player.setCollideWorldBounds(true);
-        colliders.setCollisionByProperty({ collides: true });
-        this.physics.add.collider(this.player, colliders);
+        obstaculos.setCollisionByProperty({ collides: true });
+        this.physics.add.collider(this.player, obstaculos);
     }
 
 
