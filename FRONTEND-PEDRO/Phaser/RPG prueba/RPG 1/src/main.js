@@ -13,7 +13,7 @@ const config = {
         default: 'arcade',
         arcade: {
             debug: false,
-            gravity: { y: 500 }
+            gravity: { x: 0, y: 0 }
         }
     },
     scale: {
