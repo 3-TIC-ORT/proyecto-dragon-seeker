@@ -2,13 +2,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 {
     constructor(scene, x, y)
 {
-super(scene, x, y, 'dude');
+//super(scene, x, y, 'dude');
 
 scene.add.existing(this);
 scene.physics.add.existing(this);
 
-this.setBounce(0.2);
-this.setCollideWorldBounds(true);
+
 this.initAnimations();
 }
 
@@ -35,17 +34,28 @@ this.anims.create({
 });
 }
 
+create(){
+    const speed = 150;
+    this.player.setVelocity(0); //setea la velocidad en cero
+}
+
 moveLeft ()
 {
-this.setVelocityX(-50);
+this.setVelocityX(-speed);
 this.anims.play('left', true);
 }
 moveRight ()
 {
-    this.setVelocityX(50);
+    this.setVelocityX(speed);
     this.anims.play('right', true);
 }
-idle ()
+moveUp(){
+this.setVelocityY(-speed);
+}
+moveDown(){
+    this.setVelocityY(speed);
+}
+idle () 
 {
 this.setVelocityX(0);
 this.anims.play('turn');

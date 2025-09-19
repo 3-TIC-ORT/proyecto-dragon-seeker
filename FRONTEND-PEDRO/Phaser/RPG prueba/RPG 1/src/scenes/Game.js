@@ -1,3 +1,5 @@
+import {Player} from '../GameObjects/player.js'
+
 export class Game extends Phaser.Scene {
     constructor() {
         super('Game');
@@ -27,11 +29,29 @@ export class Game extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
 
         obstaculos.setCollisionByExclusion([-1]);
-       // this.physics.add.collider(this.player, obstaculos);
+       this.physics.add.collider(this.player, obstaculos);
+
+       //movimiento
+       this.cursors = this.input.keyboard.createCursorKeys();
+       
     }
 
 
     update() {
+        const speed = 150;
+        this.player.setVelocity(0); //setea la velocidad en cero
 
+        if (this.cursors.left.isDown){
+            this.player.setVelocityX(-speed);
+        }
+        else if (this.cursors.right.isDown){
+            this.player.setVelocityX(speed);
+        }
+        if (this.cursors.up.isDown){
+            this.player.setVelocityY(-speed);
+        }
+        else if (this.cursors.down.isDown){
+            this.player.setVelocityY(speed);
+        }
     }
 }
