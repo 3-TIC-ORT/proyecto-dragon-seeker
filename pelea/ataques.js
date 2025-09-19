@@ -2,6 +2,7 @@ let ataque1 = document.getElementById("ataque1");
 let ataque2 = document.getElementById("ataque2");
 let ataque3 = document.getElementById("ataque3");
 let ataque4 = document.getElementById("ataque4");
+let BotonAdopcion = document.getElementById("adoptar")
 let barravidaChimuelo = document.getElementById("vida_chimuelo")
 let barravidaAmarillo = document.getElementById("vida_amarillo")
 let imagenamarillo = document.getElementById("amarillo")
@@ -42,13 +43,26 @@ amarillo = {
     chimuelo.viddaChimuelo -= 20;
     console.log(chimuelo);
     barravidaChimuelo.innerText -= 20;
-    terminarTurno()
+    terminarTurno2()
   }
   function terminarTurno (){
     gifChimuelo.style.display = "none";
     imagenchimuelo.style.display = "block";
     console.log ("termino el ataque")
     ataqueEnemigo()
+  }
+  function terminarTurno2 (){
+    gifAmarillo.style.display = "none";
+    imagenamarillo.style.display = "block";
+    console.log ("termino el ataque enemigo")
+    ataquechimuelo()
+  }
+  BotonAdopcion.addEventListener ('click', function(e){})
+  if (vidaAmarillo >= 30) {
+    e.preventDefault();
+    bloquearboton();
+  } else {
+    botonNormal();
   }
   
   ataque1.addEventListener('click', ataquechimuelo);
