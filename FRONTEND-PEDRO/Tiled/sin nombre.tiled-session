@@ -1,0 +1,54 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "mapa2.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "mapa 2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "mapa2.tmx": {
+            "scale": 0.25,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1610,
+                "y": 1016
+            }
+        },
+        "mapa2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tiles 2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/50233513/Downloads/clon/proyecto-dragon-seeker-1/FRONTEND-PEDRO/Tiled",
+    "last.imagePath": "C:/Users/50233513/Downloads/clon/proyecto-dragon-seeker-1/FRONTEND-PEDRO/Tiled",
+    "map.height": 50,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.width": 94,
+    "openFiles": [
+        "mapa2.tmx",
+        "mapa2.tsx"
+    ],
+    "project": "sin nombre.tiled-project",
+    "recentFiles": [
+        "mapa2.tsx",
+        "mapa2.tmx",
+        "mapa 2.tsx",
+        "tiles 2.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 1,
+    "tileset.spacing": 0
+}
