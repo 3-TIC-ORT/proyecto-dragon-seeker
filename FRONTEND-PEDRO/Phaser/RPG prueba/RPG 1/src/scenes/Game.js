@@ -23,14 +23,15 @@ export class Game extends Phaser.Scene {
         const decorado = map.createLayer("Decorado", tileset, 0, 0);
         
         //jugador
-        this.player = this.physics.add.sprite(0, 96, 'dude'); 
-        
+     
+        this.player = new Player (this, 0, 96);
         //colliders
         this.player.setCollideWorldBounds(true);
 
         obstaculos.setCollisionByExclusion([-1]);
-       this.physics.add.collider(this.player, obstaculos);
-
+        this.physics.add.collider(this.player, obstaculos);
+        decorado.setCollisionByExclusion([-1]);
+        this.physics.add.collider(this.player, decorado);
        //movimiento
        this.cursors = this.input.keyboard.createCursorKeys();
        
@@ -38,20 +39,25 @@ export class Game extends Phaser.Scene {
 
 
     update() {
-        const speed = 150;
-        this.player.setVelocity(0); //setea la velocidad en cero
+        
+        //this.player.setVelocity(0); //setea la velocidad en cero
+        if((this.cursors.left.isDown) || (this.cursors.right.isDown) || (this.cursors.up.isDown) || (this.cursors.down.isDown)){
 
-        if (this.cursors.left.isDown){
-            this.player.setVelocityX(-speed);
+            if (this.cursors.left.isDown){
+                this.player.moveLeft();
+            }
+            else if (this.cursors.right.isDown){
+                this.player.moveRight();
+            }
+            if (this.cursors.up.isDown){
+                this.player.moveUp();
+            }
+            else if (this.cursors.down.isDown){
+                this.player.moveDown();
+            }
         }
-        else if (this.cursors.right.isDown){
-            this.player.setVelocityX(speed);
-        }
-        if (this.cursors.up.isDown){
-            this.player.setVelocityY(-speed);
-        }
-        else if (this.cursors.down.isDown){
-            this.player.setVelocityY(speed);
+        else{
+            this.player.idle();
         }
     }
 }
