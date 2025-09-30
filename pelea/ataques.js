@@ -1,3 +1,4 @@
+import { bloquearboton } from './pelea.js';
 let ataque1 = document.getElementById("ataque1");
 let ataque2 = document.getElementById("ataque2");
 let ataque3 = document.getElementById("ataque3");
@@ -13,7 +14,7 @@ let gifChimuelo = document.getElementById("AtaqueChimuelo")
 barravidaChimuelo.innerHTML = 100
 barravidaAmarillo.innerHTML = 100
 
-chimuelo = {
+let chimuelo = {
     name: 'chimuelo',
     viddaChimuelo: 100,
     strength: 10,
@@ -21,14 +22,14 @@ chimuelo = {
     speed: 6,
   };
   console.log(chimuelo)
-  console.log(amarillo)
-amarillo = {
+let amarillo = {
     name: 'amarillo',
     vidaAmarillo: 100,
     strength: 8,
     defense: 7,
     speed: 7,
   };
+  console.log(amarillo)
   function ataquechimuelo (){
     gifChimuelo.style.display = "block";
     imagenchimuelo.style.display = "none";
@@ -55,14 +56,12 @@ amarillo = {
     gifAmarillo.style.display = "none";
     imagenamarillo.style.display = "block";
     console.log ("termino el ataque enemigo")
-    ataquechimuelo()
   }
-  BotonAdopcion.addEventListener ('click', function(e){})
+  BotonAdopcion.addEventListener ('click', function(e){
   if (amarillo.vidaAmarillo >= 30) {
     e.preventDefault();
-  }
-  import { bloquearboton } from './pelea.js';
-  if (amarillo.vidaAmarillo >= 30) {
+  }})
+  if (amarillo.vidaAmarillo <= 30) {
     bloquearboton();
   }
   
