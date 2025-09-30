@@ -6,3 +6,6 @@ function desplegarMenu(){
     BotonPelea.style.transform = "translateX(-200%)";
 }
 BotonPelea.addEventListener("click", desplegarMenu);
+export function bloquearboton() {
+    BotonAdopcion.classList.replace("adoptarAbilitado", "adoptarBloqueado");
+}

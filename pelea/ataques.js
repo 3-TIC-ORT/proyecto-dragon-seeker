@@ -58,11 +58,12 @@ amarillo = {
     ataquechimuelo()
   }
   BotonAdopcion.addEventListener ('click', function(e){})
-  if (vidaAmarillo >= 30) {
+  if (amarillo.vidaAmarillo >= 30) {
     e.preventDefault();
+  }
+  import { bloquearboton } from './pelea.js';
+  if (amarillo.vidaAmarillo >= 30) {
     bloquearboton();
-  } else {
-    botonNormal();
   }
   
   ataque1.addEventListener('click', ataquechimuelo);

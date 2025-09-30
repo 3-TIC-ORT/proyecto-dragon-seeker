@@ -22,5 +22,11 @@
     display: flex;
     display: block;
 }
+.adoptarAbilitado {
+    background-color: green;
+}
+.adoptarBloqueado {
+    background-color:red;
+}
 
 
