@@ -1,4 +1,5 @@
 import { bloquearboton } from './pelea.js';
+import { desbloquearBoton } from './pelea.js';
 let ataque1 = document.getElementById("ataque1");
 let ataque2 = document.getElementById("ataque2");
 let ataque3 = document.getElementById("ataque3");
@@ -55,14 +56,18 @@ let amarillo = {
   function terminarTurno2 (){
     gifAmarillo.style.display = "none";
     imagenamarillo.style.display = "block";
+    if (amarillo.vidaAmarillo <= 30) {
+      desbloquearBoton();
+    }
+    else {
+      bloquearboton()
+    }
     console.log ("termino el ataque enemigo")
   }
   BotonAdopcion.addEventListener ('click', function(e){
   if (amarillo.vidaAmarillo >= 30) {
     e.preventDefault();
   }})
-  if (amarillo.vidaAmarillo <= 30) {
-    bloquearboton();
-  }
+  
   
   ataque1.addEventListener('click', ataquechimuelo);
