@@ -15,12 +15,15 @@
             "scaleInEditor": 1
         },
         "mapa2.tmx": {
-            "scale": 0.25,
+            "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1610,
-                "y": 1016
+                "x": 718,
+                "y": 528
             }
+        },
+        "mapa2.tmx#mapa 2": {
+            "scaleInDock": 1
         },
         "mapa2.tsx": {
             "scaleInDock": 1,
@@ -33,10 +36,10 @@
     },
     "last.exportedFilePath": "C:/Users/50233513/Downloads/clon/proyecto-dragon-seeker-1/FRONTEND-PEDRO/Tiled",
     "last.imagePath": "C:/Users/50233513/Downloads/clon/proyecto-dragon-seeker-1/FRONTEND-PEDRO/Tiled",
-    "map.height": 50,
+    "map.height": 16,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
-    "map.width": 94,
+    "map.width": 25,
     "openFiles": [
         "mapa2.tmx",
         "mapa2.tsx"

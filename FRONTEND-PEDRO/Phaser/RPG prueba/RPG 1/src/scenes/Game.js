@@ -8,7 +8,7 @@ export class Game extends Phaser.Scene {
     preload() {
         //Carga del mapa
         this.load.image("tiles", "assets/town_forest_tiles.png");
-        this.load.tilemapTiledJSON("map", "assets/mapa2.json");
+        this.load.tilemapTiledJSON("map", "assets/mapa_grande.json");
 
         //asignacion del sprite al personaje
          this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
@@ -20,7 +20,9 @@ export class Game extends Phaser.Scene {
         const ground = map.createLayer("piso", tileset, 0, 0);
         const camino = map.createLayer("camino", tileset, 0, 0);
         const obstaculos = map.createLayer("obstaculos", tileset, 0, 0);
-       // const decorado = map.createLayer("Decorado", tileset, 0, 0);
+        const casa = map.createLayer("casa", tileset, 0, 0);
+        const puertas = map.createLayer("puertas", tileset, 0, 0);
+        //const decorado = map.createLayer("Decorado", tileset, 0, 0);
         
         //jugador
      
@@ -30,7 +32,9 @@ export class Game extends Phaser.Scene {
 
         obstaculos.setCollisionByExclusion([-1]);
         this.physics.add.collider(this.player, obstaculos);
-            //decorado.setCollisionByExclusion([-1]);
+        casa.setCollisionByExclusion([-1]);
+        this.physics.add.collider(this.player, casa);
+        //decorado.setCollisionByExclusion([-1]);
             //this.physics.add.collider(this.player, decorado);
       
             //movimiento
