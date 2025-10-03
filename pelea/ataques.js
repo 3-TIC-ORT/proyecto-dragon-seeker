@@ -40,22 +40,28 @@ let amarillo = {
     terminarTurno()
   }
   function ataqueEnemigo (){
+    setTimeout(() => {
     gifAmarillo.style.display = "block";
     imagenamarillo.style.display = "none";
     chimuelo.viddaChimuelo -= 20;
     console.log(chimuelo);
     barravidaChimuelo.innerText -= 20;
     terminarTurno2()
+    }, 2000);
   }
   function terminarTurno (){
-    gifChimuelo.style.display = "none";
-    imagenchimuelo.style.display = "block";
+    setTimeout(() => {
+      gifChimuelo.style.display = "none";
+      imagenchimuelo.style.display = "block";
+    }, 1500);
     console.log ("termino el ataque")
     ataqueEnemigo()
   }
   function terminarTurno2 (){
+    setTimeout(() => {
     gifAmarillo.style.display = "none";
     imagenamarillo.style.display = "block";
+    }, 1500);
     if (amarillo.vidaAmarillo <= 30) {
       desbloquearBoton();
     }
