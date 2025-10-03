@@ -3,11 +3,22 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "mapa2.tmx",
+    "activeFile": "casa  adentro.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
         "": {
+            "scaleInDock": 1
+        },
+        "casa  adentro.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 363.99999999999994,
+                "y": 264
+            }
+        },
+        "casa  adentro.tmx#mapa 2": {
             "scaleInDock": 1
         },
         "mapa 2.tsx": {
@@ -42,12 +53,14 @@
     "map.width": 25,
     "openFiles": [
         "mapa2.tmx",
-        "mapa2.tsx"
+        "mapa2.tsx",
+        "casa  adentro.tmx"
     ],
     "project": "sin nombre.tiled-project",
     "recentFiles": [
-        "mapa2.tsx",
         "mapa2.tmx",
+        "mapa2.tsx",
+        "casa  adentro.tmx",
         "mapa 2.tsx",
         "tiles 2.tsx"
     ],

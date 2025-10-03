@@ -9,6 +9,8 @@ export class Game extends Phaser.Scene {
         //Carga del mapa
         this.load.image("tiles", "assets/town_forest_tiles.png");
         this.load.tilemapTiledJSON("map", "assets/mapa_grande.json");
+        this.load.tilemapTiledJSON("casa", "assets/casa_adentro.json");
+
 
         //asignacion del sprite al personaje
          this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
@@ -22,27 +24,22 @@ export class Game extends Phaser.Scene {
         const obstaculos = map.createLayer("obstaculos", tileset, 0, 0);
         const casa = map.createLayer("casa", tileset, 0, 0);
         const puertas = map.createLayer("puertas", tileset, 0, 0);
-        //const decorado = map.createLayer("Decorado", tileset, 0, 0);
         
         //jugador
      
         this.player = new Player (this, 16, 160);
         //colliders
-        ///this.player.setCollideWorldBounds(true);
-
         obstaculos.setCollisionByExclusion([-1]);
         this.physics.add.collider(this.player, obstaculos);
         casa.setCollisionByExclusion([-1]);
         this.physics.add.collider(this.player, casa);
-        //decorado.setCollisionByExclusion([-1]);
-            //this.physics.add.collider(this.player, decorado);
       
-            //movimiento
+        //movimiento
        this.cursors = this.input.keyboard.createCursorKeys();
        
        //camara
        this.cameras.main.startFollow(this.player);
-       this.cameras.main.setBounds(93, 49, map.widthInPixels, map.heightInPixels);
+       this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
        
     }
 
