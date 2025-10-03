@@ -7,6 +7,7 @@ function desplegarMenu(){
 }
 BotonPelea.addEventListener("click", desplegarMenu);
 export function desbloquearBoton() {
+    BotonAdopcion.classList.remove('adoptarBloqueado')
     BotonAdopcion.classList.add('adoptarAbilitado');
 }
 export function bloquearboton() {

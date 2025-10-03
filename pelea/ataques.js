@@ -63,6 +63,7 @@ let amarillo = {
     imagenamarillo.style.display = "block";
     }, 1500);
     if (amarillo.vidaAmarillo <= 30) {
+      console.log("desbloquear")
       desbloquearBoton();
     }
     else {
