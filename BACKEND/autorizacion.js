@@ -2,65 +2,63 @@ import fs from "fs"
 
 const rutausuarios = "./BACKEND/usuarios.json"
 
-function leerUsuarios() {
-  if (!fs.existsSync(rutausuarios)) {
-    return []
-  }
-  const data = fs.readFileSync(rutausuarios, "utf-8")
-  return JSON.parse(data)
+function leerusuarios() {
+    const texto = fs.readFileSync(rutausuarios, "utf-8")
+    return JSON.parse(texto) 
 }
 
-function guardarUsuarios(usuarios) {
-  fs.writeFileSync(rutausuarios, JSON.stringify(usuarios, null, 2))
+function guardarusuarios(usuarios) {
+    const texto = JSON.stringify(usuarios, null, 2)
+    fs. writeFileSync(rutausuarios, texto)
 }
 
-let usuarios = []
 let sesiones = []
 
 export function registrarusuario(nombre, correo, contrasena) {
-    usuarios = leerUsuarios()
+    const usuarios = leerusuarios()
 
-    if (usarios.find(u => u.correo === correo)) {
-        return {exito: false, mensaje: "El correo ya esta registrado"}
+    let existe = false 
+    let i = 0
+    while (i < usuarios.length) {
+        if (usuarios[i].correo === correo) {
+            existe = true 
+        }
+        i = i + 1
     }
 
-    let nuevousuario = {
+    if (existe) {
+        return { exito: false, mensaje: "El correo ya esta registrado"}
+    }
+
+    const nuevo = {
         id: usuarios.length + 1,
-        nombre,
-        correo,
-        cotrasena
+        nombre: nombre,
+        correo: correo,
+        contrasena: contrasena
     }
 
-    usuarios.push(nuevousaurio)
-    guardarUsuarios(usuarios)
+    usuarios.push(nuevo)
+    guardarusuarios(usuarios)
 
-    return {exito: true, mensaje : "Usuario registrado con exito", usuario:nuevousuario}
+    return { exito: true, mensaje: "Usuario registrado con exito", usuario: nuevo }
 }
 
-export function iniciarsesion(nombre, contrasena) {
-    usuarios = leerUsuarios()
+export function iniciarsesion(correo, contrasena) {
+    const usuarios = leerusuarios()
 
-    const usuario = usarios.find(u => u.correo === correo && u.contrasena === contrasena)
+    let usuario = null
+    let i = 0
+    while (i < usuarios.length) {
+        if (usuarios[i].correo === correo && usuarios[i].contrasena === contrasena) {
+            usuario = usuarios[i]
+        }
+    i = i + 1
+        }
 
-    if (!usuario) {
-        return {exito: false, mensaje: "Correo o contraseña incorrectos"}
-    }
 
-    sesiones.add(usuario.id)
-    guardarUsuarios(usuarios)
-
-    return {exito: true, mensaje: "Sesion iniciada", usuario}
+if (usuario === null) {
+    return { exito: false, mensaje: "Correo o contraseña incorrectos"}
 }
 
-export function cerrarsesion(idusuario) {
-    usuarios = leerUsuarios()
-
-    if (!sesiones.has(idusuario)) {
-        return {exito: false, mensaje: "El usuario no tenia sesion activa"}
-    }
-
-    sesiones.delete(idusaurio)
-    guardarUsuarios(usuarios)
-
-    return {exito: true, mensaje: "Sesion cerrada"}
+return { exito: true, mensaje: "Sesion iniciada", usuario: usuario }
 }
