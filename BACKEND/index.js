@@ -1,6 +1,7 @@
 import { startServer, subscribePOSTEvent, subscribeGETEvent } from "soquetic"
 import { registrarusuario, iniciarsesion } from "./autorizacion.js"
 import { guardarpersonalizacion, cargarpersonalizacion, validaropcionesdesbloqueadas } from "./customizacion.js"
+import { enviarnotificacion, obtenernotificaciones} from "./notificaciones.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
@@ -25,6 +26,17 @@ subscribeGETEvent("cargarpersonalizacion", query => {
 subscribeGETEvent("validaropcionesdesbloqueadas", query => {
   const { idusuario, tipoopcion, idopcion } = query
   return validaropcionesdesbloqueadas(idusuario, tipoopcion, idopcion)
+})
+
+
+subscribePOSTEvent("enviarnotificacion", data => {
+  const { idusuario, mensaje } = data;
+  return enviarnotificacion(idusuario, mensaje);
+})
+
+subscribeGETEvent("obtenernotificaciones", data => {
+  const { idusuario } = data;
+  return obtenernotificaciones(idusuario);
 })
 
 console.log("Servidor iniciado")
