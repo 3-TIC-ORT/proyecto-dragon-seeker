@@ -1,87 +1,73 @@
-import fs from 'fs'
-const filePath ='./usuarios.json'
+import fs from "fs"
+
+const rutausuarios = "./BACKEND/usuarios.json"
 
 function leerarchivo() {
-    try {
-        const data = fs.readFileSync(filePath, 'utf8')
-        return JSON.parse(data)
-    } catch (error) {
-        return{}
-    }
+  const texto = fs.readFileSync(rutausuarios, "utf-8")
+  return JSON.parse(texto)
 }
 
 function escribirarchivo(usuarios) {
-    fs.writeFileSync(filePath, JSON.stringify(usuarios, null, 2))
+  const texto = JSON.stringify(usuarios, null, 2)
+  fs.writeFileSync(rutausuarios, texto)
 }
- 
-export function guardarpersonalizacion(idusuario, ropa, accesorios, colorpiel, colorpelo, colorojos) {
-    const usuarios = leerarchivo()
 
-    if (!usuarios[idusuario]) {
-        
-        usuarios[idusuario] = {
-            ropa: 'default',
-            accesorios: 'default',
-            colorpiel: 'default',
-            colorojos: 'default',
-            colorpelo: 'default',
-            opcionesdesbloqueadas: []
-        }
-    }
+export function guardarpersonalizacion(idusuario, ropa, accesorios, colorpiel, colorojos, colorpelo) {
+  const usuarios = leerarchivo()
 
+  if (!usuarios[idusuario]) {
     usuarios[idusuario] = {
-        ...usuarios[idusuario],
-        ropa,
-        accesorios,
-        colorpiel,
-        colorojos,
-        colorpelo
+      ropa: "default",
+      accesorios: "default",
+      colorpiel: "default",
+      colorpelo: "default",
+      colorojos: "default",
+      opcionesdesbloqueadas: []
     }
+  }
 
-    escribirarchivo(usuarios)
-    return { success: true, message: 'Personalizacion guardada con exito'}
+  usuarios[idusuario].ropa = ropa
+  usuarios[idusuario].accesorios = accesorios
+  usuarios[idusuario].colorojos = colorojos
+  usuarios[idusuario].colorpelo = colorpelo
+  usuarios[idusuario].colorpiel = colorpiel
+
+  escribirarchivo(usuarios)
+
+  return { exito: true, mensaje: "Personalizacion guardada con exito" }
 }
 
 export function cargarpersonalizacion(idusuario) {
-    const usuarios = leerarchivo()
+  const usuarios = leerarchivo()
 
-    if (!usuarios[idusuario]) {
-        return { success: false, message: 'Usuario no encontrado'}
-    }
+  if (!usuarios[idusuario]) {
+    return { exito: false, mensaje: "Usuario no encontrado" }
+  }
 
-    return {
-        success: true, 
-        personalizacion: usuarios[idusuario]
-    }
+  return { exito: true, personalizacion: usuarios[idusuario] }
 }
 
 export function validaropcionesdesbloqueadas(idusuario, tipoopcion, idopcion) {
-    const usuarios = leerarchivo()
+  const usuarios = leerarchivo()
 
-    if (!usuarios[idusuario]) {
-        return { success: false, message: 'Usuario no encontrado' }
+  if (!usuarios[idusuario]) {
+    return { exito: false, mensaje: "Usuario no encontrado" }
+  }
+
+  let i = 0
+  let desbloqueada = false
+  const clave = tipoopcion + "-" + idopcion
+
+  while (i < usuarios[idusuario].opcionesdesbloqueadas.length) {
+    if (usuarios[idusuario].opcionesdesbloqueadas[i] === clave) {
+      desbloqueada = true
     }
+    i = i + 1
+  }
 
-    if (usuario[idusuario].opcionesdesbloqueadas.includes(`${tipoopcion}-${idopcion}`)) {
-        return { success: true, message: 'Opcion desbloqueada'}
-    } else {
-        return { success: false, message: 'Opcion no debloqueada'}
-    }
-}
-
-export function agregaropcionesdesbloqueadas(idusuario, tipoopcion, idopcion) {
-    const usuarios = leerarchivo()
-
-    if (!usuarios[idusuario]) {
-        return { succes: false, message: 'Usuario no encontrado'}
-    }
-
-    const opcion = `${tipoopcion}-${idopcion}` 
-    if (!usuarios[idusuario].opcionesdesbloqueadas.includes(opcion)) {
-        usuarios[idusuario].opcionesdesbloqueadas.push(opcion)
-        escribirarchivo(usuarios)
-        return { success: true, message: `Opcion ${opcion} desbloqueado con exito` }
-    }
-
-    return { success: false, message: `La opcion ${opcion} ya esta debloqueada` }
+  if (desbloqueada) {
+    return { exito: true, mensaje: "Opcion desbloqueada" }
+  } else {
+    return { exito: false, mensaje: "Opcion no desbloqueada" }
+  }
 }
