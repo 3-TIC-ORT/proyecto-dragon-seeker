@@ -15,7 +15,7 @@ export class Casa extends Phaser.Scene {
          this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
     }
 
-        create(){
+        create(data){
 
             const casa = this.make.tilemap({key: "casa"});   
             const tileset = casa.addTilesetImage("mapa 2", "tiles");
@@ -34,4 +34,5 @@ export class Casa extends Phaser.Scene {
 
             this.cameras.main.startFollow(this.player);
     }
+    
 }
