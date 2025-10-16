@@ -6,7 +6,7 @@ function leerarchivo(){
     if (!fs.existsSync(rutanotificaciones)) {
         fs.writeFileSync(rutanotificaciones, "{}")
     }
-    const texto = fs.readFileSync(rutanotificacionesm, "utf-8")
+    const texto = fs.readFileSync(rutanotificaciones)
     return JSON.parse(texto)
 }
 

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/3-TIC-ORT/proyecto-dragon-seeker#readme",
   "dependencies": {
+    "fs": "^0.0.1-security",
     "soquetic": "^1.4.2"
   }
 }

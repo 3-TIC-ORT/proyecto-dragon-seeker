@@ -3,7 +3,7 @@ import fs from "fs"
 const rutausuarios = "./BACKEND/usuarios.json"
 
 function leerarchivo() {
-  const texto = fs.readFileSync(rutausuarios, "utf-8")
+  const texto = fs.readFileSync(rutausuario)
   return JSON.parse(texto)
 }
 
