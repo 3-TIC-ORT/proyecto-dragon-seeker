@@ -12,7 +12,7 @@ export class Casa extends Phaser.Scene {
         this.load.tilemapTiledJSON("casa", "assets/casa_adentro.json");
         
         //asignacion del sprite al personaje
-         this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
+        this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
     }
 
         create(data){
@@ -29,7 +29,7 @@ export class Casa extends Phaser.Scene {
             this.physics.add.collider(this.player, cofres);
 
               // Spawn del jugador en la posición recibida desde Mapa1
-            this.player = this.physics.add.sprite(data.x, data.y, "dude");
+            this.player = this.physics.add.sprite(352, 480, 'dude');
             this.physics.add.collider(this.player, cofres);
 
             this.cameras.main.startFollow(this.player);
