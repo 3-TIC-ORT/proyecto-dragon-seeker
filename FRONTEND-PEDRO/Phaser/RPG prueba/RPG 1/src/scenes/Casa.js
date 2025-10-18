@@ -30,7 +30,7 @@ export class Casa extends Phaser.Scene {
             //colliders
             cofres.setCollisionByExclusion([-1]);
             this.physics.add.collider(this.player, cofres);
-
+            
             //worldbounds
             this.physics.world.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);
             this.player.setBounce(0).setCollideWorldBounds(true)
@@ -38,7 +38,7 @@ export class Casa extends Phaser.Scene {
             //camara
             
             this.cameras.main.startFollow(this.player);
-            this.cameras.main.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);
+            this.cameras.main.setBounds(-80, -72, casa.widthInPixels, casa.heightInPixels);
 
             //creando las teclas para movimiento
             this.cursors = this.input.keyboard.createCursorKeys();
