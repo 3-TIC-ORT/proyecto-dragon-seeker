@@ -34,7 +34,7 @@ export class Game extends Phaser.Scene {
         this.physics.add.collider(this.player, casa);
       
         //movimiento
-       this.cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.createCursorKeys();
        
        //camara
        this.cameras.main.startFollow(this.player);

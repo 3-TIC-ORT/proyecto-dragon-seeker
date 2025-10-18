@@ -23,16 +23,44 @@ export class Casa extends Phaser.Scene {
             const suelo_casa = casa.createLayer("suelo casa", tileset, 0, 0);
             const cofres = casa.createLayer("objetos",  tileset, 0, 0);
 
+            
+            // Spawn del jugador en la posición recibida desde Mapa1
+            this.player = new Player(this, 352, 480);
+            
             //colliders
             cofres.setCollisionByExclusion([-1]);
-          
             this.physics.add.collider(this.player, cofres);
 
-              // Spawn del jugador en la posición recibida desde Mapa1
-            this.player = this.physics.add.sprite(352, 480, 'dude');
-            this.physics.add.collider(this.player, cofres);
-
+            //camara
             this.cameras.main.startFollow(this.player);
+            //this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+            //creando las teclas para movimiento
+            this.cursors = this.input.keyboard.createCursorKeys();
+
+    }
+    
+    update() {
+        
+        //this.player.setVelocity(0); //setea la velocidad en cero
+        if((this.cursors.left.isDown) || (this.cursors.right.isDown) || (this.cursors.up.isDown) || (this.cursors.down.isDown)){
+
+            if (this.cursors.left.isDown){
+                this.player.moveLeft();
+            }
+            else if (this.cursors.right.isDown){
+                this.player.moveRight();
+            }
+            if (this.cursors.up.isDown){
+                this.player.moveUp();
+            }
+            else if (this.cursors.down.isDown){
+                this.player.moveDown();
+            }
+        }
+        else{
+            this.player.idle();
+        }
     }
     
 }
