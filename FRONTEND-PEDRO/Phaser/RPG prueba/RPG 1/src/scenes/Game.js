@@ -12,7 +12,7 @@ export class Game extends Phaser.Scene {
 
 
         //asignacion del sprite al personaje
-         this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
+        this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
     }
     create() {
         const map = this.make.tilemap({key: "map"});
@@ -27,25 +27,31 @@ export class Game extends Phaser.Scene {
         //jugador
      
         this.player = new Player (this, 16, 160);
+
         //colliders
         obstaculos.setCollisionByExclusion([-1]);
         this.physics.add.collider(this.player, obstaculos);
         casa.setCollisionByExclusion([-1]);
         this.physics.add.collider(this.player, casa);
       
+        //worldbounds
+        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        this.player.setBounce(0).setCollideWorldBounds(true)
+        
         //movimiento
         this.cursors = this.input.keyboard.createCursorKeys();
        
-       //camara
-       this.cameras.main.startFollow(this.player);
-       this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+         //camara
+        this.cameras.main.startFollow(this.player);
+        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
        
-           // --- Trigger para pasar al Mapa2 ---
+        // --- Trigger para pasar al Mapa2 ---
         const trigger = map.findObject("puertas", obj => obj.name === "door"); 
         this.door = this.physics.add.sprite(trigger.x, trigger.y, null);
         this.door.setSize(trigger.width, trigger.height);
         this.door.setVisible(false);
 
+        //puerta de acceso a la casa (cambio de escena)
         this.physics.add.overlap(this.player, this.door, () => {
             this.scene.start('Casa', { x: 352, y: 480 }); // posición inicial en Mapa2
         });
@@ -54,19 +60,18 @@ export class Game extends Phaser.Scene {
 
     update() {
         
-        //this.player.setVelocity(0); //setea la velocidad en cero
         if((this.cursors.left.isDown) || (this.cursors.right.isDown) || (this.cursors.up.isDown) || (this.cursors.down.isDown)){
 
             if (this.cursors.left.isDown){
                 this.player.moveLeft();
             }
-            else if (this.cursors.right.isDown){
+            if (this.cursors.right.isDown){
                 this.player.moveRight();
             }
             if (this.cursors.up.isDown){
                 this.player.moveUp();
             }
-            else if (this.cursors.down.isDown){
+            if (this.cursors.down.isDown){
                 this.player.moveDown();
             }
         }

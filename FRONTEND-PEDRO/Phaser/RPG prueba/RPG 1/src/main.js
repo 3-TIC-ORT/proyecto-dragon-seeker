@@ -25,8 +25,8 @@ const config = {
         Boot,
         Preloader,
         Game,
-        GameOver,
-        Casa
+        Casa,
+        GameOver
     ]
 };
 
