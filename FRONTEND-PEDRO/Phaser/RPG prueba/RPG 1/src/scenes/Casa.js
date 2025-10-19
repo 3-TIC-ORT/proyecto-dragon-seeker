@@ -25,7 +25,7 @@ export class Casa extends Phaser.Scene {
 
             
             // Spawn del jugador en la posición recibida desde Mapa1
-            this.player = new Player(this, 352, 480);
+            this.player = new Player(this, data.x, data.y);
             
             //colliders
             cofres.setCollisionByExclusion([-1]);
@@ -43,6 +43,15 @@ export class Casa extends Phaser.Scene {
             //creando las teclas para movimiento
             this.cursors = this.input.keyboard.createCursorKeys();
 
+            //puerta
+            const trigger = casa.findObject("puertas", obj => obj.name === "door"); 
+            this.door = this.physics.add.sprite(trigger.x, trigger.y, null);
+            this.door.setSize(trigger.width, trigger.height);
+            this.door.setVisible(false);
+            
+            this.physics.add.overlap(this.player, this.door, () => {
+            this.scene.start('Game', { x: 1248, y: 608 }); // posición inicial en Mapa2
+        });
     }
     
     update() {

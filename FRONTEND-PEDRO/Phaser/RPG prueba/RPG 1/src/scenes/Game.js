@@ -53,7 +53,7 @@ export class Game extends Phaser.Scene {
 
         //puerta de acceso a la casa (cambio de escena)
         this.physics.add.overlap(this.player, this.door, () => {
-            this.scene.start('Casa', { x: 352, y: 480 }); // posición inicial en Mapa2
+            this.scene.start('Casa', { x: 368, y: 528 }); // posición inicial en Mapa2
         });
     }
 
