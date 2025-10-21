@@ -223,7 +223,7 @@
 </data>
  </layer>
  <objectgroup id="6" name="puertas">
-  <object id="4" name="door" type="trigger" x="1216" y="575" width="31" height="32"/>
+  <object id="4" name="door" type="trigger" x="1216" y="575" width="31" height="27.5455"/>
  </objectgroup>
  <layer id="7" name="puertas visibles" width="94" height="50">
   <data encoding="csv">

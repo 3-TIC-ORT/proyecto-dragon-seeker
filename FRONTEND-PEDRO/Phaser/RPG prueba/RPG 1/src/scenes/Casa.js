@@ -50,7 +50,7 @@ export class Casa extends Phaser.Scene {
             this.door.setVisible(false);
             
             this.physics.add.overlap(this.player, this.door, () => {
-            this.scene.start('Game', { x: 1248, y: 608 }); // posición inicial en Mapa2
+            this.scene.start('Game', { x: 1232, y: 624 }); // posición inicial en Mapa2
         });
     }
     

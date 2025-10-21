@@ -14,7 +14,7 @@ export class Game extends Phaser.Scene {
         //asignacion del sprite al personaje
         this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
     }
-    create() {
+    create(data) {
         const map = this.make.tilemap({key: "map"});
         const tileset = map.addTilesetImage("mapa 2", "tiles");
         //creacion de las capas
@@ -24,9 +24,12 @@ export class Game extends Phaser.Scene {
         const casa = map.createLayer("casa", tileset, 0, 0);
         const puertas = map.createLayer("puertas visibles", tileset, 0, 0);
         
-        //jugador
+        //spawn jugador
      
-        this.player = new Player (this, 16, 160);
+        const startX = data?.x ?? 16;
+        const startY = data?.y ?? 160;
+
+        this.player = new Player(this, startX, startY);
 
         //colliders
         obstaculos.setCollisionByExclusion([-1]);
@@ -53,7 +56,7 @@ export class Game extends Phaser.Scene {
 
         //puerta de acceso a la casa (cambio de escena)
         this.physics.add.overlap(this.player, this.door, () => {
-            this.scene.start('Casa', { x: 368, y: 528 }); // posición inicial en Mapa2
+            this.scene.start('Casa', { x: 368, y: 448 }); // posición inicial en Mapa2
         });
     }
 
