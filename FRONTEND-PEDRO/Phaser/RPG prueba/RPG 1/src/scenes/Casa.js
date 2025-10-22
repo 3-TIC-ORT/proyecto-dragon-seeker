@@ -22,6 +22,7 @@ export class Casa extends Phaser.Scene {
             //capas
             const suelo_casa = casa.createLayer("suelo casa", tileset, 0, 0);
             const cofres = casa.createLayer("objetos",  tileset, 0, 0);
+            const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
 
             
             // Spawn del jugador en la posición recibida desde Mapa1
@@ -30,6 +31,8 @@ export class Casa extends Phaser.Scene {
             //colliders
             cofres.setCollisionByExclusion([-1]);
             this.physics.add.collider(this.player, cofres);
+            limit.setCollisionByExclusion([-1]);
+            this.physics.add.collider(this.player, limit);
             
             //worldbounds
             this.physics.world.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);

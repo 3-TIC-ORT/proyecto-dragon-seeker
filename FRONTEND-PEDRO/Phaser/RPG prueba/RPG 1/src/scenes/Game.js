@@ -12,11 +12,15 @@ export class Game extends Phaser.Scene {
 
 
         //asignacion del sprite al personaje
+        
         this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
+        //asignacion del sprite al dragon
+        this.load.spritesheet('dragon', 'assets/dragon.png', {frameWidth: 32, frameHeight: 32});
     }
     create(data) {
         const map = this.make.tilemap({key: "map"});
         const tileset = map.addTilesetImage("mapa 2", "tiles");
+        
         //creacion de las capas
         const ground = map.createLayer("piso", tileset, 0, 0);
         const camino = map.createLayer("camino", tileset, 0, 0);
@@ -31,15 +35,27 @@ export class Game extends Phaser.Scene {
 
         this.player = new Player(this, startX, startY);
 
+        //dragon
+        this.dragon = this.physics.add.sprite(224, 160, "dragon");
+        this.dragon.setCollideWorldBounds(true);
+
         //colliders
+        
         obstaculos.setCollisionByExclusion([-1]);
-        this.physics.add.collider(this.player, obstaculos);
         casa.setCollisionByExclusion([-1]);
-        this.physics.add.collider(this.player, casa);
-      
+            
+            //colliders con el player
+            this.physics.add.collider(this.player, obstaculos);
+            this.physics.add.collider(this.player, casa);
+            this.physics.add.collider(this.player, this.dragon);
+
+            //colliders con el dragon
+            this.physics.add.collider(this.dragon, obstaculos);
+            this.physics.add.collider(this.dragon, casa);
+
         //worldbounds
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.player.setBounce(0).setCollideWorldBounds(true)
+        this.player.setBounce(0).setCollideWorldBounds(true);
         
         //movimiento
         this.cursors = this.input.keyboard.createCursorKeys();
