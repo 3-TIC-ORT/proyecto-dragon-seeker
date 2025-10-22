@@ -2,7 +2,7 @@ import { startServer, subscribePOSTEvent, subscribeGETEvent } from "soquetic"
 import { registrarusuario, iniciarsesion } from "./autorizacion.js"
 import { guardarpersonalizacion, cargarpersonalizacion, validaropcionesdesbloqueadas } from "./customizacion.js"
 import { enviarnotificacion, obtenernotificaciones } from "./notificaciones.js"
-import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas } from "./progreso.js"
+import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas } from "./progresousuario.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
