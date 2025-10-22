@@ -3,6 +3,7 @@ let formulario = document.getElementById('formLogin');
 let mensaje = document.getElementById('mensaje');
 let contraseña = document.getElementById ("contraseña").value;
 let correo = document.getElementById ("usuario").value;
+let botoningresar = document.getElementById('botonIngresar');
 postEvent("iniciarsesion", { correo, contraseña }, (idUsuario) => {
     if (idUsuario.exito === false) {
         console.log(idUsuario.mensaje);
@@ -14,3 +15,5 @@ postEvent("iniciarsesion", { correo, contraseña }, (idUsuario) => {
     else if (idUsuario.exito === true) {
         console.log(idUsuario.mensaje);
 }});
+
+botoningresar.addEventListener("click", postEvent)
