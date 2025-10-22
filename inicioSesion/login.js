@@ -6,6 +6,10 @@ let correo = document.getElementById ("usuario").value;
 postEvent("iniciarsesion", { correo, contraseña }, (idUsuario) => {
     if (idUsuario.exito === false) {
         console.log(idUsuario.mensaje);
+        let container = document.createElement('p');
+        container.innerText += `
+        ${idUsuario.mensaje}
+      `
     }
     else if (idUsuario.exito === true) {
         console.log(idUsuario.mensaje);
