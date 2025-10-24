@@ -81,6 +81,7 @@ function construirlistaboss(bossId, bossEstado) {
 
         } else { 
             lista.push(a)  
+            31WSFVCA     DZ  
         }
         i = i + 1 
     } 
@@ -100,7 +101,7 @@ export function elegirataqueenemigo({tipo, nivel, esBoss, bossId, bossEstado}) {
         lista = [{nombre: "Golpe", daño: 5}]
     }
 
-    const numero = Math.floor(Math.random() * pool.length)
+    const numero = Math.floor(Math.random() * lista.length)
     const ataqueelegido = lista[numero] 
 
     let bossestadoactualizado = bossEstado || undefined
@@ -120,4 +121,31 @@ export function elegirataqueenemigo({tipo, nivel, esBoss, bossId, bossEstado}) {
         ataque: ataqueelegido,
         bossEstado: bossestadoactualizado
     }
+}
+
+export function aplicarbbeneficiosdebilidades(tipoataque, tipodefensor, modificador) {
+    const relaciones = {
+        tierra: {efectivo: "electrico", debil: ["agua", "hielo"]},
+        fuego: {efectivo: "hielo", debil: ["agua"]},
+        hielo: {efectivo: "tierra", debil: ["fuego"]},
+        electrico: { efectivo: "agua", debil: ["tierra"] },
+        agua: { efectivo: "fuego", debil: ["electrico"] },
+    }
+
+    let multiplicador = 1
+    const rel = relaciones[tipoataque]
+    if (rel) {
+        if (rel.efectivo === tipodefensor) {
+            multiplicador = 1.5
+        }
+
+        let i = 0
+        while (i < rel.debil.length) {
+            if (rel.debil[i] === tipodefensor) {
+                multiplicador = 0.75
+            }
+            i = i + 1
+        }
+    }
+    return modificador * multiplicador
 }

@@ -3,6 +3,8 @@ import { registrarusuario, iniciarsesion } from "./autorizacion.js"
 import { guardarpersonalizacion, cargarpersonalizacion, validaropcionesdesbloqueadas } from "./customizacion.js"
 import { enviarnotificacion, obtenernotificaciones } from "./notificaciones.js"
 import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas } from "./progresousuario.js"
+import { startServer, subscribeGETEvent, subscribePOSTEvent } from "soquetic"
+import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerAtaquesDisponibles } from "./batalla_ataques.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
@@ -57,6 +59,25 @@ subscribePOSTEvent("desbloquearataques", data => {
 subscribePOSTEvent("aumentarestadisticas", data => {
   const { iddragon, incremento, idusuario } = data
   return aumentarestadisticas(iddragon, incremento, idusuario)
+})
+
+subscribeGETEvent("elegirAtaqueEnemigoNormal", query => {
+  return elegirataqueenemigo({ tipo: query.tipo, nivel: Number(query.nivel), esBoss: false })
+})
+
+subscribeGETEvent("elegirAtaqueBoss", query => {
+  const bossEstado = { soplido: Number(query.soplido || 0), daga: Number(query.daga || 0) }
+  return elegirataqueenemigo({ esBoss: true, bossId: Number(query.bossId), bossEstado })
+})
+
+subscribePOSTEvent("modificadorPorTipo", data => {
+  const mod = aplicarbbeneficiosdebilidades(data.tipoataque, data.tipodefensor, Number(data.base))
+  return { exito: true, modificador: mod }
+})
+
+subscribeGETEvent("ataquesDisponibles", query => {
+  const lista = obtenerAtaquesDisponibles(query.tipo, Number(query.nivel))
+  return { exito: true, ataques: lista }
 })
 
 console.log("Servidor iniciado")
