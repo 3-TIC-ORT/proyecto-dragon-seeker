@@ -1,4 +1,5 @@
 import {Player} from '../GameObjects/player.js'
+import {NPC} from '../GameObjects/npc.js'
 
 export class Game extends Phaser.Scene {
     constructor() {
