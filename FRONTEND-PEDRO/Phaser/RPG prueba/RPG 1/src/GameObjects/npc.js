@@ -5,22 +5,22 @@ export class NPC extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.leftLimit = 170;
-        this.rightLimit = 300;
+        this.leftLimit = 768;
+        this.rightLimit = 1152;
         this.setVelocityX(0);
     }
 
-    update(time, delta){
-    super.update(time, delta);
+    preUpdate(time, delta){
+    super.preUpdate(time, delta);
 
         // Movimiento entre los límites
-        if ( 224> this.rightLimit) {
+        if ( this.x> this.rightLimit) {
             this.setVelocityX(-50);
-            this.flipX = true; // mira hacia la izquierda
+            this.flipX = false; // mira hacia la izquierda
         } 
-        else if (224 < this.leftLimit) {
+        else if (this.x < this.leftLimit) {
             this.setVelocityX(50);
-            this.flipX = false; // mira hacia la derecha
+            this.flipX = true; // mira hacia la derecha
         }
     }
 }

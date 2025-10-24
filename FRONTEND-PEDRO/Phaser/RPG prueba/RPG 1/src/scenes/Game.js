@@ -37,7 +37,7 @@ export class Game extends Phaser.Scene {
         this.player = new Player(this, startX, startY);
 
         //dragon
-        this.dragon = new NPC (this, 224, 160, "dragon");
+        this.dragon = new NPC (this, 960, 192, "dragon");
         this.dragon.setCollideWorldBounds(true);
 
         //colliders
