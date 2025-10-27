@@ -81,7 +81,6 @@ function construirlistaboss(bossId, bossEstado) {
 
         } else { 
             lista.push(a)  
-            31WSFVCA     DZ  
         }
         i = i + 1 
     } 

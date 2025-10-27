@@ -3,8 +3,7 @@ import { registrarusuario, iniciarsesion } from "./autorizacion.js"
 import { guardarpersonalizacion, cargarpersonalizacion, validaropcionesdesbloqueadas } from "./customizacion.js"
 import { enviarnotificacion, obtenernotificaciones } from "./notificaciones.js"
 import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas } from "./progresousuario.js"
-import { startServer, subscribeGETEvent, subscribePOSTEvent } from "soquetic"
-import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerAtaquesDisponibles } from "./batalla_ataques.js"
+import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
@@ -76,7 +75,7 @@ subscribePOSTEvent("modificadorPorTipo", data => {
 })
 
 subscribeGETEvent("ataquesDisponibles", query => {
-  const lista = obtenerAtaquesDisponibles(query.tipo, Number(query.nivel))
+  const lista = obtenerataquesdisponibles(query.tipo, Number(query.nivel))
   return { exito: true, ataques: lista }
 })
 
