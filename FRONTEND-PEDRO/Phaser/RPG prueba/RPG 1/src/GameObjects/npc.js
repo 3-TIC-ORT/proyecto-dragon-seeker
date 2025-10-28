@@ -29,7 +29,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite{
           
           this.anims.create({
             key: 'npc-left',
-            frames: this.anims.generateFrameNumbers('npc', { start: 0, end: 4 }),
+            frames: this.anims.generateFrameNumbers('dragon', { start: 0, end: 4 }),
             frameRate: 8,
             repeat: -1
           });
@@ -50,8 +50,8 @@ export class NPC extends Phaser.Physics.Arcade.Sprite{
           this.anims.stop();
         } else if (step.dx > 0) {
             this.anims.play('npc-left', true);
-        } else if (step.dx < 0) {
             this.setFlipX(true);  
+        } else if (step.dx < 0) {
           this.anims.play('npc-left', true);
         } else if (step.dy > 0) {
           
