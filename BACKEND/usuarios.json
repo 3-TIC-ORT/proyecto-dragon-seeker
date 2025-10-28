@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "id": 1,
+    "nombre": "zeide",
+    "correo": "zeide@gmail.com",
+    "contrasena": "1234"
+  }
+]
