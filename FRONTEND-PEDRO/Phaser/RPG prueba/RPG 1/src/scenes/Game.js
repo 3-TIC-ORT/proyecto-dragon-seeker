@@ -13,7 +13,6 @@ export class Game extends Phaser.Scene {
 
 
         //asignacion del sprite al personaje
-        
         this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
         //asignacion del sprite al dragon
         this.load.spritesheet('dragon', 'assets/dragon.png', {frameWidth: 32, frameHeight: 32});
