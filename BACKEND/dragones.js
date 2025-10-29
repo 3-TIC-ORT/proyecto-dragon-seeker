@@ -43,4 +43,9 @@ export function iniciarbatalledragon(idusuario, iddragon, ubicacion) {
     }
     return {exito: true, mensaje: "Batalla bien iniciada", batalla}
 }
+
+export function obtenerlistadragones() {
+    const data = leerdragones()
+    return { exito: true, dragones: data.dragones }
+}
     
