@@ -4,6 +4,7 @@ import { guardarpersonalizacion, cargarpersonalizacion, validaropcionesdesbloque
 import { enviarnotificacion, obtenernotificaciones } from "./notificaciones.js"
 import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas } from "./progresousuario.js"
 import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
+import { determinartipodragon, enviardatosdragon, iniciarbatalledragon } from "./dragones.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
@@ -79,5 +80,20 @@ subscribeGETEvent("ataquesDisponibles", query => {
   return { exito: true, ataques: lista }
 })
 
+subscribeGETEvent("obtenerTipoDragon", query => {
+  const { idzona, dificultad } = query
+  return determinartipodragon(Number(idzona), dificultad)
+})
+
+subscribeGETEvent("obtenerDragon", query => {
+  const { iddragon, idusuario } = query
+  return enviardatosdragon(Number(iddragon), Number(idusuario))
+})
+
+subscribePOSTEvent("iniciarBatalla", data => {
+  const { idusuario, iddragon, ubicacion } = data
+  return iniciarbatalledragon(Number(idusuario), Number(iddragon), ubicacion)
+})
+
 console.log("Servidor iniciado")
-startServer()
+startServer(3000)
