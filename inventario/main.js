@@ -32,13 +32,13 @@
 let botontrucho = document.getElementById("botontrucho");
   let dragontrucho = {
     nombre: 'chimuelo',
-    viddaChimuelo: 100,
+    viddaChimuelo: 200,
     strength: 10,
     defense: 9,
     speed: 6,
   }
 function guardarEnLocalStorage (){
-  localStorage.setItem("datotrucho", dragontrucho);
+  localStorage.setItem("datotrucho", JSON.stringify(dragontrucho));
   console.log(dragontrucho)
 }
 
