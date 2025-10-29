@@ -1,0 +1,201 @@
+{
+    "dragones": [
+      { "id": 1, "nombre": "Terragon", "tipo": "tierra", "nivel": 1, "vida": 60, "fuerza": 10, "especial": false, "mapa": 1,
+        "ataques": [
+          { "nombre": "Coletazo", "daño": 5, "nivel": 1 },
+          { "nombre": "Bola de barro", "daño": 10, "nivel": 5 },
+          { "nombre": "Terremoto", "daño": 10, "nivel": 13 },
+          { "nombre": "Arañazo", "daño": 10, "nivel": 1 }
+        ]
+      },
+      { "id": 2, "nombre": "Rocabrava", "tipo": "tierra", "nivel": 1, "vida": 75, "fuerza": 12, "especial": false, "mapa": 2,
+        "ataques": [
+          { "nombre": "Coletazo", "daño": 8, "nivel": 1 },
+          { "nombre": "Bola de barro", "daño": 13, "nivel": 5 },
+          { "nombre": "Terremoto", "daño": 13, "nivel": 13 },
+          { "nombre": "Patado", "daño": 12, "nivel": 1 }
+        ]
+      },
+      { "id": 3, "nombre": "Golem Verde", "tipo": "tierra", "nivel": 1, "vida": 90, "fuerza": 15, "especial": true, "mapa": 3,
+        "ataques": [
+          { "nombre": "Coletazo", "daño": 12, "nivel": 1 },
+          { "nombre": "Bola de barro", "daño": 16, "nivel": 5 },
+          { "nombre": "Terremoto", "daño": 16, "nivel": 13 },
+          { "nombre": "Puñetazo", "daño": 12, "nivel": 1 }
+        ]
+      },
+  
+      { "id": 4, "nombre": "Chimuelo", "tipo": "fuego", "nivel": 1, "vida": 55, "fuerza": 10, "especial": true, "mapa": 1,
+        "ataques": [
+          { "nombre": "Llamarada", "daño": 10, "nivel": 1 },
+          { "nombre": "Bola de fuego", "daño": 15, "nivel": 5 },
+          { "nombre": "Puño de fuego", "daño": 20, "nivel": 13 },
+          { "nombre": "Arañazo", "daño": 10, "nivel": 1 }
+        ]
+      },
+      { "id": 5, "nombre": "Llamafuria", "tipo": "fuego", "nivel": 1, "vida": 70, "fuerza": 13, "especial": false, "mapa": 2,
+        "ataques": [
+          { "nombre": "Llamarada", "daño": 13, "nivel": 1 },
+          { "nombre": "Bola de fuego", "daño": 18, "nivel": 5 },
+          { "nombre": "Puño de fuego", "daño": 23, "nivel": 13 },
+          { "nombre": "Patado", "daño": 12, "nivel": 1 }
+        ]
+      },
+      { "id": 6, "nombre": "Pyrosombra", "tipo": "fuego", "nivel": 1, "vida": 85, "fuerza": 16, "especial": false, "mapa": 3,
+        "ataques": [
+          { "nombre": "Llamarada", "daño": 16, "nivel": 1 },
+          { "nombre": "Bola de fuego", "daño": 21, "nivel": 5 },
+          { "nombre": "Puño de fuego", "daño": 26, "nivel": 13 },
+          { "nombre": "Golpe", "daño": 12, "nivel": 1 }
+        ]
+      },
+  
+      { "id": 7, "nombre": "Amarillo", "tipo": "electrico", "nivel": 1, "vida": 50, "fuerza": 9, "especial": false, "mapa": 1,
+        "ataques": [
+          { "nombre": "Chispa", "daño": 8, "nivel": 1 },
+          { "nombre": "Tormeta electrica", "daño": 13, "nivel": 5 },
+          { "nombre": "Onda trueno", "daño": 18, "nivel": 13 },
+          { "nombre": "Arañazo", "daño": 10, "nivel": 1 }
+        ]
+      },
+      { "id": 8, "nombre": "Centella", "tipo": "electrico", "nivel": 1, "vida": 65, "fuerza": 12, "especial": false, "mapa": 2,
+        "ataques": [
+          { "nombre": "Chispa", "daño": 11, "nivel": 1 },
+          { "nombre": "Tormeta electrica", "daño": 16, "nivel": 5 },
+          { "nombre": "Onda trueno", "daño": 21, "nivel": 13 },
+          { "nombre": "Patado", "daño": 12, "nivel": 1 }
+        ]
+      },
+      { "id": 9, "nombre": "Truenoz", "tipo": "electrico", "nivel": 1, "vida": 80, "fuerza": 15, "especial": true, "mapa": 3,
+        "ataques": [
+          { "nombre": "Chispa", "daño": 14, "nivel": 1 },
+          { "nombre": "Tormeta electrica", "daño": 19, "nivel": 5 },
+          { "nombre": "Onda trueno", "daño": 24, "nivel": 13 },
+          { "nombre": "Puñetazo", "daño": 13, "nivel": 1 }
+        ]
+      },
+  
+      { "id": 10, "nombre": "Burbu", "tipo": "agua", "nivel": 1, "vida": 55, "fuerza": 10, "especial": false, "mapa": 1,
+        "ataques": [
+          { "nombre": "burbuja", "daño": 8, "nivel": 1 },
+          { "nombre": "Salpicadura", "daño": 15, "nivel": 5 },
+          { "nombre": "Tsunami", "daño": 18, "nivel": 13 },
+          { "nombre": "Arañazo", "daño": 10, "nivel": 1 }
+        ]
+      },
+      { "id": 11, "nombre": "Tsunami", "tipo": "agua", "nivel": 1, "vida": 70, "fuerza": 13, "especial": false, "mapa": 2,
+        "ataques": [
+          { "nombre": "burbuja", "daño": 11, "nivel": 1 },
+          { "nombre": "Salpicadura", "daño": 18, "nivel": 5 },
+          { "nombre": "Tsunami", "daño": 21, "nivel": 13 },
+          { "nombre": "Patado", "daño": 12, "nivel": 1 }
+        ]
+      },
+      { "id": 12, "nombre": "Maremus", "tipo": "agua", "nivel": 1, "vida": 85, "fuerza": 16, "especial": true, "mapa": 3,
+        "ataques": [
+          { "nombre": "burbuja", "daño": 14, "nivel": 1 },
+          { "nombre": "Salpicadura", "daño": 21, "nivel": 5 },
+          { "nombre": "Tsunami", "daño": 24, "nivel": 13 },
+          { "nombre": "Puñetazo", "daño": 13, "nivel": 1 }
+        ]
+      },
+  
+      { "id": 13, "nombre": "Escarcha", "tipo": "hielo", "nivel": 1, "vida": 55, "fuerza": 10, "especial": false, "mapa": 1,
+        "ataques": [
+          { "nombre": "Ventisca", "daño": 10, "nivel": 1 },
+          { "nombre": "Nevada", "daño": 15, "nivel": 5 },
+          { "nombre": "Puño hielo", "daño": 20, "nivel": 13 },
+          { "nombre": "Arañazo", "daño": 10, "nivel": 1 }
+        ]
+      },
+      { "id": 14, "nombre": "Nevazon", "tipo": "hielo", "nivel": 1, "vida": 70, "fuerza": 13, "especial": false, "mapa": 2,
+        "ataques": [
+          { "nombre": "Ventisca", "daño": 13, "nivel": 1 },
+          { "nombre": "Nevada", "daño": 18, "nivel": 5 },
+          { "nombre": "Puño hielo", "daño": 23, "nivel": 13 },
+          { "nombre": "Patado", "daño": 12, "nivel": 1 }
+        ]
+      },
+      { "id": 15, "nombre": "Yetihelado", "tipo": "hielo", "nivel": 1, "vida": 85, "fuerza": 16, "especial": true, "mapa": 3,
+        "ataques": [
+          { "nombre": "Ventisca", "daño": 16, "nivel": 1 },
+          { "nombre": "Nevada", "daño": 21, "nivel": 5 },
+          { "nombre": "Puño hielo", "daño": 26, "nivel": 13 },
+          { "nombre": "Puñetazo", "daño": 13, "nivel": 1 }
+        ]
+      },
+  
+      { "id": 16, "nombre": "Oso", "tipo": "normal", "nivel": 1, "vida": 60, "fuerza": 10, "especial": false, "mapa": 1,
+        "ataques": [
+          { "nombre": "Arañazo", "daño": 10, "nivel": 1 },
+          { "nombre": "Patado", "daño": 10, "nivel": 1 },
+          { "nombre": "Puñetazo", "daño": 10, "nivel": 1 },
+          { "nombre": "Coletazo", "daño": 5, "nivel": 1 }
+        ]
+      },
+      { "id": 17, "nombre": "Oso Hormiguero", "tipo": "normal", "nivel": 1, "vida": 75, "fuerza": 13, "especial": false, "mapa": 2,
+        "ataques": [
+          { "nombre": "Arañazo", "daño": 13, "nivel": 1 },
+          { "nombre": "Patado", "daño": 13, "nivel": 1 },
+          { "nombre": "Puñetazo", "daño": 13, "nivel": 1 },
+          { "nombre": "Bola de barro", "daño": 13, "nivel": 5 }
+        ]
+      },
+      { "id": 18, "nombre": "Drakko", "tipo": "normal", "nivel": 1, "vida": 90, "fuerza": 16, "especial": true, "mapa": 3,
+        "ataques": [
+          { "nombre": "Arañazo", "daño": 16, "nivel": 1 },
+          { "nombre": "Patado", "daño": 16, "nivel": 1 },
+          { "nombre": "Puñetazo", "daño": 16, "nivel": 1 },
+          { "nombre": "Llamarada", "daño": 13, "nivel": 1 }
+        ]
+      }
+    ],
+    "bosses": [
+      {
+        "id": 1,
+        "nombre": "Guardián de Piedra",
+        "mapa": 1,
+        "tipo": "tierra",
+        "vida": 220,
+        "fuerza": 30,
+        "capturable": false,
+        "ataques": [
+          { "nombre": "Coletazo", "daño": 15 },
+          { "nombre": "Gas verde", "daño": 20 },
+          { "nombre": "Fuego", "daño": 25 },
+          { "nombre": "Aletazo", "daño": 15 }
+        ]
+      },
+      {
+        "id": 2,
+        "nombre": "Señor del Magma",
+        "mapa": 2,
+        "tipo": "fuego",
+        "vida": 270,
+        "fuerza": 35,
+        "capturable": false,
+        "ataques": [
+          { "nombre": "Coletazo", "daño": 20 },
+          { "nombre": "Pelotazo de carbon prendido", "daño": 30 },
+          { "nombre": "Llamarada", "daño": 35 },
+          { "nombre": "Rugido caliente", "daño": 25 }
+        ]
+      },
+      {
+        "id": 3,
+        "nombre": "Yeti de Hielo",
+        "mapa": 3,
+        "tipo": "hielo",
+        "vida": 320,
+        "fuerza": 40,
+        "capturable": true,
+        "ataques": [
+          { "nombre": "Soplido helado", "daño": 0, "efecto": "pasar_turno" },
+          { "nombre": "Daga de hielo", "daño": 30 },
+          { "nombre": "Bola de nieve", "daño": 35 },
+          { "nombre": "Bola de nieve + Daga", "daño": 50, "requiere": "desbloqueo_combo" }
+        ]
+      }
+    ]
+  }
+  

@@ -15,6 +15,8 @@ let gifChimuelo = document.getElementById("AtaqueChimuelo")
 barravidaChimuelo.innerHTML = 100
 barravidaAmarillo.innerHTML = 100
 
+let dragontrucho = localStorage.getItem("datotrucho");
+console.log (dragontrucho)
 let chimuelo = {
     name: 'chimuelo',
     viddaChimuelo: 100,
@@ -22,7 +24,6 @@ let chimuelo = {
     defense: 9,
     speed: 6,
   };
-  console.log(chimuelo)
 let amarillo = {
     name: 'amarillo',
     vidaAmarillo: 100,
@@ -30,7 +31,6 @@ let amarillo = {
     defense: 7,
     speed: 7,
   };
-  console.log(amarillo)
   function ataquechimuelo (){
     gifChimuelo.style.display = "block";
     imagenchimuelo.style.display = "none";
