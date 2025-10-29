@@ -27,6 +27,7 @@ export class Game extends Phaser.Scene {
         const obstaculos = map.createLayer("obstaculos", tileset, 0, 0);
         const casa = map.createLayer("casa", tileset, 0, 0);
         const puertas = map.createLayer("puertas visibles", tileset, 0, 0);
+        const corral_dragones = map.createLayer("corral dragones", tileset, 0, 0);
         
         //spawn jugador
      
@@ -52,10 +53,12 @@ export class Game extends Phaser.Scene {
             //colliders con el dragon
             this.physics.add.collider(this.dragon, obstaculos);
             this.physics.add.collider(this.dragon, casa);
+            this.physics.add.collider(this.dragon, corral_dragones)
 
         //worldbounds
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.player.setBounce(0).setCollideWorldBounds(true);
+        this.dragon.setBounce(1).setCollideWorldBounds(true);
         
         //movimiento
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -74,6 +77,11 @@ export class Game extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.door, () => {
             this.scene.start('Casa', { x: 368, y: 448 }); // posición inicial en Mapa2
         });
+
+        //cambio de escena a la batalla
+        /*this.physics.add.overlap(this.player, this.dragon, () => {
+            //cambio de escena
+        });*/
     }
 
 
