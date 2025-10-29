@@ -5,18 +5,19 @@ let ataque2 = document.getElementById("ataque2");
 let ataque3 = document.getElementById("ataque3");
 let ataque4 = document.getElementById("ataque4");
 let BotonAdopcion = document.getElementById("adoptar")
-let barravidaChimuelo = document.getElementById("vida_chimuelo")
-let barravidaAmarillo = document.getElementById("vida_amarillo")
+let barravidaUsuario = document.getElementById("vida_chimuelo")
+let barravidaEnemigo = document.getElementById("vida_amarillo")
 let imagenamarillo = document.getElementById("amarillo")
 let gifAmarillo = document.getElementById ("AtaqueAmarillo")
 let imagenchimuelo = document.getElementById("chimuelo")
 let gifChimuelo = document.getElementById("AtaqueChimuelo")
 
-barravidaChimuelo.innerHTML = 100
-barravidaAmarillo.innerHTML = 100
-
-let dragontrucho = localStorage.getItem("datotrucho");
+let dragontrucho = JSON.parse(localStorage.getItem("datotrucho"));
 console.log (dragontrucho)
+
+barravidaUsuario.innerHTML = dragontrucho.viddaChimuelo
+barravidaEnemigo.innerHTML = 100
+
 let chimuelo = {
     name: 'chimuelo',
     viddaChimuelo: 100,

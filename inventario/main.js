@@ -1,17 +1,10 @@
 /*
     Cargar comidas en memoria desde el JSON
 */
-//postEvent("infoDragones", { nombre, tipo, nivel, vida, fuerza, especial, mapa }, (dragon) => {
-//fetch('./BACKEND/dragones.json')          // Ruta al archivo JSON
-  //.then(response => response.json())  // Convertir la respuesta en JSON
-  //.then(data => {                     // Aquí tienes acceso al JSON en formato de objeto JS
-   // console.log('dragones cargadas desde JSON:');
-   // console.log(data);
+getEvent("infoDragones", { nombre, tipo, nivel, vida, fuerza, especial, mapa }, (dragon) => {
   //  dragones = data;                   // Asignar el JSON a la variable comidas
   //  mostrarDragones()
- // }).catch(error => {                   // Manejo de errores al leer el archivo JSON
- //   console.error('Error al leer el archivo JSON:', error);
- // });
+})
 
 //let dragones = [];
 //const container = document.getElementById('dragonContainer');
@@ -32,13 +25,13 @@
 let botontrucho = document.getElementById("botontrucho");
   let dragontrucho = {
     nombre: 'chimuelo',
-    viddaChimuelo: 100,
+    viddaChimuelo: 200,
     strength: 10,
     defense: 9,
     speed: 6,
   }
 function guardarEnLocalStorage (){
-  localStorage.setItem("datotrucho", dragontrucho);
+  localStorage.setItem("datotrucho", JSON.stringify(dragontrucho));
   console.log(dragontrucho)
 }
 
