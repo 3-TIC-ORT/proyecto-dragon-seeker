@@ -20,6 +20,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite{
           { dx: 1, dy: 0, time: 1000 },
           { dx: 0, dy: -1, time: 1000 },
           { dx: 1, dy: 0, time: 2000 },
+          { dx: 0, dy: 0, time: 1000},
           { dx: 0, dy: 1, time: 2000 }
         ];
     

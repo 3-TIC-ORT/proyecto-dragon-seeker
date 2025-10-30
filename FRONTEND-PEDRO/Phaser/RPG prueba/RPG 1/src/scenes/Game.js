@@ -33,7 +33,7 @@ export class Game extends Phaser.Scene {
      
         const startX = data?.x ?? 16;
         const startY = data?.y ?? 160;
-
+        
         this.player = new Player(this, startX, startY);
 
         //dragon
