@@ -4,9 +4,9 @@ const rutanotificaciones = "./BACKEND/notificaciones.json"
 
 function leerarchivo(){
     if (!fs.existsSync(rutanotificaciones)) {
-        fs.writeFileSync(rutanotificaciones, "{}")
+        fs.writeFileSync(rutanotificaciones, "{}", "utf-8")
     }
-    const texto = fs.readFileSync(rutanotificaciones)
+    const texto = fs.readFileSync(rutanotificaciones, "utf-8")
     return JSON.parse(texto)
 }
 
@@ -30,5 +30,6 @@ export function enviarnotificacion(idusuario, mensaje, tipo) {
 
 export function obtenernotificaciones(idusuario, filtro) {
     const notificaciones = leerarchivo()
-    return notificaciones[idusuario] || []
+    const lista = notificaciones[idusuario] || []
+    return {exito: true, notificaciones: lista}
 }

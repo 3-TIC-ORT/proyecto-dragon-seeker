@@ -101,4 +101,4 @@ subscribeGETEvent("obtenerDragones", () => {
 })
 
 console.log("Servidor iniciado")
-startServer(3000)
+startServer(8080)
