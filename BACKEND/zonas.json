@@ -1,0 +1,73 @@
+[
+    {
+      "id": 1,
+      "nombre": "Bosque Inicial",
+      "nivelMin": 1,
+      "nivelMax": 6,
+      "dragones": [
+        { "id": 1, "nombre": "Terragon", "nivelMin": 1, "nivelMax": 6 },
+        { "id": 4, "nombre": "Chimuelo", "nivelMin": 1, "nivelMax": 6 },
+        { "id": 7, "nombre": "Amarillo", "nivelMin": 1, "nivelMax": 6 },
+        { "id": 10, "nombre": "Burbu", "nivelMin": 1, "nivelMax": 6 },
+        { "id": 13, "nombre": "Escarcha", "nivelMin": 1, "nivelMax": 6 },
+        { "id": 16, "nombre": "Oso", "nivelMin": 1, "nivelMax": 6 }
+      ],
+      "boss": {
+        "id": 1,
+        "nombre": "Guardián de Piedra",
+        "tipo": "tierra",
+        "vida": 220,
+        "nivel": 6
+      },
+      "requisitosEntrada": []
+    },
+    {
+      "id": 2,
+      "nombre": "Volcán del Magma",
+      "nivelMin": 6,
+      "nivelMax": 10,
+      "dragones": [
+        { "id": 2, "nombre": "Rocabrava", "nivelMin": 6, "nivelMax": 10 },
+        { "id": 5, "nombre": "Llamafuria", "nivelMin": 6, "nivelMax": 10 },
+        { "id": 8, "nombre": "Centella", "nivelMin": 6, "nivelMax": 10 },
+        { "id": 11, "nombre": "Tsunami", "nivelMin": 6, "nivelMax": 10 },
+        { "id": 14, "nombre": "Nevazon", "nivelMin": 6, "nivelMax": 10 },
+        { "id": 17, "nombre": "Oso Hormiguero", "nivelMin": 6, "nivelMax": 10 }
+      ],
+      "boss": {
+        "id": 2,
+        "nombre": "Señor del Magma",
+        "tipo": "fuego",
+        "vida": 270,
+        "nivel": 10
+      },
+      "requisitosEntrada": [
+        { "nombre": "Derrotar al Guardián de Piedra", "cumplido": false }
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Montaña de Hielo",
+      "nivelMin": 10,
+      "nivelMax": 13,
+      "dragones": [
+        { "id": 3, "nombre": "Golem Verde", "nivelMin": 10, "nivelMax": 13 },
+        { "id": 6, "nombre": "Pyrosombra", "nivelMin": 10, "nivelMax": 13 },
+        { "id": 9, "nombre": "Truenoz", "nivelMin": 10, "nivelMax": 13 },
+        { "id": 12, "nombre": "Maremus", "nivelMin": 10, "nivelMax": 13 },
+        { "id": 15, "nombre": "Yetihelado", "nivelMin": 10, "nivelMax": 13 },
+        { "id": 18, "nombre": "Drakko", "nivelMin": 10, "nivelMax": 13 }
+      ],
+      "boss": {
+        "id": 3,
+        "nombre": "Yeti de Hielo",
+        "tipo": "hielo",
+        "vida": 320,
+        "nivel": 13
+      },
+      "requisitosEntrada": [
+        { "nombre": "Derrotar al Señor del Magma", "cumplido": false }
+      ]
+    }
+  ]
+  

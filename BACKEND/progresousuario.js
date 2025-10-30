@@ -4,7 +4,7 @@ const ruta = "./BACKEND/progreso.json"
 
 function leer() {
     try {
-        return JSON.parse(fs.readFileSync(ruta) || "[]")
+        return JSON.parse(fs.readFileSync(ruta, "utf-8") || "[]")
     } catch {
         fs.writeFileSync(ruta, "[]")
         return []
