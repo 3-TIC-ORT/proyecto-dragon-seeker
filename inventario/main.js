@@ -1,3 +1,4 @@
+connect2Server()
 let dragones = [];
 getEvent("obtenerDragones", {}, (data) => {
   dragones = data;                   // Asignar el JSON a la variable dragones
@@ -34,7 +35,7 @@ function guardarEnLocalStorage(e){
   if (tarjeta) {
     let indice = tarjeta.dataset.index;  // índice del dragón clickeado
     let dragon = dragones[indice];  
-  localStorage.setItem("dragonardo", JSON.stringify(dragon));
+  localStorage.setItem("dragonardo", dragon);
   console.log(dragon)
  }
 }
