@@ -37,8 +37,8 @@ subscribePOSTEvent("enviarnotificacion", data => {
   return enviarnotificacion(idusuario, mensaje)
 })
 
-subscribeGETEvent("obtenernotificaciones", data => {
-  const { idusuario } = data
+subscribeGETEvent("obtenernotificaciones", query => {
+  const { idusuario } = query
   return obtenernotificaciones(idusuario)
 })
 
