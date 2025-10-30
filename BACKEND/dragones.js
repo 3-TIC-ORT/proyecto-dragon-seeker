@@ -3,7 +3,7 @@ import fs from "fs"
 const ruta = "./dragones.json"
 
 function leerdragones () {
-    const texto = fs.readFileSync(ruta)
+    const texto = fs.readFileSync(ruta, "utf-8 ")
     return JSON.parse(texto)
 }
 

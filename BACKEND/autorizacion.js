@@ -3,13 +3,13 @@ import fs from "fs"
 const rutausuarios = "./usuarios.json"
 
 function leerusuarios() {
-    const texto = fs.readFileSync(rutausuarios)
+    const texto = fs.readFileSync(rutausuarios, "utf-8")
     return JSON.parse(texto) 
 }
 
 function guardarusuarios(usuarios) {
     const texto = JSON.stringify(usuarios, null, 2)
-    fs. writeFileSync(rutausuarios, texto)
+    fs.writeFileSync(rutausuarios, texto)
 }
 
 let sesiones = []
