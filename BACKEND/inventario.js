@@ -59,5 +59,14 @@ export function actualizarinventario(idusuario, cambios) {
     return {exito: true, mensaje: "Inventario acualizado correctamente"}
 }
 export function aplicarefectoobjeto(idusuario, objeto, objetivo) {
-    
+    const efectos = {
+        "pocion": {vida: +20},
+        "caramelo": {exp: +50},
+        "cura total": {vida: "max"}
+    }
+    const efecto = efectos[objeto]
+    if (!efecto) {
+        return {exito: false, mensaje: "El objeto no tiene efecto"}
+    }
+    return {exito: true, mensaje: "Efecto aplicado correctamente", efecto: efecto}
 }
