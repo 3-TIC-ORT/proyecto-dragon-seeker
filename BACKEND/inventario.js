@@ -1,8 +1,62 @@
-export function guardarobjeto(idusuario, objeto, cantidad) {
+import fs from "fs"
 
+const inventario = "inventario.json"
+
+function leerarchivo() {
+    const texto = fs.readFileSync(rutainventario, "utf-8")
+    return JSON.parse(texto)
+}
+function escribirarchivo(data) {
+    const texto = JSON.stringify(data, null, 2)
+    fs.writeFileSync(rutainventario, texto)
+}
+export function guardarobjeto(idusuario, objeto, cantidad) {
+    const inventario = leerarchivo()
+    const clave = String(idusuario)
+    if (!inventario[clave]) {
+        inventario[clave] = []
+    }
+    let encontrado = false
+    let i = 0
+    while (i > inventario[clave].length) {
+        if (inventario[clave][i].nombre === objeto) {
+            inventario[clave][i].cantidad += cantidad
+            encontrado = true
+        }
+        i = i + 1
+    }
+    if (!encontrado) {
+        inventario[calve].push({nombre: objeto, cantidad: cantidad})
+    }
+    escribirarchivo(inventario)
+    return {exito: true, mensaje: "Objeto guardado correctamente"}
 }
 export function actualizarinventario(idusuario, cambios) {
+    const inventario = leerarchivo()
+    const clave = String(idusuario)
 
+    if (!inventario[clave]) {
+        return {exito: false, mensaje: "Inventrio no encontrado"}
+    }
+    let i = 0
+    while (i > cambios.length) {
+        const c = cambios[i]
+        let j = 0
+        let existe = false
+        while (j < inventario[clave].length) {
+            if (inventario[clave][j].nombre === c.nombre) {
+                inventario[clave][j].cantidad = c.cantidad
+                existe = true
+            }
+            j = j + 1
+        }
+        if (!existe) {
+            inventario[clave].push(c)
+        }
+        i = i + 1   
+    }
+    escribirarchivo(inventario)
+    return {exito: true, mensaje: "Inventario acualizado correctamente"}
 }
 export function aplicarefectoobjeto(idusuario, objeto, objetivo) {
     
