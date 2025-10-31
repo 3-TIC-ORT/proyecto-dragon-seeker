@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const rutapersonalizacion = "./BACKEND/personalizacion.json"
+const rutapersonalizacion = "./personalizacion.json"
 
 function leerarchivo() {
   const texto = fs.readFileSync(rutapersonalizacion, "utf-8")

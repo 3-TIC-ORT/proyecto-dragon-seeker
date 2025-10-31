@@ -12,8 +12,6 @@ function guardarusuarios(usuarios) {
     fs.writeFileSync(rutausuarios, texto)
 }
 
-let sesiones = []
-
 export function registrarusuario(nombre, correo, contrasena) {
     const usuarios = leerusuarios()
 

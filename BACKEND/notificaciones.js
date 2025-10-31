@@ -22,7 +22,7 @@ export function enviarnotificacion(idusuario, mensaje, tipo) {
         notificaciones[idusuario] = []
     }
 
-    notificaciones[idusuario].push(mensaje)
+    notificaciones[idusuario].push({ mensaje, tipo, fecha: new Date().toISOString() })
 
     escribirarchivo(notificaciones)
     return {exito: true, mensaje: "Notificacion enviada"}
@@ -31,5 +31,6 @@ export function enviarnotificacion(idusuario, mensaje, tipo) {
 export function obtenernotificaciones(idusuario, filtro) {
     const notificaciones = leerarchivo()
     const lista = notificaciones[idusuario] || []
+    if (filtro) lista = lista.filter(n => n.tipo === filtro)
     return {exito: true, notificaciones: lista}
 }

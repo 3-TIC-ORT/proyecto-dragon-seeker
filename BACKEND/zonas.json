@@ -14,7 +14,7 @@
       ],
       "boss": {
         "id": 1,
-        "nombre": "Guardián de Piedra",
+        "nombre": "Guardian de Piedra",
         "tipo": "tierra",
         "vida": 220,
         "nivel": 6
@@ -23,7 +23,7 @@
     },
     {
       "id": 2,
-      "nombre": "Volcán del Magma",
+      "nombre": "Volcan del Magma",
       "nivelMin": 6,
       "nivelMax": 10,
       "dragones": [

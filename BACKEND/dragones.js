@@ -3,7 +3,7 @@ import fs from "fs"
 const ruta = "./dragones.json"
 
 function leerdragones () {
-    const texto = fs.readFileSync(ruta, "utf-8 ")
+    const texto = fs.readFileSync(ruta, "utf-8")
     return JSON.parse(texto)
 }
 
@@ -19,7 +19,7 @@ export function enviardatosdragon(iddragon, idusuario) {
     const data = leerdragones()
     const dragon = data.dragones.find(d => d.id === iddragon)
     if (!dragon) {
-        return {exito: false, mensaje: "No se econtro el dragon pedido."}
+        return {exito: false, mensaje: "No se encontro el dragon pedido."}
     }
     return {exito: true, dragon}
 }
