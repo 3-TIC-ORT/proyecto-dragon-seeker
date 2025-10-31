@@ -6,6 +6,7 @@ import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarest
 import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
 import { determinartipodragon, enviardatosdragon, iniciarbatalledragon } from "./dragones.js"
 import { obtenerlistadragones } from "./dragones.js"
+import { objeto, obtenerdatosobjeto } from "./items.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
@@ -37,8 +38,8 @@ subscribePOSTEvent("enviarnotificacion", data => {
   return enviarnotificacion(idusuario, mensaje)
 })
 
-subscribeGETEvent("obtenernotificaciones", data => {
-  const { idusuario } = data
+subscribeGETEvent("obtenernotificaciones", query => {
+  const { idusuario } = query
   return obtenernotificaciones(idusuario)
 })
 
@@ -100,5 +101,15 @@ subscribeGETEvent("obtenerDragones", () => {
   return obtenerlistadragones()
 })
 
+subscribePOSTEvent("crearObjeto", data => {
+  const { nombre, tipo, efectos, rareza } = data
+  return objeto(nombre, tipo, efectos, rareza)
+})
+
+subscribeGETEvent("obtenerObjeto", query => {
+  const { idobjeto } = query
+  return obtenerdatosobjeto(Number(idobjeto))
+})
+
 console.log("Servidor iniciado")
-startServer(3000)
+startServer(8080)

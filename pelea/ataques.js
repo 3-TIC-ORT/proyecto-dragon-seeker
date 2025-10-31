@@ -12,10 +12,10 @@ let gifAmarillo = document.getElementById ("AtaqueAmarillo")
 let imagenchimuelo = document.getElementById("chimuelo")
 let gifChimuelo = document.getElementById("AtaqueChimuelo")
 
-let dragontrucho = JSON.parse(localStorage.getItem("datotrucho"));
-console.log (dragontrucho)
+let dragon = JSON.parse(localStorage.getItem("dragonardo"));
+console.log (dragon)
 
-barravidaUsuario.innerHTML = dragontrucho.viddaChimuelo
+barravidaUsuario.innerHTML = dragon.vida
 barravidaEnemigo.innerHTML = 100
 
 let chimuelo = {

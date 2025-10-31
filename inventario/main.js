@@ -1,38 +1,43 @@
-/*
-    Cargar comidas en memoria desde el JSON
-*/
-getEvent("infoDragones", { nombre, tipo, nivel, vida, fuerza, especial, mapa }, (dragon) => {
-  //  dragones = data;                   // Asignar el JSON a la variable comidas
-  //  mostrarDragones()
+connect2Server()
+let dragones = [];
+getEvent("obtenerDragones", {}, (data) => {
+  dragones = data;                   // Asignar el JSON a la variable dragones
+  mostrarDragones()
 })
 
-//let dragones = [];
-//const container = document.getElementById('dragonContainer');
+const containerDragon = document.getElementById('dragonContainer');
 
-//function mostrarDragones(){
- // dragones.forEach(dragon=> {
- //   container.innerHTML += `
- //     <div class = "tarjeta">
-  //    <h4>${dragon.nombre}</h4>
-  //    <p>${dragon.tipo}</p>
-  //    <p>${dragon.nivel}</p>
-   //   <p>${dragon.vida}</p>
-   //   <p>${dragon.fuerza}</p>
-   //   <p>${dragon.especial}</p>
-   //   <p>${dragon.mapa}</p>
-   //   </div>
-   // `})}
-let botontrucho = document.getElementById("botontrucho");
-  let dragontrucho = {
-    nombre: 'chimuelo',
-    viddaChimuelo: 200,
-    strength: 10,
-    defense: 9,
-    speed: 6,
-  }
-function guardarEnLocalStorage (){
-  localStorage.setItem("datotrucho", JSON.stringify(dragontrucho));
-  console.log(dragontrucho)
+function mostrarDragones() {
+containerDragon.innerHTML = ""; // Limpia antes de agregar
+for (let i = 0; i < dragones.length; i++) {
+  let dragon = dragones[i];
+  let tarjeta = document.createElement("div");
+  tarjeta.classList.add("tarjeta");
+  tarjeta.dataset.index = i;
+    if (dragon.especial === true) {
+      tarjeta.classList.add("dragonEspecial");
+    } else {
+      tarjeta.classList.add("dragonNormal");
+    }
+  tarjeta.innerHTML = `
+    <h4>${dragon.nombre}</h4>
+    <p>Tipo: ${dragon.tipo}</p>
+    <p>Nivel: ${dragon.nivel}</p>
+    <p>Vida: ${dragon.vida}</p>
+    <p>Fuerza: ${dragon.fuerza}</p>
+    <p>Mapa: ${dragon.mapa}</p>
+    `;
+    containerDragon.appendChild(tarjeta);
+  };
+ }
+function guardarEnLocalStorage(e){
+  let tarjeta = e.target.closest(".tarjeta");
+  if (tarjeta) {
+    let indice = tarjeta.dataset.index;  // índice del dragón clickeado
+    let dragon = dragones[indice];  
+  localStorage.setItem("dragonardo", dragon);
+  console.log(dragon)
+ }
 }
 
-botontrucho.addEventListener('click', guardarEnLocalStorage);
+containerDragon.addEventListener('click', guardarEnLocalStorage);

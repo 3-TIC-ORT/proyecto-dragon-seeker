@@ -1,22 +1,23 @@
 import fs from "fs"
 
-const rutausuarios = "./BACKEND/usuarios.json"
+const rutapersonalizacion = "./BACKEND/personalizacion.json"
 
 function leerarchivo() {
-  const texto = fs.readFileSync(rutausuario)
+  const texto = fs.readFileSync(rutapersonalizacion, "utf-8")
   return JSON.parse(texto)
 }
 
 function escribirarchivo(usuarios) {
   const texto = JSON.stringify(usuarios, null, 2)
-  fs.writeFileSync(rutausuarios, texto)
+  fs.writeFileSync(rutapersonalizacion, texto)
 }
 
 export function guardarpersonalizacion(idusuario, ropa, accesorios, colorpiel, colorojos, colorpelo) {
   const usuarios = leerarchivo()
+  const clave = String(idusuario)
 
-  if (!usuarios[idusuario]) {
-    usuarios[idusuario] = {
+  if (!usuarios[clave]) {
+    usuarios[clave] = {
       ropa: "default",
       accesorios: "default",
       colorpiel: "default",
@@ -26,40 +27,41 @@ export function guardarpersonalizacion(idusuario, ropa, accesorios, colorpiel, c
     }
   }
 
-  usuarios[idusuario].ropa = ropa
-  usuarios[idusuario].accesorios = accesorios
-  usuarios[idusuario].colorojos = colorojos
-  usuarios[idusuario].colorpelo = colorpelo
-  usuarios[idusuario].colorpiel = colorpiel
+  usuarios[clave].ropa = ropa
+  usuarios[clave].accesorios = accesorios
+  usuarios[clave].colorojos = colorojos
+  usuarios[clave].colorpelo = colorpelo
+  usuarios[clave].colorpiel = colorpiel
 
   escribirarchivo(usuarios)
-
   return { exito: true, mensaje: "Personalizacion guardada con exito" }
 }
 
 export function cargarpersonalizacion(idusuario) {
   const usuarios = leerarchivo()
+  const clave = String(idusuario)
 
-  if (!usuarios[idusuario]) {
+  if (!usuarios[clave]) {
     return { exito: false, mensaje: "Usuario no encontrado" }
   }
 
-  return { exito: true, personalizacion: usuarios[idusuario] }
+  return { exito: true, personalizacion: usuarios[clave] }
 }
 
 export function validaropcionesdesbloqueadas(idusuario, tipoopcion, idopcion) {
   const usuarios = leerarchivo()
+  const clave = String(idusuario)
 
-  if (!usuarios[idusuario]) {
+  if (!usuarios[clave]) {
     return { exito: false, mensaje: "Usuario no encontrado" }
   }
 
   let i = 0
   let desbloqueada = false
-  const clave = tipoopcion + "-" + idopcion
+  const claveopcion = tipoopcion + "-" + idopcion
 
-  while (i < usuarios[idusuario].opcionesdesbloqueadas.length) {
-    if (usuarios[idusuario].opcionesdesbloqueadas[i] === clave) {
+  while (i < usuarios[clave].opcionesdesbloqueadas.length) {
+    if (usuarios[clave].opcionesdesbloqueadas[i] === claveopcion) {
       desbloqueada = true
     }
     i = i + 1
