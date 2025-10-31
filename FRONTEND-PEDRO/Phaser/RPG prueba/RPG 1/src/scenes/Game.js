@@ -41,9 +41,9 @@ export class Game extends Phaser.Scene {
         this.dragon.setCollideWorldBounds(true);
 
         //colliders
-        
         obstaculos.setCollisionByExclusion([-1]);
         casa.setCollisionByExclusion([-1]);
+        corral_dragones.setCollisionByExclusion([-1]);
             
             //colliders con el player
             this.physics.add.collider(this.player, obstaculos);
@@ -63,7 +63,7 @@ export class Game extends Phaser.Scene {
         //movimiento
         this.cursors = this.input.keyboard.createCursorKeys();
        
-         //camara
+        //camara
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
        
@@ -82,9 +82,12 @@ export class Game extends Phaser.Scene {
         /*this.physics.add.overlap(this.player, this.dragon, () => {
             //cambio de escena
         });*/
+        this.dragon = this.physics.add.group ({
+            key: 'dragon',
+            repeat: 5,
+            setXY: {x: 960, y: 192, stepX: 30, stepY: 30}
+         });
     }
-
-
     update() {
         
         if((this.cursors.left.isDown) || (this.cursors.right.isDown) || (this.cursors.up.isDown) || (this.cursors.down.isDown)){

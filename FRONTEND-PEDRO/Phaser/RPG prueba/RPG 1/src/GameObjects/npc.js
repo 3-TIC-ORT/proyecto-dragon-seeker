@@ -78,4 +78,5 @@ export class NPC extends Phaser.Physics.Arcade.Sprite{
           this.currentStep = (this.currentStep + 1) % this.patrolSteps.length;
         }
       }
+
 }
