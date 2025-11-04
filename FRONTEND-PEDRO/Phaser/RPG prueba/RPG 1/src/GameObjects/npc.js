@@ -1,83 +1,71 @@
-export class NPC extends Phaser.Physics.Arcade.Sprite{
-    constructor(scene, x, y, ){
-        super(scene, x, y, 'dragon');
-        
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
-    
-        this.speed = 50;
-    
-        // Definimos la secuencia de movimiento
-        this.patrolSteps = [
-          { dx: -1, dy: 0, time: 2000 },  // derecha
-          { dx: 0, dy: 0, time: 1000 },  // pausa
-          { dx: 0, dy: -1, time: 2000 }, // arriba
-          { dx: 0, dy: 0, time: 1000 },  // pausa
-          { dx: 1, dy: 0, time: 1000 }, // izquierda
-          { dx: 0, dy: 0, time: 1000 },  // pausa
-          { dx: 0, dy: 1, time: 1000 },  // abajo
-          { dx: 0, dy: 0, time: 1000 },
-          { dx: 1, dy: 0, time: 1000 },
-          { dx: 0, dy: -1, time: 1000 },
-          { dx: 1, dy: 0, time: 2000 },
-          { dx: 0, dy: 0, time: 1000},
-          { dx: 0, dy: 1, time: 2000 }
-        ];
-    
-        this.currentStep = 0;
-        this.timeElapsed = 0;
-        
-        this.initanimations()
-      }
+export class NPC extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene, x, y) {
+    super(scene, x, y, "dragon");
 
-      initanimations(){
-          
-          this.anims.create({
-            key: 'npc-left',
-            frames: this.anims.generateFrameNumbers('dragon', { start: 0, end: 3 }),
-            frameRate: 8,
-            repeat: -1
-          });
-      }
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
 
-      preUpdate(t, dt) {
-        super.preUpdate(t, dt);
-    
-        this.timeElapsed += dt;
-        const step = this.patrolSteps[this.currentStep];
-    
-        // Movimiento
-        this.setVelocity(step.dx * this.speed, step.dy * this.speed);
-    
-        // --- Animaciones según dirección ---
-        if (step.dx === 0 && step.dy === 0) {
-          // Pausa → quieto
-          this.anims.stop();
-        } 
-          
-          else if (step.dx > 0) {
-          this.setFlipX(true);
-          this.anims.play('npc-left', true);
-          } 
-          
-            else if (step.dx < 0) {  
-            this.setFlipX(false);
-            this.anims.play('npc-left', true);
-          } 
-          
-          else if (step.dy > 0) {
-          
-          } 
-          
-          else if (step.dy < this.maxX) {
-          
-          }
-    
-        // Cambiar de paso cuando se cumple el tiempo
-        if (this.timeElapsed >= step.time) {
-          this.timeElapsed = 0;
-          this.currentStep = (this.currentStep + 1) % this.patrolSteps.length;
-        }
-      }
+    this.speed = 50;
+    this.direction = new Phaser.Math.Vector2(1, 0); // comienza yendo a la derecha
+    this.setCollideWorldBounds(true); // no sale del mapa
+    this.body.setBounce(1, 1); // rebota automáticamente
 
+    // cada dragón tiene un temporizador para cambiar de dirección
+    this.changeDirEvent = scene.time.addEvent({
+      delay: 2000, // cada 2 segundos
+      callback: this.updatePatrol,
+      callbackScope: this,
+      loop: true,
+    });
+
+    this.currentStep = 0;
+    this.timeElapsed = 0;
+
+    this.initanimations();
+  }
+
+  initanimations() {
+    this.anims.create({
+      key: "dragon-left",
+      frames: this.anims.generateFrameNumbers("dragon", { start: 0, end: 3 }),
+      frameRate: 8,
+      repeat: -1,
+    });
+  }
+
+  preUpdate(t, dt) {
+    super.preUpdate(t, dt);
+
+    // Movimiento
+    this.setVelocity(
+      this.direction.dx * this.speed,
+      this.direction.dy * this.speed
+    );
+
+    // --- Animaciones según dirección ---
+    if (this.direction.dx === 0 && this.direction.dy === 0) {
+      // Pausa → quieto
+      this.anims.stop();
+    } else if (this.direction.dx > 0) {
+      this.setFlipX(true);
+      this.anims.play("npc-left", true);
+    } else if (this.direction.dx < 0) {
+      this.setFlipX(false);
+      this.anims.play("npc-left", true);
+    }
+  }
+  // cambio de dirección aleatorio
+  updatePatrol() {
+    // 2% de probabilidad por frame de cambiar dirección (da efecto aleatorio)
+    if (Phaser.Math.Between(0, 100) < 2) {
+      const dirs = [
+        new Phaser.Math.Vector2(1, 0), // derecha
+        new Phaser.Math.Vector2(-1, 0), // izquierda
+        new Phaser.Math.Vector2(0, 1), // abajo
+        new Phaser.Math.Vector2(0, -1), // arriba
+        new Phaser.Math.Vector2(0, 0),
+      ];
+      this.direction = Phaser.Utils.Array.GetRandom(dirs);
+    }
+  }
 }

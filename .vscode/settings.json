@@ -1,4 +1,6 @@
 {
     "liveServer.settings.port": 5500,
-    "liveServer.settings.ignoreFiles": [ "**/*.json"]
+    "liveServer.settings.ignoreFiles": [ "**/*.json"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
 }
