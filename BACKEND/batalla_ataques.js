@@ -1,7 +1,7 @@
 const ATAQUES_POR_TIPO = {
     normal: [
         {nombre: "Arañazo", daño: 10, nivel: 1},
-        {nombre: "Patado", daño: 10, nivel: 1},
+        {nombre: "Patada", daño: 10, nivel: 1},
         {nombre: "Puñetazo", daño: 10, nivel: 1}
     ],
     tierra: [
@@ -16,7 +16,7 @@ const ATAQUES_POR_TIPO = {
     ],
     electrico: [
         {nombre: "Chispa", daño: 8, nivel: 1},
-        {nombre: "Tormeta electrica", daño: 13, nivel: 5},
+        {nombre: "Tormenta electrica", daño: 13, nivel: 5},
         {nombre: "Onda trueno", daño: 18, nivel: 13}
     ],
     hielo: [

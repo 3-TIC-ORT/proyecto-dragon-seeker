@@ -30,7 +30,7 @@ export function obtenerdatosobjeto(idobjeto) {
     const item = items.find(i => i.id === idobjeto)
 
     if (!item) {
-        return {exito: fals, mensaje: "Objeto no encontrado"}
+        return {exito: false, mensaje: "Objeto no encontrado"}
     }
     return {exito: true, objeto: item}
 }

@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const rutazonas = "zonas.json"
+const rutazonas = "./zonas.json"
 
 function leerzonas() {
     const texto = fs.readFileSync(rutazonas, "utf-8")
@@ -38,9 +38,9 @@ export function determinarapariciondragones(idzona, nivelusuario) {
     const dragones = zona.dragones || []
     const posibles = dragones.filter(d => nivelusuario >= d.nivelMin && nivelusuario <= d.nivelMax)
     if (posibles.length === 0) {
-        return {exito: false, mensaje: "Dragones disponibles encontrados", dragones: posibles}
+        return {exito: false, mensaje: "No se encontraron dragones disponibles", dragones: posibles}
     }
-
+    return { exito: true, dragones: posibles }
 }
 export function controlarcondicionesentrada(idusuario, idzona, requisitos) {
     const zonas = leerzonas()

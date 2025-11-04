@@ -4,8 +4,7 @@ import { guardarpersonalizacion, cargarpersonalizacion, validaropcionesdesbloque
 import { enviarnotificacion, obtenernotificaciones } from "./notificaciones.js"
 import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas } from "./progresousuario.js"
 import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
-import { determinartipodragon, enviardatosdragon, iniciarbatalledragon } from "./dragones.js"
-import { obtenerlistadragones } from "./dragones.js"
+import { determinartipodragon, enviardatosdragon, iniciarbatalledragon, obtenerlistadragones } from "./dragones.js"
 import { objeto, obtenerdatosobjeto } from "./items.js"
 
 subscribePOSTEvent("registrarusuario", data => {
@@ -112,4 +111,4 @@ subscribeGETEvent("obtenerObjeto", query => {
 })
 
 console.log("Servidor iniciado")
-startServer(8080)
+startServer()

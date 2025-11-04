@@ -18,13 +18,10 @@ console.log (dragon)
 barravidaUsuario.innerHTML = dragon.vida
 barravidaEnemigo.innerHTML = 100
 
-let chimuelo = {
-    name: 'chimuelo',
-    viddaChimuelo: 100,
-    strength: 10,
-    defense: 9,
-    speed: 6,
-  };
+ataque1.innerText = dragon.ataques[0]?.nombre || "Sin ataque";
+ataque2.innerText = dragon.ataques[1]?.nombre || "Sin ataque";
+ataque3.innerText = dragon.ataques[2]?.nombre || "Sin ataque";
+ataque4.innerText = dragon.ataques[3]?.nombre || "Sin ataque";
 let amarillo = {
     name: 'amarillo',
     vidaAmarillo: 100,
@@ -32,21 +29,24 @@ let amarillo = {
     defense: 7,
     speed: 7,
   };
-  function ataquechimuelo (){
+  function ataqueUsuario (i){
+    let ataque = dragon.ataques[i]; 
+    if (!ataque) return;
     gifChimuelo.style.display = "block";
     imagenchimuelo.style.display = "none";
-    amarillo.vidaAmarillo -= 30;
+    let daño = ataque.daño + dragon.fuerza;
+    amarillo.vidaAmarillo -= daño;
     console.log(amarillo);
-    barravidaAmarillo.innerText -= 30;
+    barravidaEnemigo.innerText -= amarillo.vidaAmarillo;
     terminarTurno()
   }
   function ataqueEnemigo (){
     setTimeout(() => {
     gifAmarillo.style.display = "block";
     imagenamarillo.style.display = "none";
-    chimuelo.viddaChimuelo -= 20;
-    console.log(chimuelo);
-    barravidaChimuelo.innerText -= 20;
+    dragon.vida -= 20;
+    console.log(dragon);
+    barravidaUsuario.innerText -= 20;
     terminarTurno2()
     }, 2000);
   }
@@ -71,11 +71,28 @@ let amarillo = {
       bloquearboton()
     }
     console.log ("termino el ataque enemigo")
-  }
-  BotonAdopcion.addEventListener ('click', function(e){
+  
+  if (dragon.vida === 0 || amarillo.vidaAmarillo === 0) {
+    console.log("termino la pelea")
+    [ataque1, ataque2, ataque3, ataque4].disabled = true;
+    if (dragon.vida === 0 && amarillo.vidaAmarillo >= 0){
+      alert("game over fraca, perdiste")
+      postEvent("actualizarVida", { vida }, () => {
+    })}
+    else if (dragon.vida >= 0 && amarillo.vidaAmarillo === 0){
+      alert("ganaste brooo")
+      postEvent("sumarexperiencia", {iddragon, cantidad, idusuario}, (data) {
+      
+    })
+    }
+    window.location.href = '.RPG 1/index.html';
+  }}
+  BotonAdopcion.addEventListener ('click', () =>{
   if (amarillo.vidaAmarillo >= 30) {
-    e.preventDefault();
+    BotonAdopcion.disabled = true;
   }})
   
-  
-  ataque1.addEventListener('click', ataquechimuelo);
+  ataque1.addEventListener('click', () => ataqueUsuario(0));
+  ataque2.addEventListener('click', () => ataqueUsuario(1));
+  ataque3.addEventListener('click', () => ataqueUsuario(2));
+  ataque4.addEventListener('click', () => ataqueUsuario(3));

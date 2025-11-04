@@ -1,6 +1,6 @@
 import fs from "fs"
 
-let logros = "./BACKEND/logros.json"
+let logros = "./logros.json"
 
 function leer12() {
     const texto = fs.readFileSync(logros, "utf-8")
@@ -25,7 +25,7 @@ export function registrardragoncapturado(idusuario, iddragon, fecha) {
     return {exito: true, mensaje: "Dragon registrado de manera exitosa"}
 }
 export function guardarestadisticasdragon(idusuario, iddragon) {
-    const logros = leer12()
+    const lista = leer12()
 
     const logro = logros.find(
         logro => logro.idusuario === idusuario && logro.iddragon ===  iddragon
