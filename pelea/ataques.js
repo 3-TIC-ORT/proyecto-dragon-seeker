@@ -71,13 +71,28 @@ let amarillo = {
       bloquearboton()
     }
     console.log ("termino el ataque enemigo")
-  }
-  BotonAdopcion.addEventListener ('click', function(e){
+  
+  if (dragon.vida === 0 || amarillo.vidaAmarillo === 0) {
+    console.log("termino la pelea")
+    [ataque1, ataque2, ataque3, ataque4].disabled = true;
+    if (dragon.vida === 0 && amarillo.vidaAmarillo >= 0){
+      alert("game over fraca, perdiste")
+      postEvent("actualizarVida", { vida }, () => {
+    })}
+    else if (dragon.vida >= 0 && amarillo.vidaAmarillo === 0){
+      alert("ganaste brooo")
+      postEvent("sumarexperiencia", {iddragon, cantidad, idusuario}, (data) {
+      
+    })
+    }
+    window.location.href = '.RPG 1/index.html';
+  }}
+  BotonAdopcion.addEventListener ('click', () =>{
   if (amarillo.vidaAmarillo >= 30) {
-    e.preventDefault();
+    BotonAdopcion.disabled = true;
   }})
   
-  ataque1.addEventListener('click', ataqueUsuario(0));
-  ataque2.addEventListener('click', ataqueUsuario(1));
-  ataque3.addEventListener('click', ataqueUsuario(2));
-  ataque4.addEventListener('click', ataqueUsuario(3));
+  ataque1.addEventListener('click', () => ataqueUsuario(0));
+  ataque2.addEventListener('click', () => ataqueUsuario(1));
+  ataque3.addEventListener('click', () => ataqueUsuario(2));
+  ataque4.addEventListener('click', () => ataqueUsuario(3));
