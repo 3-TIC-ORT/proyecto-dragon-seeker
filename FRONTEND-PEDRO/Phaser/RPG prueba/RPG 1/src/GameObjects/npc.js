@@ -71,8 +71,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
 
   // cambio de dirección aleatorio
   updatePatrol() {
-    // 2% de probabilidad por frame de cambiar dirección (da efecto aleatorio)
-
     const dirs = [
       new Phaser.Math.Vector2(1, 0), // derecha
       new Phaser.Math.Vector2(-1, 0), // izquierda
