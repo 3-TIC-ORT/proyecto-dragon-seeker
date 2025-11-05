@@ -7,8 +7,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
 
     this.speed = 50;
     this.direction = new Phaser.Math.Vector2(1, 0); // comienza yendo a la derecha
-    //this.setCollideWorldBounds(true); // no sale del mapa
-    //this.body.setBounce(1, 1); // rebota automáticamente
 
     // cada dragón tiene un temporizador para cambiar de dirección
     this.changeDirEvent = scene.time.addEvent({
@@ -18,8 +16,10 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       loop: true,
     });
 
-    this.currentStep = 0;
-    this.timeElapsed = 0;
+    this.setVelocity(
+      this.direction.x * this.speed,
+      this.direction.y * this.speed
+    );
 
     this.initanimations();
   }
@@ -54,6 +54,21 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       this.anims.play("dragon-left", true);
     }
   }
+
+  update() {
+    // Si choca con los bordes del mundo o con algo sólido:
+    if (this.body.blocked.left || this.body.blocked.right) {
+      this.direction.x *= -1;
+      this.setVelocityX(this.direction.x * this.speed);
+      this.flipX = this.direction.x < 0;
+    }
+
+    if (this.body.blocked.up || this.body.blocked.down) {
+      this.direction.y *= -1;
+      this.setVelocityY(this.direction.y * this.speed);
+    }
+  }
+
   // cambio de dirección aleatorio
   updatePatrol() {
     // 2% de probabilidad por frame de cambiar dirección (da efecto aleatorio)
@@ -63,7 +78,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       new Phaser.Math.Vector2(-1, 0), // izquierda
       new Phaser.Math.Vector2(0, 1), // abajo
       new Phaser.Math.Vector2(0, -1), // arriba
-      new Phaser.Math.Vector2(0, 0),
+      new Phaser.Math.Vector2(0, 0), // quieto
     ];
     this.direction = Phaser.Utils.Array.GetRandom(dirs);
   }

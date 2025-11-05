@@ -48,6 +48,8 @@ export class Game extends Phaser.Scene {
       const y = Phaser.Math.Between(32, 352);
       const dragon = new NPC(this, x, y);
       this.dragons.add(dragon);
+
+      dragon.setBounce(1, 1).setCollideWorldBounds(true);
     }
 
     //colliders
@@ -62,23 +64,12 @@ export class Game extends Phaser.Scene {
 
     //colliders con el dragon
     this.physics.add.collider(this.dragons, obstaculos);
-    this.physics.add.collider(this.dragons, corral_dragones, (dragon, tile) => {
-      // reacción al chocar: invertir direccion (ejemplo)
-      if (dragon.body.blocked.left || dragon.body.blocked.right) {
-        dragon.direction.x *= -1;
-        dragon.setVelocityX(dragon.direction.x * dragon.speed);
-        dragon.flipX = dragon.direction.x < 0;
-      }
-      if (dragon.body.blocked.up || dragon.body.blocked.down) {
-        dragon.direction.y *= -1;
-        dragon.setVelocityY(dragon.direction.y * dragon.speed);
-      }
-    });
-
+    this.physics.add.collider(this.dragons, corral_dragones);
+    this.physics.add.collider(this.dragons, casa);
+    this.physics.add.collider(this.dragons, this.dragons);
     //worldbounds
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.player.setBounce(0).setCollideWorldBounds(true);
-    this.player.setBounce(1, 1).setCollideWorldBounds(true);
 
     //movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -125,5 +116,10 @@ export class Game extends Phaser.Scene {
     } else {
       this.player.idle();
     }
+
+    // actualizamos cada dragón
+    this.dragons.children.iterate((dragon) => {
+      dragon.update();
+    });
   }
 }
