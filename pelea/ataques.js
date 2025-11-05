@@ -37,7 +37,7 @@ let amarillo = {
     let daño = ataque.daño + dragon.fuerza;
     amarillo.vidaAmarillo -= daño;
     console.log(amarillo);
-    barravidaEnemigo.innerText -= amarillo.vidaAmarillo;
+    barravidaEnemigo.innerText = amarillo.vidaAmarillo;
     terminarTurno()
   }
   function ataqueEnemigo (){
@@ -46,7 +46,7 @@ let amarillo = {
     imagenamarillo.style.display = "none";
     dragon.vida -= 20;
     console.log(dragon);
-    barravidaUsuario.innerText -= 20;
+    barravidaUsuario.innerText = dragon.vida;
     terminarTurno2()
     }, 2000);
   }
@@ -81,12 +81,12 @@ let amarillo = {
     })}
     else if (dragon.vida >= 0 && amarillo.vidaAmarillo === 0){
       alert("ganaste brooo")
-      postEvent("sumarexperiencia", {iddragon, cantidad, idusuario}, (data) {
+      //postEvent("sumarexperiencia", {iddragon, cantidad, idusuario}, (data) {
       
-    })
+    }//)
     }
-    window.location.href = '.RPG 1/index.html';
-  }}
+    //window.location.href = '.RPG 1/index.html';
+  }//}
   BotonAdopcion.addEventListener ('click', () =>{
   if (amarillo.vidaAmarillo >= 30) {
     BotonAdopcion.disabled = true;

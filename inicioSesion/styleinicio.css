@@ -1,0 +1,101 @@
+body {
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: bold;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 90%;
+  max-width: 1000px;
+}
+
+.contenedor {
+  position: relative;
+  width: 100%;
+}
+
+.contenedor img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  width: 80%;
+  height: 60%;
+  border: none;
+  font-size: 3.6rem;
+  text-align: left;
+  color: #333;
+  z-index: 1;
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: bold;
+}
+
+.input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.input:focus {
+  outline: none;
+}
+
+/* Botón dentro de la imagen */
+button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  width: 80%;
+  height: 60%;
+  border: none;
+  font-size: 3.7rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  z-index: 1;
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: bold;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#mensaje {
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
+.mensaje {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 3.6rem;
+}
+
+.mensaje a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.mensaje a:hover {
+  text-decoration: underline;
+}

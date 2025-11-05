@@ -4,5 +4,11 @@
     "nombre": "zeide",
     "correo": "zeide@gmail.com",
     "contrasena": "1234"
+  },
+  {
+    "id": 2,
+    "nombre": "pedro",
+    "correo": "pedrogoAT",
+    "contrasena": "laviejadeliquiestadetonable"
   }
 ]
