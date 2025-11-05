@@ -7,8 +7,8 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
 
     this.speed = 50;
     this.direction = new Phaser.Math.Vector2(1, 0); // comienza yendo a la derecha
-    this.setCollideWorldBounds(true); // no sale del mapa
-    this.body.setBounce(1, 1); // rebota automáticamente
+    //this.setCollideWorldBounds(true); // no sale del mapa
+    //this.body.setBounce(1, 1); // rebota automáticamente
 
     // cada dragón tiene un temporizador para cambiar de dirección
     this.changeDirEvent = scene.time.addEvent({
@@ -38,34 +38,33 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
 
     // Movimiento
     this.setVelocity(
-      this.direction.dx * this.speed,
-      this.direction.dy * this.speed
+      this.direction.x * this.speed,
+      this.direction.y * this.speed
     );
 
     // --- Animaciones según dirección ---
-    if (this.direction.dx === 0 && this.direction.dy === 0) {
+    if (this.direction.x === 0 && this.direction.y === 0) {
       // Pausa → quieto
       this.anims.stop();
-    } else if (this.direction.dx > 0) {
+    } else if (this.direction.x > 0) {
       this.setFlipX(true);
-      this.anims.play("npc-left", true);
-    } else if (this.direction.dx < 0) {
+      this.anims.play("dragon-left", true);
+    } else if (this.direction.x < 0) {
       this.setFlipX(false);
-      this.anims.play("npc-left", true);
+      this.anims.play("dragon-left", true);
     }
   }
   // cambio de dirección aleatorio
   updatePatrol() {
     // 2% de probabilidad por frame de cambiar dirección (da efecto aleatorio)
-    if (Phaser.Math.Between(0, 100) < 2) {
-      const dirs = [
-        new Phaser.Math.Vector2(1, 0), // derecha
-        new Phaser.Math.Vector2(-1, 0), // izquierda
-        new Phaser.Math.Vector2(0, 1), // abajo
-        new Phaser.Math.Vector2(0, -1), // arriba
-        new Phaser.Math.Vector2(0, 0),
-      ];
-      this.direction = Phaser.Utils.Array.GetRandom(dirs);
-    }
+
+    const dirs = [
+      new Phaser.Math.Vector2(1, 0), // derecha
+      new Phaser.Math.Vector2(-1, 0), // izquierda
+      new Phaser.Math.Vector2(0, 1), // abajo
+      new Phaser.Math.Vector2(0, -1), // arriba
+      new Phaser.Math.Vector2(0, 0),
+    ];
+    this.direction = Phaser.Utils.Array.GetRandom(dirs);
   }
 }

@@ -46,7 +46,7 @@ export class Game extends Phaser.Scene {
     for (let i = 0; i < 3; i++) {
       const x = Phaser.Math.Between(1024, 1472);
       const y = Phaser.Math.Between(32, 352);
-      const dragon = new NPC(this, 960, 192);
+      const dragon = new NPC(this, x, y);
       this.dragons.add(dragon);
     }
 
@@ -58,10 +58,10 @@ export class Game extends Phaser.Scene {
     //colliders con el player
     this.physics.add.collider(this.player, obstaculos);
     this.physics.add.collider(this.player, casa);
-    this.physics.add.collider(this.player, this.dragon);
+    this.physics.add.collider(this.player, this.dragons);
 
     //colliders con el dragon
-    this.physics.add.collider(this.dragon, obstaculos);
+    this.physics.add.collider(this.dragons, obstaculos);
     this.physics.add.collider(this.dragons, corral_dragones, (dragon, tile) => {
       // reacción al chocar: invertir direccion (ejemplo)
       if (dragon.body.blocked.left || dragon.body.blocked.right) {
@@ -78,6 +78,7 @@ export class Game extends Phaser.Scene {
     //worldbounds
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.player.setBounce(0).setCollideWorldBounds(true);
+    this.player.setBounce(1, 1).setCollideWorldBounds(true);
 
     //movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
