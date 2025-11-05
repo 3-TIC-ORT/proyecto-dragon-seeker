@@ -6,6 +6,7 @@ import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarest
 import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
 import { determinartipodragon, enviardatosdragon, iniciarbatalledragon, obtenerlistadragones } from "./dragones.js"
 import { objeto, obtenerdatosobjeto } from "./items.js"
+import { registrarbatalla, actualizarvida, obtenervid } from "./batalla_vida.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
