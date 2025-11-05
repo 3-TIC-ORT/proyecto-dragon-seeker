@@ -9,16 +9,20 @@
   <script src="https://cdn.jsdelivr.net/gh/JZylber/SoqueTIC-Client@v1.4.2/soquetic-client.js"></script>
 </head>
 <body>
-  <div class="form-container">
-    <h2>Iniciar sesión</h2>
+  <div>
     <form id="formLogin">
-      <label for="correo">Correo electrónico</label>
-      <input type="usuario" id="usuario" name="usuario" required>
-
-      <label for="contrasena">Contraseña</label>
-      <input type="password" id="contraseña" name="contraseña" required>
-
+    <div class="contenedor"> 
+      <img src="../imagenes/Frame 166.png" alt="">
+      <input type="text" class="input" id="usuario" placeholder="Usuario"name="usuario" required>
+    </div>
+    <div class="contenedor">
+      <img src="../imagenes/Frame 166.png" alt="">
+      <input type="password" class="input" id="contraseña" placeholder="Contraseña"name="contraseña" required>
+    </div>
+    <div class="contenedor">
+      <img src="../imagenes/Frame 237 (1).png" alt="">
       <button id="botonIngresar" type="submit">Ingresar</button>
+    </div>
     </form>
 
     <p id="mensaje"></p>
