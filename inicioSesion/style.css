@@ -26,12 +26,17 @@ body {
     font-weight: bold;
   }
   
-  input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+  .input {
+    position: absolute;
+    left: 350px;
+    z-index: 1;
+    background-color: transparent;
+    width: 650px;
+    height: 90px;
+    margin-top: 20px;
+    border-radius: 0px;
+    border: 1px transparent;
+    font-size: 80px;
   }
   
   button {
