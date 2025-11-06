@@ -5,28 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro</title>
   <link rel="stylesheet" href="styleregistro.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/JZylber/SoqueTIC-Client@v1.4.2/soquetic-client.js"></script>
 </head>
 <body>
-  <div class="form-container">
-    <h2>Registrate</h2>
+  <div class="main">
     <form id="formRegistro">
-        
-      <label for="nombre">Nombre</label>
-      <input type="nombre" id="nombre" name="nombre" required>
-      
-      <label for="correo">Correo electrónico</label>
-      <input type="usuario" id="usuario2" name="usuario" required>
-
-      <label for="contrasena">Contraseña</label>
-      <input type="password" id="contraseña2" name="contraseña" required>
-
+      <div class="contenedor"> 
+      <img src="../imagenes/Frame 166.png" alt="">
+      <input type="nombre" class="input" id="nombre" placeholder="NOMBRE" name="nombre" required>
+      </div>
+      <div class="contenedor"> 
+      <img src="../imagenes/Frame 166.png" alt="">
+      <input type="usuario" class="input" id="usuario2" placeholder="USUARIO" name="usuario" required>
+      </div>
+      <div class="contenedor"> 
+      <img src="../imagenes/Frame 166.png" alt="">
+      <input type="password" class="input" id="contraseña2" placeholder="CONTRASEÑA" name="contraseña" required>
+      </div> 
+      <div class="contenedor">
+      <img src="../imagenes/Frame 237 (1).png" alt=""> 
       <button id="botonIngresar2" type="submit">Ingresar</button>
+      </div>
     </form>
 
     <p id="mensaje2"></p>
-    <p>¿Ya tenés cuenta? <a href="inicioSesion.html">Iniciá Sesion</a></p>
+    <p class="mensaje">¿Ya tenés cuenta? <a href="inicioSesion.html">Iniciá Sesion</a></p>
   </div>
 
   <script src="registro.js"></script>

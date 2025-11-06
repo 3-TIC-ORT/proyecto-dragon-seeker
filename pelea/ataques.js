@@ -12,8 +12,12 @@ let gifAmarillo = document.getElementById ("AtaqueAmarillo")
 let imagenchimuelo = document.getElementById("chimuelo")
 let gifChimuelo = document.getElementById("AtaqueChimuelo")
 
+let usuario = JSON.parse(localStorage.getItem("usuario"))
+console.log (usuario)
+let idusuario = usuario.id
 let dragon = JSON.parse(localStorage.getItem("dragonardo"));
 console.log (dragon)
+let iddragon = dragon.id
 
 barravidaUsuario.innerHTML = dragon.vida
 barravidaEnemigo.innerHTML = 100
@@ -71,7 +75,7 @@ let amarillo = {
       bloquearboton()
     }
     console.log ("termino el ataque enemigo")
-  
+  }
   if (dragon.vida === 0 || amarillo.vidaAmarillo === 0) {
     console.log("termino la pelea")
     [ataque1, ataque2, ataque3, ataque4].disabled = true;
@@ -81,12 +85,14 @@ let amarillo = {
     })}
     else if (dragon.vida >= 0 && amarillo.vidaAmarillo === 0){
       alert("ganaste brooo")
-      //postEvent("sumarexperiencia", {iddragon, cantidad, idusuario}, (data) {
-      
-    }//)
+      let expGanada = 50;
+      postEvent("sumarexperiencia", {iddragon: idusuario, cantidad: expGanada, idusuario: iddragon}, (data) {
+        console.log(data.mensaje)
+        console.log("nuevo nivel:", data.progreso.nivel)
+      )}
     }
     //window.location.href = '.RPG 1/index.html';
-  }//}
+  //}
   BotonAdopcion.addEventListener ('click', () =>{
   if (amarillo.vidaAmarillo >= 30) {
     BotonAdopcion.disabled = true;
