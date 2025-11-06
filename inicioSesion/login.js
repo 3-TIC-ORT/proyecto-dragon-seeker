@@ -19,6 +19,8 @@ botoningresar.addEventListener("click", (event) => {
           let container = document.createElement('p');
           container.innerText = idUsuario.mensaje;
           mensaje.appendChild(container);
+          localStorage.setItem("usuario", JSON.stringify(idUsuario.usuario));
+          console.log(idUsuario.usuario)
       }
   });
 });
