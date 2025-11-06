@@ -43,8 +43,8 @@ export class Game extends Phaser.Scene {
     //dragon
     this.dragons = this.physics.add.group();
 
-    for (let i = 0; i < 3; i++) {
-      const x = Phaser.Math.Between(1024, 1472);
+    for (let i = 0; i < 5; i++) {
+      const x = Phaser.Math.Between(896, 1440);
       const y = Phaser.Math.Between(32, 352);
       const dragon = new NPC(this, x, y);
       this.dragons.add(dragon);
@@ -60,7 +60,6 @@ export class Game extends Phaser.Scene {
     //colliders con el player
     this.physics.add.collider(this.player, obstaculos);
     this.physics.add.collider(this.player, casa);
-    this.physics.add.collider(this.player, this.dragons);
 
     //colliders con el dragon
     this.physics.add.collider(this.dragons, obstaculos);
@@ -90,33 +89,11 @@ export class Game extends Phaser.Scene {
     });
 
     //cambio de escena a la batalla
-    /*this.physics.add.overlap(this.player, this.dragon, () => {
-            //cambio de escena
-        });*/
+    this.physics.add.overlap(this.player, this.dragons, () => {
+      window.location.href = "../inventario/inventario.html";
+    });
   }
   update() {
-    if (
-      this.cursors.left.isDown ||
-      this.cursors.right.isDown ||
-      this.cursors.up.isDown ||
-      this.cursors.down.isDown
-    ) {
-      if (this.cursors.left.isDown) {
-        this.player.moveLeft();
-      }
-      if (this.cursors.right.isDown) {
-        this.player.moveRight();
-      }
-      if (this.cursors.up.isDown) {
-        this.player.moveUp();
-      }
-      if (this.cursors.down.isDown) {
-        this.player.moveDown();
-      }
-    } else {
-      this.player.idle();
-    }
-
     // actualizamos cada dragón
     this.dragons.children.iterate((dragon) => {
       dragon.update();
