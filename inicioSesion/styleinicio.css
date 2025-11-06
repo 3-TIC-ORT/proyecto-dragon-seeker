@@ -1,4 +1,4 @@
-.main {
+main {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,7 +24,7 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 3rem;
   width: 90%;
   max-width: 700px;
 }
@@ -98,13 +98,14 @@ button:hover {
 
 .mensaje {
   text-align: center;
-  font-size: 4rem;
-  margin-top: 3.6rem;
+  font-size: 3rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   color: white;
 }
 
 .mensaje a {
-  color: #b0b3b7c2;
+  color: #3e4044c2;
   text-decoration: none;
 }
 
