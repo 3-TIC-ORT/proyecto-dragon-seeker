@@ -71,7 +71,7 @@ let amarillo = {
       bloquearboton()
     }
     console.log ("termino el ataque enemigo")
-  
+  }
   if (dragon.vida === 0 || amarillo.vidaAmarillo === 0) {
     console.log("termino la pelea")
     [ataque1, ataque2, ataque3, ataque4].disabled = true;
@@ -86,7 +86,7 @@ let amarillo = {
     }//)
     }
     //window.location.href = '.RPG 1/index.html';
-  }//}
+  //}
   BotonAdopcion.addEventListener ('click', () =>{
   if (amarillo.vidaAmarillo >= 30) {
     BotonAdopcion.disabled = true;
