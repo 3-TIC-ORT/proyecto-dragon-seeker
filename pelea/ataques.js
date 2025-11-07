@@ -76,14 +76,14 @@ let amarillo = {
     }
     console.log ("termino el ataque enemigo")
 
-    if (dragon.vida === 0 || amarillo.vidaAmarillo === 0) {
+    if (dragon.vida <= 0 || amarillo.vidaAmarillo <= 0) {
       console.log("termino la pelea")
       [ataque1, ataque2, ataque3, ataque4].disabled = true;
-      if (dragon.vida === 0 && amarillo.vidaAmarillo >= 0){
+      if (dragon.vida <= 0 && amarillo.vidaAmarillo >= 0){
         alert("game over fraca, perdiste")
         postEvent("actualizarVida", { vida }, () => {
       })}
-      else if (dragon.vida >= 0 && amarillo.vidaAmarillo === 0){
+      else if (dragon.vida >= 0 && amarillo.vidaAmarillo <= 0){
         alert("ganaste brooo")
         let expGanada = 50;
         postEvent("sumarexperiencia", {iddragon: iddragon, cantidad: expGanada, idusuario: idusuario}, (data) => {
