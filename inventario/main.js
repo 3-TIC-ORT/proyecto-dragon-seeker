@@ -3,35 +3,22 @@ connect2Server();
 let dragones = [];
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) {
-  console.warn("⚠️ No hay usuario logueado en localStorage.");
-  return;
+  alert("No hay usuario registrado, logueate");
+  //window.location.href = '..inicioSesion/inicioSesion.html';
 }
 
 const containerDragon = document.getElementById("dragonContainer");
 
-// 🔹 Cargar lista de dragones y luego mostrar
 getEvent("obtenerDragones", (data) => {
   dragones = data.dragones;
   mostrarDragones();
 });
 
-async function mostrarDragones() {
+function mostrarDragones() {
   containerDragon.innerHTML = "";
 
   for (let i = 0; i < dragones.length; i++) {
     let dragon = dragones[i];
-
-  postEvent("obtenerProgresoDragon" ,{idusuario: usuario.id, iddragon: dragon.id}, (data) => {
-      if (data.exito) {
-        dragon.nivel = data.progreso.nivel;
-        dragon.vida = data.progreso.vida;
-        dragon.fuerza = data.progreso.daño;
-        localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
-        console.log("Progreso actualizado:", data.progreso);
-      } else {
-        console.warn(`No se pudo obtener el progreso del dragón ${dragon.nombre}`);
-      }
-    });
     
     let tarjeta = document.createElement("div");
     tarjeta.classList.add("tarjeta");

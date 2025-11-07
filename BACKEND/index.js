@@ -6,7 +6,6 @@ import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarest
 import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
 import { determinartipodragon, enviardatosdragon, iniciarbatalledragon, obtenerlistadragones } from "./dragones.js"
 import { objeto, obtenerdatosobjeto } from "./items.js"
-import { leer, buscar } from "./progresousuario.js";
 //import { registrarbatalla, actualizarvida, obtenervid } from "./batalla_vida.js"
 
 subscribePOSTEvent("registrarusuario", data => {
@@ -112,13 +111,6 @@ subscribeGETEvent("obtenerObjeto", query => {
   return obtenerdatosobjeto(Number(idobjeto))
 })
 
-subscribePOSTEvent("obtenerProgresoDragon", query => {
-  const { idusuario, iddragon } = query;
-  const lista = leer();
-  const progreso = buscar(lista, idusuario, iddragon);
-  if (!progreso) return { exito: false, mensaje: "No se encontró progreso" };
-  return { exito: true, progreso };
-});
 
 console.log("Servidor iniciado")
 startServer()

@@ -2,7 +2,7 @@ import fs from "fs"
 
 const ruta = "./BACKEND/progreso.json"
 
-function leer() {
+export function leer() {
     try {
         return JSON.parse(fs.readFileSync(ruta, "utf-8") || "[]")
     } catch {
@@ -15,7 +15,7 @@ function guardar(datos) {
     fs.writeFileSync(ruta, JSON.stringify(datos,null,2))
 }
 
-function buscar(lista, user, dragon) {
+export function buscar(lista, user, dragon) {
     return lista.find(x => x.user === user && x.dragon === dragon)
 }
 
