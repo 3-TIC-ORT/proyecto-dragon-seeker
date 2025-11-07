@@ -1,9 +1,13 @@
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y) {
+  constructor(scene, x, y, cursors) {
     super(scene, x, y, "dude");
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+
+    this.cursors = cursors;
+
+    this.setBounce(0).setCollideWorldBounds(true);
 
     this.initAnimations();
   }
@@ -34,16 +38,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setVelocityX(-150);
     this.anims.play("left", true);
   }
+
   moveRight() {
     this.setVelocityX(150);
     this.anims.play("right", true);
   }
+
   moveUp() {
     this.setVelocityY(-150);
   }
+
   moveDown() {
     this.setVelocityY(150);
   }
+
   idle() {
     this.setVelocity(0);
     this.anims.play("turn");
@@ -57,12 +65,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.moveLeft();
     } else if (this.cursors.right.isDown) {
       this.moveRight();
-    } else {
-      this.idle();
-    }
-
-    // Movimiento vertical
-    if (this.cursors.up.isDown) {
+    } else if (this.cursors.up.isDown) {
       this.moveUp();
     } else if (this.cursors.down.isDown) {
       this.moveDown();

@@ -38,7 +38,11 @@ export class Game extends Phaser.Scene {
     const startX = data?.x ?? 16;
     const startY = data?.y ?? 160;
 
-    this.player = new Player(this, startX, startY);
+    //movimiento
+    this.cursors = this.input.keyboard.createCursorKeys();
+
+    //creo el Player
+    this.player = new Player(this, startX, startY, this.cursors);
 
     //dragon
     this.dragons = this.physics.add.group();
@@ -66,12 +70,9 @@ export class Game extends Phaser.Scene {
     this.physics.add.collider(this.dragons, corral_dragones);
     this.physics.add.collider(this.dragons, casa);
     this.physics.add.collider(this.dragons, this.dragons);
+
     //worldbounds
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-    this.player.setBounce(0).setCollideWorldBounds(true);
-
-    //movimiento
-    this.cursors = this.input.keyboard.createCursorKeys();
 
     //camara
     this.cameras.main.startFollow(this.player);
@@ -90,7 +91,7 @@ export class Game extends Phaser.Scene {
 
     //cambio de escena a la batalla
     this.physics.add.overlap(this.player, this.dragons, () => {
-      window.location.href = "../inventario/inventario.html";
+      window.location.href = "../../../../inventario/inventario.html";
     });
   }
   update() {
