@@ -1,3 +1,4 @@
+connect2Server();
 import { bloquearboton } from './pelea.js';
 import { desbloquearBoton } from './pelea.js';
 let ataque1 = document.getElementById("ataque1");
@@ -78,15 +79,33 @@ let amarillo = {
 
     if (dragon.vida <= 0 || amarillo.vidaAmarillo <= 0) {
       console.log("termino la pelea")
-      [ataque1, ataque2, ataque3, ataque4].disabled = true;
+      ataque1.disabled = true;
+      ataque2.disabled = true;
+      ataque3.disabled = true;
+      ataque4.disabled = true;
       if (dragon.vida <= 0 && amarillo.vidaAmarillo >= 0){
         alert("game over fraca, perdiste")
-        postEvent("actualizarVida", { vida }, () => {
-      })}
+      postEvent("actualizarVida", {
+        idusuario: usuario.id,
+        iddragon: dragon.id,
+        vida: dragon.vida,
+      }, (data) => {
+        if (data.exito) {
+          console.log("Vida del dragón actualizada:", data.progreso.vida);
+          localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+        } else {
+          console.error("Error al actualizar la vida del dragón.");
+        }
+      });
+    }
       else if (dragon.vida >= 0 && amarillo.vidaAmarillo <= 0){
         alert("ganaste brooo")
         let expGanada = 50;
-        postEvent("sumarexperiencia", {iddragon: iddragon, cantidad: expGanada, idusuario: idusuario}, (data) => {
+        postEvent("sumarexperiencia", {
+          iddragon: iddragon,
+          cantidad: expGanada,
+          idusuario: idusuario
+        }, (data) => {
           console.log(data.mensaje)
           console.log("nuevo nivel:", data.progreso.nivel)
           console.log("Ataques desbloqueados:", data.progreso.desbloqueados);
