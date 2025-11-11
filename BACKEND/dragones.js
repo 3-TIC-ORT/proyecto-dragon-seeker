@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const ruta = "./dragones.json"
+const ruta = "./BACKEND/dragones.json"
 
 function leerdragones () {
     const texto = fs.readFileSync(ruta, "utf-8")
@@ -46,6 +46,7 @@ export function iniciarbatalledragon(idusuario, iddragon, ubicacion) {
 
 export function obtenerlistadragones() {
     const data = leerdragones()
+    // Modificar los dragones base en base al progreso LABURAR
     return { exito: true, dragones: data.dragones }
 }
     

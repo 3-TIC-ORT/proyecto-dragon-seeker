@@ -6,7 +6,8 @@ import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarest
 import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
 import { determinartipodragon, enviardatosdragon, iniciarbatalledragon, obtenerlistadragones } from "./dragones.js"
 import { objeto, obtenerdatosobjeto } from "./items.js"
-//import { registrarbatalla, actualizarvida, obtenervid } from "./batalla_vida.js"
+//lo puse yo (doble)
+import { actualizarVida} from "./batalla_vida.js"
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
@@ -110,6 +111,13 @@ subscribeGETEvent("obtenerObjeto", query => {
   const { idobjeto } = query
   return obtenerdatosobjeto(Number(idobjeto))
 })
+
+
+// lo puse yo (doble)
+subscribePOSTEvent("actualizarVida", data => {
+  const { iddragon, idusuario, vida } = data;
+  return actualizarVida(iddragon, idusuario, vida);
+});
 
 
 console.log("Servidor iniciado")

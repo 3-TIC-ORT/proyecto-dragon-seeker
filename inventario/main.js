@@ -4,7 +4,7 @@ let dragones = [];
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) {
   alert("No hay usuario registrado, logueate");
-  //window.location.href = '..inicioSesion/inicioSesion.html';
+  window.location.href = '/inicioSesion/inicioSesion.html';
 }
 
 const containerDragon = document.getElementById("dragonContainer");

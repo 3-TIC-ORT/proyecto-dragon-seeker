@@ -30,20 +30,31 @@ export function registrarbatalla(idusuario, iddragon, vidadragon, vidaenemigo, u
     return {exito: true, idbatalla: nuevabatalla.idbatalla, batalla: nuevabatalla}
 }
 
-export function actualizarvida(idbatalla, vidadragon, vidaenemigo) {
-    const data = leerarchivo()
-    const batalla = data.batallas.find(b => b.idbatalla === idbatalla)
-    if (!batalla) return {exito: false, mensaje: "Batalla no encontrada"}
+//export function actualizarvida(idbatalla, vidadragon, vidaenemigo) {
+    //const data = leerarchivo()
+    //const batalla = data.batallas.find(b => b.idbatalla === idbatalla)
+    //if (!batalla) return {exito: false, mensaje: "Batalla no encontrada"}
     
-    batalla.dragon.vida = vidadragon
-    batalla.enemigo.vida = vidaenemigo
+    //batalla.dragon.vida = vidadragon
+    //batalla.enemigo.vida = vidaenemigo
 
-    if (vidadragon <= 0 || vidaenemigo <= 0) {
-        batalla.estado = "Finalizada"
-    }
-    guardararchivo(data)
-    return {exito: true, mensaje: "Vida actualizada", batalla}
+    //if (vidadragon <= 0 || vidaenemigo <= 0) {
+        //batalla.estado = "Finalizada"
+   // }
+   // guardararchivo(data)
+    //return {exito: true, mensaje: "Vida actualizada", batalla}
+//}
+
+//lo puse yo (doble)
+export function actualizarVida(iddragon, idusuario, nuevaVida) {
+    const lista = leerarchivo();
+    const reg = asegurar(lista, idusuario, iddragon);
+    reg.vida = nuevaVida;
+  
+    guardar(lista);
+    return { exito: true, mensaje: "Vida actualizada correctamente.", progreso: reg };
 }
+
 export function obtenervidaactual(idbatalla) {
     const data = leerarchivo()
     const batalla = data.batallas.find(b => idbatalla === idbatalla)
