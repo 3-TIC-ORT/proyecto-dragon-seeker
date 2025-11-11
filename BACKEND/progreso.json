@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "user": 1,
+    "dragon": 2,
+    "nivel": 1,
+    "exp": 50,
+    "vida": 100,
+    "daño": 10,
+    "ataques": [
+      {
+        "nombre": "Arañazo",
+        "nivel": 1
+      },
+      {
+        "nombre": "Llamarada",
+        "nivel": 5
+      },
+      {
+        "nombre": "Terremoto",
+        "nivel": 13
+      }
+    ],
+    "desbloqueados": []
+  },
+  {
+    "user": 1,
+    "dragon": 3,
+    "nivel": 2,
+    "exp": 50,
+    "vida": 110,
+    "daño": 15,
+    "ataques": [
+      {
+        "nombre": "Arañazo",
+        "nivel": 1
+      },
+      {
+        "nombre": "Llamarada",
+        "nivel": 5
+      },
+      {
+        "nombre": "Terremoto",
+        "nivel": 13
+      }
+    ],
+    "desbloqueados": [
+      "Arañazo"
+    ]
+  }
+]

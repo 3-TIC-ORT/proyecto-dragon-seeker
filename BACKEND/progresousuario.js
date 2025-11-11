@@ -65,7 +65,7 @@ export function sumarexperiencia(iddragon, cantidad, idusuario) {
         mensaje:
           subidas > 0
             ? `Subiste ${subidas} nivel(es)!`
-            : "Experiencia sumada.",
+            : `Experiencia sumada ${cantidad}xp`,
         progreso: reg
     }
 }
