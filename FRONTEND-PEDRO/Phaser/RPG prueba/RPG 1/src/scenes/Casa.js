@@ -25,6 +25,9 @@ export class Casa extends Phaser.Scene {
     const cofres = casa.createLayer("objetos", tileset, 0, 0);
     const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
 
+    //creando las teclas para movimiento
+    this.cursors = this.input.keyboard.createCursorKeys();
+
     // Spawn del jugador en la posición recibida desde Mapa1
     this.player = new Player(this, data.x, data.y, this.cursors);
 
@@ -46,9 +49,6 @@ export class Casa extends Phaser.Scene {
       casa.widthInPixels,
       casa.heightInPixels
     );
-
-    //creando las teclas para movimiento
-    this.cursors = this.input.keyboard.createCursorKeys();
 
     //puerta
     const trigger = casa.findObject("puertas", (obj) => obj.name === "door");

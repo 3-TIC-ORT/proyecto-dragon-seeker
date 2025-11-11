@@ -58,8 +58,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   preUpdate(time, delta) {
-    super.preUpdate(time, delta); // ⚠️ mantiene las animaciones activas
-
+    super.preUpdate(time, delta); // mantiene las animaciones activas
     // Movimiento horizontal
     if (this.cursors.left.isDown) {
       this.moveLeft();

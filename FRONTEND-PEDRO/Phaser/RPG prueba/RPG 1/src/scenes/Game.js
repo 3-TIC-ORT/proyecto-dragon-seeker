@@ -20,6 +20,8 @@ export class Game extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    //asignacion de la coke
+    this.load.image("coke", "assets/soda.png");
   }
   create(data) {
     const map = this.make.tilemap({ key: "map" });
@@ -44,11 +46,14 @@ export class Game extends Phaser.Scene {
     //creo el Player
     this.player = new Player(this, startX, startY, this.cursors);
 
+    //creo la coke
+    const coke = this.physics.add.sprite(32, 32, "coke");
+
     //dragon
     this.dragons = this.physics.add.group();
 
     for (let i = 0; i < 5; i++) {
-      const x = Phaser.Math.Between(896, 1440);
+      const x = Phaser.Math.Between(896, 1424);
       const y = Phaser.Math.Between(32, 352);
       const dragon = new NPC(this, x, y);
       this.dragons.add(dragon);
@@ -78,7 +83,7 @@ export class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-    // --- Trigger para pasar al Mapa2 ---
+    // trigger para pasar al Mapa2
     const trigger = map.findObject("puertas", (obj) => obj.name === "door");
     this.door = this.physics.add.sprite(trigger.x, trigger.y, null);
     this.door.setSize(trigger.width, trigger.height);
@@ -90,9 +95,9 @@ export class Game extends Phaser.Scene {
     });
 
     //cambio de escena a la batalla
-    this.physics.add.overlap(this.player, this.dragons, () => {
+    /*this.physics.add.overlap(this.player, this.dragons, () => {
       window.location.href = "../../../../inventario/inventario.html";
-    });
+    });*/
   }
   update() {
     // actualizamos cada dragón

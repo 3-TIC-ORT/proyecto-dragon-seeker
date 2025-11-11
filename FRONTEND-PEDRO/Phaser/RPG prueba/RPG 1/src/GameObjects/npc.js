@@ -16,11 +16,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       loop: true,
     });
 
-    this.setVelocity(
-      this.direction.x * this.speed,
-      this.direction.y * this.speed
-    );
-
     this.initanimations();
   }
 
