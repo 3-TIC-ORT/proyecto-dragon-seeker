@@ -28,7 +28,7 @@ function asegurar(lista, user, dragon) {
             nivel: 1,
             exp: 0, 
             vida: 100,
-            daño: 10,
+            fuerza: 10,
             ataques: [
                 {nombre: "Arañazo", nivel: 1},
                 {nombre: "Llamarada", nivel: 5},
@@ -55,7 +55,7 @@ export function sumarexperiencia(iddragon, cantidad, idusuario) {
         reg.exp -= experiencianecesaria(reg.nivel)
         reg.nivel++
         subidas++
-        aumentarestadisticas(iddragon, {vida: 10, daño: 5}, idusuario, lista)
+        aumentarestadisticas(iddragon, {vida: 10, fuerza: 5}, idusuario, lista)
         desbloquearataques(iddragon, reg.nivel, idusuario, lista)
     }
 
@@ -103,8 +103,8 @@ export function aumentarestadisticas(iddragon, incremento, idusuario, lista0 = n
     const lista = lista0 || leer()
     const reg = asegurar(lista, idusuario, iddragon)
     reg.vida += incremento.vida || 0
-    reg.daño += incremento.daño || 0
+    reg.fuerza += incremento.fuerza || 0
 
     if (!lista0) guardar(lista)
-    return { exito: true, mensaje: `+${incremento.vida} vida, +${incremento.daño} daño.` }
+    return { exito: true, mensaje: `+${incremento.vida} vida, +${incremento.fuerza} fuerza.` }
 }
