@@ -53,7 +53,7 @@ export function obtenerlistadragones() {
     const base = leerdragones()
     const progreso = leerprogreso()
 
-    const dragonesactualizados = base.dragonesy.map( d => {
+    const dragonesactualizados = base.dragones.map( d => {
         const prog = progreso.find(p => p.dragon === d.id)
 
         if (!prog) return d
@@ -63,7 +63,7 @@ export function obtenerlistadragones() {
             nivel: prog.nivel,
             exp: prog.exp,
             vida: prog.vida,
-            daño: prog.daño,
+            fuerza: prog.daño,
             ataques: prog.ataques,
             desbloqueados: prog.desbloqueados
         }
