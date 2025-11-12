@@ -20,19 +20,26 @@ export class Game extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    //asignacopn del spirte al viejo
+    this.load.spritesheet("chimuelo", "assets/viejo_npc.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
     //asignacion de la coke
     this.load.image("coke", "assets/coke.png");
   }
   create(data) {
     this.messageText = this.add
-      .text(10, 10, "", {
-        fontSize: "18px",
-        fill: "#ffffff",
-        backgroundColor: "#000000",
+      .text(860, 15, "", {
+        fontSize: "20px",
+        fill: "#000000",
+        backgroundColor: "#f7e8ad",
         padding: { x: 10, y: 5 },
+        fontFamily: "Pixelify Sans",
       })
       .setOrigin(0.5)
       .setScrollFactor(0)
+      .setDepth(1000)
       .setVisible(false);
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("mapa 2", "tiles");
@@ -61,6 +68,9 @@ export class Game extends Phaser.Scene {
 
     coke.setImmovable(true); // no se mueve
     this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
+
+    //dragon especial
+    this.chimuelo = new NPC(this, 350, 160);
 
     //dragon
     this.dragons = this.physics.add.group();
@@ -117,15 +127,26 @@ export class Game extends Phaser.Scene {
     coke.disableBody(true, true); // desaparece del mapa
     this.showMessage("Agarraste la coca!");
   }
+  giveCokeToNPC(player, npc) {
+    if (this.hasCoke) {
+      // ✅ si el jugador tiene la coca
+      this.showMessage("Le diste la Coca al NPC!");
+      this.hasCoke = false; // ❌ ya no la tiene
+      // Podés poner una animación, sonido, o cambiar el diálogo
+    } else {
+      this.showMessage("No tenés la Coca todavía!");
+    }
+  }
   showMessage(text) {
     this.messageText.setText(text);
     this.messageText.setVisible(true);
 
     // Oculta el mensaje después de 2 segundos
-    this.time.delayedCall(2000, () => {
+    this.time.delayedCall(3000, () => {
       this.messageText.setVisible(false);
     });
   }
+
   update() {
     // actualizamos cada dragón
     this.dragons.children.iterate((dragon) => {
