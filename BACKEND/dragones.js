@@ -65,7 +65,7 @@ export function obtenerlistadragones() {
             nivel: prog.nivel ?? d.nivel,
             exp: prog.exp ?? 0,
             vida: prog.vida ?? d.vida,
-            daño: prog.daño ?? d.fuerza,
+            fuerza: prog.fuerza ?? d.fuerza,
             ataques: prog.ataques ?? d.ataques,
             desbloqueados: prog.desbloqueados ?? []
         }
