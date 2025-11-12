@@ -9,7 +9,7 @@ if (!usuario) {
 
 const containerDragon = document.getElementById("dragonContainer");
 
-getEvent("obtenerDragones", (data) => {
+getEvent("obtenerdragones", (data) => {
   dragones = data.dragones;
   mostrarDragones();
 });
@@ -33,6 +33,7 @@ function mostrarDragones() {
     tarjeta.innerHTML = `
       <h4>${dragon.nombre}</h4>
       <p>Tipo: ${dragon.tipo}</p>
+      <p>Xp: ${dragon.exp}</p>
       <p>Nivel: ${dragon.nivel}</p>
       <p>Vida: ${dragon.vida}</p>
       <p>Fuerza: ${dragon.fuerza}</p>

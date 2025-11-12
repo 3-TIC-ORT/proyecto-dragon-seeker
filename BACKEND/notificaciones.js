@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const rutanotificaciones = "./BACKEND/notificaciones.json"
+const rutanotificaciones = "./notificaciones.json"
 
 function leerarchivo(){
     if (!fs.existsSync(rutanotificaciones)) {
