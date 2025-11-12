@@ -1,12 +1,17 @@
 import fs from "fs"
 
-const ruta = "./BACKEND/dragones.json"
+const ruta = "./dragones.json"
+const rutaprogreso = "./progreso.json"
 
 function leerdragones () {
     const texto = fs.readFileSync(ruta, "utf-8")
     return JSON.parse(texto)
 }
 
+function leerprogreso() {
+    const texto = fs.readFileSync(rutaprogreso, "utf-8")
+    return JSON.parse(texto)
+}
 export function determinartipodragon(idzona, dificultad) {
     const data = leerdragones()
     const dragon = data.dragones.find(d => d.mapa === idzona)
@@ -45,8 +50,25 @@ export function iniciarbatalledragon(idusuario, iddragon, ubicacion) {
 }
 
 export function obtenerlistadragones() {
-    const data = leerdragones()
+    const base = leerdragones()
+    const progreso = leerprogreso()
+
+    const dragonesactualizados = base.dragonesy.map( d => {
+        const prog = progreso.find(p => p.dragon === d.id)
+
+        if (!prog) return d
+
+        return{
+            ...d,
+            nivel: prog.nivel,
+            exp: prog.exp,
+            vida: prog.vida,
+            daño: prog.daño,
+            ataques: prog.ataques,
+            desbloqueados: prog.desbloqueados
+        }
+    })
     // Modificar los dragones base en base al progreso LABURAR
-    return { exito: true, dragones: data.dragones }
+    return { exito: true, dragones: dragonesactualizados}
 }
     
