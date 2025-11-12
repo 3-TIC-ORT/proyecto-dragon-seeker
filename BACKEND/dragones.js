@@ -53,22 +53,23 @@ export function obtenerlistadragones() {
     const base = leerdragones()
     const progreso = leerprogreso()
 
-    const dragonesactualizados = base.dragones.map( d => {
+    if (!base || !base.dragones) {
+        return {exito: false, mensaje: "No se pudo leer la base de dragones"}
+    }
+    const dragoensactualizados = base.dragones.map(d => {
         const prog = progreso.find(p => p.dragon === d.id)
 
         if (!prog) return d
-
-        return{
+        return {
             ...d,
-            nivel: prog.nivel,
-            exp: prog.exp,
-            vida: prog.vida,
-            fuerza: prog.daño,
-            ataques: prog.ataques,
-            desbloqueados: prog.desbloqueados
+            nivel: prog.nivel ?? d.nivel,
+            exp: prog.exp ?? 0,
+            vida: prog.vida ?? d.vida,
+            daño: prog.daño ?? d.fuerza,
+            ataques: prog.ataques ?? d.ataques,
+            desbloqueados: prog.desbloqueados ?? []
         }
     })
-    // Modificar los dragones base en base al progreso LABURAR
-    return { exito: true, dragones: dragonesactualizados}
+    return {exito: true, dragones: dragoensactualizados}
 }
     
