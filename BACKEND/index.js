@@ -7,7 +7,7 @@ import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdispo
 import { determinartipodragon, enviardatosdragon, iniciarbatalledragon, obtenerlistadragones } from "./dragones.js"
 import { objeto, obtenerdatosobjeto } from "./items.js"
 //lo puse yo (doble)
-import { actualizarVida} from "./batalla_vida.js"
+
 
 subscribePOSTEvent("registrarusuario", data => {
   const { nombre, correo, contrasena } = data
@@ -64,61 +64,53 @@ subscribePOSTEvent("aumentarestadisticas", data => {
   return aumentarestadisticas(iddragon, incremento, idusuario)
 })
 
-subscribeGETEvent("elegirAtaqueEnemigoNormal", query => {
+subscribeGETEvent("elegirataqueenemigonormal", query => {
   return elegirataqueenemigo({ tipo: query.tipo, nivel: Number(query.nivel), esBoss: false })
 })
 
-subscribeGETEvent("elegirAtaqueBoss", query => {
+subscribeGETEvent("elegirataqueboss", query => {
   const bossEstado = { soplido: Number(query.soplido || 0), daga: Number(query.daga || 0) }
   return elegirataqueenemigo({ esBoss: true, bossId: Number(query.bossId), bossEstado })
 })
 
-subscribePOSTEvent("modificadorPorTipo", data => {
+subscribePOSTEvent("modificadorportipo", data => {
   const mod = aplicarbbeneficiosdebilidades(data.tipoataque, data.tipodefensor, Number(data.base))
   return { exito: true, modificador: mod }
 })
 
-subscribeGETEvent("ataquesDisponibles", query => {
+subscribeGETEvent("ataquesdisponibles", query => {
   const lista = obtenerataquesdisponibles(query.tipo, Number(query.nivel))
   return { exito: true, ataques: lista }
 })
 
-subscribeGETEvent("obtenerTipoDragon", query => {
+subscribeGETEvent("obtenerTipodragon", query => {
   const { idzona, dificultad } = query
   return determinartipodragon(Number(idzona), dificultad)
 })
 
-subscribeGETEvent("obtenerDragon", query => {
+subscribeGETEvent("obtenerdragon", query => {
   const { iddragon, idusuario } = query
   return enviardatosdragon(Number(iddragon), Number(idusuario))
 })
 
-subscribePOSTEvent("iniciarBatalla", data => {
+subscribePOSTEvent("iniciarbatalla", data => {
   const { idusuario, iddragon, ubicacion } = data
   return iniciarbatalledragon(Number(idusuario), Number(iddragon), ubicacion)
 })
 
-subscribeGETEvent("obtenerDragones", () => {
+subscribeGETEvent("obtenerdragones", () => {
   return obtenerlistadragones()
 })
 
-subscribePOSTEvent("crearObjeto", data => {
+subscribePOSTEvent("crearobjeto", data => {
   const { nombre, tipo, efectos, rareza } = data
   return objeto(nombre, tipo, efectos, rareza)
 })
 
-subscribeGETEvent("obtenerObjeto", query => {
+subscribeGETEvent("obtenerobjeto", query => {
   const { idobjeto } = query
   return obtenerdatosobjeto(Number(idobjeto))
 })
-
-
-// lo puse yo (doble)
-subscribePOSTEvent("actualizarVida", data => {
-  const { iddragon, idusuario, vida } = data;
-  return actualizarVida(iddragon, idusuario, vida);
-});
-
 
 console.log("Servidor iniciado")
 startServer()
