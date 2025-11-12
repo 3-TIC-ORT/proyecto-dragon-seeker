@@ -21,9 +21,19 @@ export class Game extends Phaser.Scene {
       frameHeight: 32,
     });
     //asignacion de la coke
-    this.load.image("coke", "assets/soda.png");
+    this.load.image("coke", "assets/coke.png");
   }
   create(data) {
+    this.messageText = this.add
+      .text(10, 10, "", {
+        fontSize: "18px",
+        fill: "#ffffff",
+        backgroundColor: "#000000",
+        padding: { x: 10, y: 5 },
+      })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setVisible(false);
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("mapa 2", "tiles");
 
@@ -47,7 +57,10 @@ export class Game extends Phaser.Scene {
     this.player = new Player(this, startX, startY, this.cursors);
 
     //creo la coke
-    const coke = this.physics.add.sprite(32, 32, "coke");
+    const coke = this.physics.add.sprite(256, 160, "coke");
+
+    coke.setImmovable(true); // no se mueve
+    this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
 
     //dragon
     this.dragons = this.physics.add.group();
@@ -98,6 +111,20 @@ export class Game extends Phaser.Scene {
     /*this.physics.add.overlap(this.player, this.dragons, () => {
       window.location.href = "../../../../inventario/inventario.html";
     });*/
+  }
+  pickUpCoke(player, coke) {
+    this.hasCoke = true; // variable que indica que el jugador tiene la coca
+    coke.disableBody(true, true); // desaparece del mapa
+    this.showMessage("Agarraste la coca!");
+  }
+  showMessage(text) {
+    this.messageText.setText(text);
+    this.messageText.setVisible(true);
+
+    // Oculta el mensaje después de 2 segundos
+    this.time.delayedCall(2000, () => {
+      this.messageText.setVisible(false);
+    });
   }
   update() {
     // actualizamos cada dragón
