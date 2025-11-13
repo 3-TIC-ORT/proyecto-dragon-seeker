@@ -1,5 +1,6 @@
 import { Player } from "../GameObjects/player.js";
 import { NPC } from "../GameObjects/npc.js";
+import { Minero } from "../GameObjects/minero.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -15,16 +16,19 @@ export class Game extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 46,
     });
+
     //asignacion del sprite al dragon
     this.load.spritesheet("dragon", "assets/dragon.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
+
     //asignacopn del spirte al viejo
-    this.load.spritesheet("chimuelo", "assets/viejo_npc.png", {
+    this.load.spritesheet("chimuelo", "assets/pinguino.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
+
     //asignacion de la coke
     this.load.image("coke", "assets/coke.png");
   }
@@ -53,12 +57,14 @@ export class Game extends Phaser.Scene {
     const corral_dragones = map.createLayer("corral dragones", tileset, 0, 0);
 
     //spawn jugador
-
     const startX = data?.x ?? 16;
     const startY = data?.y ?? 160;
 
     //movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    //se activa la tecla E
+    this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
     //creo el Player
     this.player = new Player(this, startX, startY, this.cursors);
@@ -70,7 +76,7 @@ export class Game extends Phaser.Scene {
     this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
 
     //dragon especial
-    this.chimuelo = new NPC(this, 350, 160);
+    this.chimuelo = new Minero(this, 350, 160);
 
     //dragon
     this.dragons = this.physics.add.group();
@@ -121,17 +127,31 @@ export class Game extends Phaser.Scene {
     /*this.physics.add.overlap(this.player, this.dragons, () => {
       window.location.href = "../../../../inventario/inventario.html";
     });*/
+    this.physics.add.overlap(
+      this.player,
+      this.chimuelo,
+      this.tryGiveCoke,
+      null,
+      this
+    );
   }
   pickUpCoke(player, coke) {
     this.hasCoke = true; // variable que indica que el jugador tiene la coca
     coke.disableBody(true, true); // desaparece del mapa
     this.showMessage("Agarraste la coca!");
   }
-  giveCokeToNPC(player, npc) {
+  tryGiveCoke(player, chimuelo) {
     if (this.hasCoke) {
-      // ✅ si el jugador tiene la coca
-      this.showMessage("Le diste la Coca al NPC!");
-      this.hasCoke = false; // ❌ ya no la tiene
+      // mostrar mensaje para presionar E
+      this.showMessage("Presioná E para darle la Coca");
+      this.nearChimuelo = chimuelo; // guardamos referencia del chimuelo tocado
+    }
+  }
+  giveCokeToNPC(player, chimuelo) {
+    if (this.hasCoke) {
+      // si el jugador tiene la coca
+      this.showMessage("Le diste la Coca a Chimuelo!");
+      this.hasCoke = false; // ya no la tiene
       // Podés poner una animación, sonido, o cambiar el diálogo
     } else {
       this.showMessage("No tenés la Coca todavía!");
@@ -142,7 +162,7 @@ export class Game extends Phaser.Scene {
     this.messageText.setVisible(true);
 
     // Oculta el mensaje después de 2 segundos
-    this.time.delayedCall(3000, () => {
+    this.time.delayedCall(2000, () => {
       this.messageText.setVisible(false);
     });
   }
@@ -152,5 +172,20 @@ export class Game extends Phaser.Scene {
     this.dragons.children.iterate((dragon) => {
       dragon.update();
     });
+
+    if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
+      if (this.hasCoke) {
+        this.hasCoke = false;
+        this.showMessage("Le diste la Coca al NPC 😄");
+
+        // opcional: podés cambiar algo del NPC
+        this.nearChimuelo.setTint(0x00ff00); // ejemplo: se pone verde
+      } else {
+        this.showMessage("No tenés la Coca todavía!");
+      }
+
+      // una vez hecho, limpiamos el NPC cercano
+      this.nearChimuelo = null;
+    }
   }
 }
