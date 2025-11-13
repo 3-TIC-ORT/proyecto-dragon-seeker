@@ -1,53 +1,53 @@
 const ATAQUES_POR_TIPO = {
     normal: [
-        {nombre: "Arañazo", daño: 10, nivel: 1},
-        {nombre: "Patada", daño: 10, nivel: 1},
-        {nombre: "Puñetazo", daño: 10, nivel: 1}
+        {nombre: "Arañazo", dano: 10, nivel: 1},
+        {nombre: "Patada", dano: 10, nivel: 1},
+        {nombre: "Puñetazo", dano: 10, nivel: 1}
     ],
     tierra: [
-        {nombre: "Coletazo", daño: 5, nivel: 1},
-        {nombre: "Bola de barro", daño: 10, nivel: 5},
-        {nombre: "Terremoto", daño: 10, nivel: 13}
+        {nombre: "Coletazo", dano: 5, nivel: 1},
+        {nombre: "Bola de barro", dano: 10, nivel: 5},
+        {nombre: "Terremoto", dano: 10, nivel: 13}
     ],
     fuego: [
-        {nombre: "Llamarada", daño: 10, nivel: 1},
-        {nombre: "Bola de fuego", daño: 15, nivel: 5},
-        {nombre: "Puño de fuego", daño: 20, nivel: 13}
+        {nombre: "Llamarada", dano: 10, nivel: 1},
+        {nombre: "Bola de fuego", dano: 15, nivel: 5},
+        {nombre: "Puño de fuego", dano: 20, nivel: 13}
     ],
     electrico: [
-        {nombre: "Chispa", daño: 8, nivel: 1},
-        {nombre: "Tormenta electrica", daño: 13, nivel: 5},
-        {nombre: "Onda trueno", daño: 18, nivel: 13}
+        {nombre: "Chispa", dano: 8, nivel: 1},
+        {nombre: "Tormenta electrica", dano: 13, nivel: 5},
+        {nombre: "Onda trueno", dano: 18, nivel: 13}
     ],
     hielo: [
-        {nombre: "Ventisca", daño: 10, nivel: 1},
-        {nombre: "Nevada", daño: 15, nivel: 5},
-        {nombre: "Puño hielo", daño: 20, nivel: 13}
+        {nombre: "Ventisca", dano: 10, nivel: 1},
+        {nombre: "Nevada", dano: 15, nivel: 5},
+        {nombre: "Puño hielo", dano: 20, nivel: 13}
     ],
     agua: [
-        {nombre: "burbuja", daño: 8, nivel: 1},
-        {nombre: "Salpicadura", daño: 15, nivel: 5},
-        {nombre: "Tsunami", daño: 18, nivel: 13}
+        {nombre: "burbuja", dano: 8, nivel: 1},
+        {nombre: "Salpicadura", dano: 15, nivel: 5},
+        {nombre: "Tsunami", dano: 18, nivel: 13}
     ]
 }
 const ATAQUES_BOSS = {
     1: [
-        {nombre: "Coletazo", daño: 15},
-        {nombre: "Gas verde", daño: 20},
-        {nombre: "Fuego", daño: 25},
-        {nombre: "Aletazo", daño: 15}
+        {nombre: "Coletazo", dano: 15},
+        {nombre: "Gas verde", dano: 20},
+        {nombre: "Fuego", dano: 25},
+        {nombre: "Aletazo", dano: 15}
     ],
     2: [
-        {nombre: "Coletazo", daño: 20},
-        {nombre: "Pelotazo de carbon prendido", daño: 30},
-        {nombre: "Llamarada", daño: 35},
-        {nombre: "Rugido caliente", daño: 25}
+        {nombre: "Coletazo", dano: 20},
+        {nombre: "Pelotazo de carbon prendido", dano: 30},
+        {nombre: "Llamarada", dano: 35},
+        {nombre: "Rugido caliente", dano: 25}
     ],
     3: [
-        {nombre: "Soplido helado", daño: 0, efecto: "pasar_turno"},
-        {nombre: "Daga de hielo", daño: 30},
-        {nombre: "Bola de nieve", daño: 35},
-        {nombre: "Bola de nieve + Daga", daño: 50, requiere: "desbloqueo_combo"}
+        {nombre: "Soplido helado", dano: 0, efecto: "pasar_turno"},
+        {nombre: "Daga de hielo", dano: 30},
+        {nombre: "Bola de nieve", dano: 35},
+        {nombre: "Bola de nieve + Daga", dano: 50, requiere: "desbloqueo_combo"}
     ]
 }
 
@@ -57,7 +57,7 @@ export function obtenerataquesdisponibles(tipo, nivel) {
     let i = 0
     while (i < lista.length) {
         if (nivel >= lista[i].nivel) {
-            disponibles.push({nombre: lista[i].nombre, daño: lista[i].daño})
+            disponibles.push({nombre: lista[i].nombre, dano: lista[i].dano})
         }
         i = i + 1
     }
@@ -97,7 +97,7 @@ export function elegirataqueenemigo({tipo, nivel, esBoss, bossId, bossEstado}) {
     }
 
     if (lista.length === 0) {
-        lista = [{nombre: "Golpe", daño: 5}]
+        lista = [{nombre: "Golpe", dano: 5}]
     }
 
     const numero = Math.floor(Math.random() * lista.length)

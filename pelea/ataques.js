@@ -106,13 +106,16 @@ function ataqueUsuario(i) {
   gifChimuelo.style.display = "block";
   imagenchimuelo.style.display = "none";
 
-  let daño = ataque.daño + dragon.fuerza;
-  amarillo.vidaAmarillo -= daño;
+  let danoBase = ataque.dano ?? 0;
+  let fuerzaBase = dragon.fuerza ?? 0;
+  let danoTotal = danoBase + fuerzaBase;
+  //let dano = ataque.dano + dragon.fuerza;
+  amarillo.vidaAmarillo -= danoTotal;
   if (amarillo.vidaAmarillo < 0) amarillo.vidaAmarillo = 0;
 
   barravidaEnemigo.innerText = amarillo.vidaAmarillo;
 
-  console.log(`Ataque del usuario: ${daño}, vida rival: ${amarillo.vidaAmarillo}`);
+  console.log(`Ataque del usuario: ${danoTotal}, vida rival: ${amarillo.vidaAmarillo}`);
 
   if (checkFinDeBatalla()) return;
 
@@ -128,13 +131,13 @@ function ataqueEnemigo() {
     gifAmarillo.style.display = "block";
     imagenamarillo.style.display = "none";
 
-    let daño = 20;
-    dragon.vida -= daño;
+    let dano = 10;
+    dragon.vida -= dano;
     if (dragon.vida < 0) dragon.vida = 0;
 
     barravidaUsuario.innerText = dragon.vida;
 
-    console.log(`Ataque enemigo: ${daño}, vida dragón: ${dragon.vida}`);
+    console.log(`Ataque enemigo: ${dano}, vida dragón: ${dragon.vida}`);
 
     checkFinDeBatalla();
     terminarTurno2();
