@@ -66,8 +66,17 @@ export function obtenerlistadragones() {
             exp: prog.exp ?? 0,
             vida: prog.vida ?? d.vida,
             fuerza: prog.fuerza ?? d.fuerza,
-            ataques: prog.ataques ?? d.ataques,
-            desbloqueados: prog.desbloqueados ?? []
+            desbloqueados: prog.desbloqueados ?? [],
+
+            ataques: (d.ataques || []).map(atBase => {
+             let progAtaq = prog.ataques.find(a => a.nombre === atBase.nombre);
+                return {
+                    nombre: atBase.nombre,
+                    nivel: atBase.nivel,
+                    dano: atBase.dano,
+                    desbloqueado: prog.desbloqueados?.includes(atBase.nombre) ?? false
+                };
+            })
         }
     })
     return {exito: true, dragones: dragoensactualizados}

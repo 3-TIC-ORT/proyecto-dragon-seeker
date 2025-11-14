@@ -5,7 +5,7 @@
     "nivel": 1,
     "exp": 50,
     "vida": 100,
-    "daño": 10,
+    "dano": 10,
     "ataques": [
       {
         "nombre": "Arañazo",
@@ -26,9 +26,9 @@
     "user": 1,
     "dragon": 3,
     "nivel": 2,
-    "exp": 50,
+    "exp": 100,
     "vida": 110,
-    "daño": 15,
+    "dano": 15,
     "ataques": [
       {
         "nombre": "Arañazo",
