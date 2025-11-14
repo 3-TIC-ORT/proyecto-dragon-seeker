@@ -141,22 +141,11 @@ export class Game extends Phaser.Scene {
     this.showMessage("Agarraste la coca!");
   }
   tryGiveCoke(player, chimuelo) {
-    if (this.hasCoke) {
-      // mostrar mensaje para presionar E
-      this.showMessage("Presioná E para darle la Coca");
-      this.nearChimuelo = chimuelo; // guardamos referencia del chimuelo tocado
-    }
+    // mostrar mensaje para presionar E
+    this.showMessage("Presioná E para ineractuar");
+    this.nearChimuelo = chimuelo; // guardamos referencia del chimuelo tocado
   }
-  giveCokeToNPC(player, chimuelo) {
-    if (this.hasCoke) {
-      // si el jugador tiene la coca
-      this.showMessage("Le diste la Coca a Chimuelo!");
-      this.hasCoke = false; // ya no la tiene
-      // Podés poner una animación, sonido, o cambiar el diálogo
-    } else {
-      this.showMessage("No tenés la Coca todavía!");
-    }
-  }
+
   showMessage(text) {
     this.messageText.setText(text);
     this.messageText.setVisible(true);
@@ -176,16 +165,17 @@ export class Game extends Phaser.Scene {
     if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
       if (this.hasCoke) {
         this.hasCoke = false;
-        this.showMessage("Le diste la Coca al NPC 😄");
+        this.showMessage("Gracias por la coca");
 
         // opcional: podés cambiar algo del NPC
         this.nearChimuelo.setTint(0x00ff00); // ejemplo: se pone verde
+
+        // una vez hecho, limpiamos el NPC cercano
+        this.nearChimuelo = null;
       } else {
+        console.log("hola");
         this.showMessage("No tenés la Coca todavía!");
       }
-
-      // una vez hecho, limpiamos el NPC cercano
-      this.nearChimuelo = null;
     }
   }
 }
