@@ -2,7 +2,7 @@ import { startServer, subscribePOSTEvent, subscribeGETEvent } from "soquetic"
 import { registrarusuario, iniciarsesion } from "./autorizacion.js"
 import { guardarpersonalizacion, cargarpersonalizacion, validaropcionesdesbloqueadas } from "./customizacion.js"
 import { enviarnotificacion, obtenernotificaciones } from "./notificaciones.js"
-import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas } from "./progresousuario.js"
+import { sumarexperiencia, verificarsubidanivel, desbloquearataques, aumentarestadisticas, habilitardragon } from "./progresousuario.js"
 import { elegirataqueenemigo, aplicarbbeneficiosdebilidades, obtenerataquesdisponibles } from "./batalla_ataques.js"
 import { determinartipodragon, enviardatosdragon, iniciarbatalledragon, obtenerlistadragones } from "./dragones.js"
 import { objeto, obtenerdatosobjeto } from "./items.js"
@@ -110,6 +110,11 @@ subscribePOSTEvent("crearobjeto", data => {
 subscribeGETEvent("obtenerobjeto", query => {
   const { idobjeto } = query
   return obtenerdatosobjeto(Number(idobjeto))
+})
+
+subscribePOSTEvent("adoptarDragon", (data) => {
+  const { user, dragon } = data
+  return habilitarDragon(user, dragon)
 })
 
 console.log("Servidor iniciado")
