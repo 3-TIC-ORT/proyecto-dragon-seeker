@@ -2,9 +2,24 @@ import { Player } from "../GameObjects/player.js";
 import { NPC } from "../GameObjects/npc.js";
 import { Minero } from "../GameObjects/minero.js";
 
+connect2Server();
+
 export class Game extends Phaser.Scene {
   constructor() {
     super("Game");
+
+    let dragones = [];
+
+    getEvent("obtenerdragones", (data) => {
+      dragones = data.dragones;
+      recorrerDragones();
+    });
+
+    function recorrerDragones() {
+      for (let i = 0; i < dragones.length; i++) {
+        let dragon = dragones[i];
+      }
+    }
   }
   preload() {
     //Carga del mapa
@@ -84,7 +99,7 @@ export class Game extends Phaser.Scene {
     for (let i = 0; i < 5; i++) {
       const x = Phaser.Math.Between(896, 1424);
       const y = Phaser.Math.Between(32, 352);
-      const dragon = new NPC(this, x, y);
+      dragon = new NPC(this, x, y);
       this.dragons.add(dragon);
 
       dragon.setBounce(1, 1).setCollideWorldBounds(true);
