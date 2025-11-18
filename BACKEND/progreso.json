@@ -2,9 +2,9 @@
   {
     "user": 1,
     "dragon": 2,
-    "nivel": 1,
-    "exp": 50,
-    "vida": 100,
+    "nivel": 2,
+    "exp": 0,
+    "vida": 110,
     "dano": 10,
     "ataques": [
       {
@@ -20,13 +20,16 @@
         "nivel": 13
       }
     ],
-    "desbloqueados": []
+    "desbloqueados": [
+      "Arañazo"
+    ],
+    "fuerza": null
   },
   {
     "user": 1,
     "dragon": 3,
     "nivel": 2,
-    "exp": 100,
+    "exp": 150,
     "vida": 110,
     "dano": 15,
     "ataques": [
@@ -46,5 +49,28 @@
     "desbloqueados": [
       "Arañazo"
     ]
+  },
+  {
+    "user": 1,
+    "dragon": 1,
+    "nivel": 1,
+    "exp": 50,
+    "vida": 100,
+    "fuerza": 10,
+    "ataques": [
+      {
+        "nombre": "Arañazo",
+        "nivel": 1
+      },
+      {
+        "nombre": "Llamarada",
+        "nivel": 5
+      },
+      {
+        "nombre": "Terremoto",
+        "nivel": 13
+      }
+    ],
+    "desbloqueados": []
   }
 ]
