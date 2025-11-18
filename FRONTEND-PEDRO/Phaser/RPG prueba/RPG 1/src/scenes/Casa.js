@@ -1,5 +1,7 @@
 import { Player } from "../GameObjects/player.js";
 
+connect2Server();
+
 export class Casa extends Phaser.Scene {
   constructor() {
     super("Casa");
@@ -42,13 +44,8 @@ export class Casa extends Phaser.Scene {
     this.player.setBounce(0).setCollideWorldBounds(true);
 
     //camara
+    this.cameras.main.setBounds(0, 0, widthInPixels, heightInPixels);
     this.cameras.main.startFollow(this.player);
-    this.cameras.main.setBounds(
-      -80,
-      -72,
-      casa.widthInPixels,
-      casa.heightInPixels
-    );
 
     //puerta
     const trigger = casa.findObject("puertas", (obj) => obj.name === "door");
