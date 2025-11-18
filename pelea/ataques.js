@@ -13,9 +13,22 @@ let imagenamarillo = document.getElementById("amarillo");
 let gifAmarillo = document.getElementById("AtaqueAmarillo");
 let imagenchimuelo = document.getElementById("chimuelo");
 let gifChimuelo = document.getElementById("AtaqueChimuelo");
+let nombredragon = document.getElementById("nombreDragon")
+let nombredragonmalo = document.getElementById("nombreDragonMalo")
 
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 let dragon = JSON.parse(localStorage.getItem("dragonardo"));
+
+let amarillo = {
+  nombre: "amarillo",
+  vidaAmarillo: 100,
+  strength: 8,
+  defense: 7,
+  speed: 7,
+};
+
+nombredragon.innerText = dragon.nombre
+nombredragonmalo.innerText = amarillo.nombre
 
 let idusuario = usuario.id;
 let iddragon = dragon.id;
@@ -29,14 +42,6 @@ ataque1.innerText = dragon.ataques[0]?.nombre || "Sin ataque";
 ataque2.innerText = dragon.ataques[1]?.nombre || "Sin ataque";
 ataque3.innerText = dragon.ataques[2]?.nombre || "Sin ataque";
 ataque4.innerText = dragon.ataques[3]?.nombre || "Sin ataque";
-
-let amarillo = {
-  name: "amarillo",
-  vidaAmarillo: 100,
-  strength: 8,
-  defense: 7,
-  speed: 7,
-};
 
 function checkFinDeBatalla() {
   if (batallaTerminada) return true; 
@@ -109,7 +114,6 @@ function ataqueUsuario(i) {
   let danoBase = ataque.dano ?? 0;
   let fuerzaBase = dragon.fuerza ?? 0;
   let danoTotal = danoBase + fuerzaBase;
-  //let dano = ataque.dano + dragon.fuerza;
   amarillo.vidaAmarillo -= danoTotal;
   if (amarillo.vidaAmarillo < 0) amarillo.vidaAmarillo = 0;
 

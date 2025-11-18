@@ -1,10 +1,68 @@
+* {
+    box-sizing: border-box;
+}
+body{
+    background-image: url(../imagenes/Frame\ 340.png)
+}
+.footer{
+    position: absolute;
+    bottom: 0%;
+    left: 0%;
+    width: 100%;
+    height: 200px;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: space-between;
+}
+.dragon {
+    position: absolute;
+    display: flex;
+    display: block;
+    width: 300px;
+    height: 300px;
+}
+
+/* dragón malo (arriba derecha) */
+.dragon.malo {
+    bottom: 180px;
+    left: 220px;
+}
+
+/* dragón usuario (abajo izquierda) */
+.dragon.usuario {
+    bottom: 340px;
+    right: 180px;
+}
+.dragon .nombre {
+    font-size: 50px;
+    color: white;
+    text-shadow: 2px 2px 2px black;
+    margin: 0;
+}
+
+.dragon .vida {
+    background: rgba(255,255,255,0.7);
+    padding: 5px 15px;
+    border-radius: 10px;
+    border: 3px solid black;
+    width: 100%;
+    font-size: x-large;
+    margin-top: 4px;
+    font-weight: bold;
+}
+.dragon .sprite {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+}
 .menudeataques {
     position: absolute;
     transform: translateX(-200%);
     background-color: #2350ca;
-    min-width: 160px;
-    border-radius: 5px;
-    margin-left: 10px;
+    width: 100%;
+    border-radius: 0px;
     transition: transform 1s ease-in;
 }
 .adopcionPelea {
@@ -15,12 +73,6 @@
     position: absolute;
     display: flex;
     display: none;
-}
-
-.chimuelo {
-    position: absolute;
-    display: flex;
-    display: block;
 }
 .adoptarAbilitado {
     background-color: green;
