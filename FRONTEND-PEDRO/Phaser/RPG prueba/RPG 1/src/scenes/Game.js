@@ -18,6 +18,12 @@ export class Game extends Phaser.Scene {
     function recorrerDragones() {
       for (let i = 0; i < dragones.length; i++) {
         let dragon = dragones[i];
+        const x = Phaser.Math.Between(896, 1424);
+        const y = Phaser.Math.Between(32, 352);
+        dragon = new NPC(this, x, y);
+        this.dragons.add(dragon);
+
+        dragon.setBounce(1, 1).setCollideWorldBounds(true);
       }
     }
   }
@@ -96,14 +102,14 @@ export class Game extends Phaser.Scene {
     //dragon
     this.dragons = this.physics.add.group();
 
-    for (let i = 0; i < 5; i++) {
+    /*for (let i = 0; i < 5; i++) {
       const x = Phaser.Math.Between(896, 1424);
       const y = Phaser.Math.Between(32, 352);
       dragon = new NPC(this, x, y);
       this.dragons.add(dragon);
 
       dragon.setBounce(1, 1).setCollideWorldBounds(true);
-    }
+    }*/
 
     //colliders
     obstaculos.setCollisionByExclusion([-1]);
