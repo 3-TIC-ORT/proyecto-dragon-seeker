@@ -12,19 +12,28 @@ export class Game extends Phaser.Scene {
 
     getEvent("obtenerdragones", (data) => {
       dragones = data.dragones;
-      recorrerDragones();
+      return recorrerDragones();
     });
 
-    function recorrerDragones() {
+    function recorrerDragones(mapa) {
+      let dragonesSeleccionados = [];
       for (let i = 0; i < dragones.length; i++) {
         let dragon = dragones[i];
-        const x = Phaser.Math.Between(896, 1424);
-        const y = Phaser.Math.Between(32, 352);
-        dragon = new NPC(this, x, y);
         this.dragons.add(dragon);
 
+        if (dragon.nombre === "Rocabrava" || dragon.nombre === "Golem Verde") {
+          mapa1.dragonesSeleccionados.push(dragon);
+          //Rocabrava, Golem Verde
+
+          const y = Phaser.Math.Between(32, 352);
+          const x = Phaser.Math.Between(896, 1424);
+
+          dragonesSeleccionados = new NPC(this, x, y);
+        }
+        //mapa = mapa1
         dragon.setBounce(1, 1).setCollideWorldBounds(true);
       }
+      return dragonesSeleccionados;
     }
   }
   preload() {
@@ -66,6 +75,7 @@ export class Game extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(1000)
       .setVisible(false);
+
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("mapa 2", "tiles");
 
@@ -188,10 +198,7 @@ export class Game extends Phaser.Scene {
         this.hasCoke = false;
         this.showMessage("Gracias por la coca");
 
-        // opcional: podés cambiar algo del NPC
-        this.nearChimuelo.setTint(0x00ff00); // ejemplo: se pone verde
-
-        // una vez hecho, limpiamos el NPC cercano
+        this.chimuelo.setTint(0x00ff00);
         this.nearChimuelo = null;
       } else {
         console.log("hola");
