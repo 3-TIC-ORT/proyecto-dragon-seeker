@@ -20,11 +20,13 @@ export function buscar(lista, user, dragon) {
 }
 
 function asegurar(lista, user, dragon) {
-    let aaa = buscar(lista, user, dragon)
-    if (!aaa) {
-        let reg = {
+    let reg = buscar(lista, user, dragon)
+    
+    if (!reg) {
+        reg = {
             user,
             dragon,
+            habilitado: (dragon === 3),
             nivel: 1,
             exp: 0, 
             vida: 100,
@@ -37,9 +39,8 @@ function asegurar(lista, user, dragon) {
             desbloqueados: []
         }
         lista.push(reg)
-        return reg
     }
-    return aaa
+    return reg
 }
 
 function experiencianecesaria(nivel) {
@@ -107,4 +108,18 @@ export function aumentarestadisticas(iddragon, incremento, idusuario, lista0 = n
 
     if (!lista0) guardar(lista)
     return { exito: true, mensaje: `+${incremento.vida} vida, +${incremento.fuerza} fuerza.` }
+}
+
+export function habilitardragon(user, dragon) {
+    const lista = leer()
+    const reg = asegurar(lista, user, dragon)
+     
+    reg.habilitado = true
+
+    guardar(lista)
+    return {
+        exito: true,
+        mensaje: "dragon adoptado!",
+        progreso: reg
+    }
 }
