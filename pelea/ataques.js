@@ -7,8 +7,13 @@ let ataque2 = document.getElementById("ataque2");
 let ataque3 = document.getElementById("ataque3");
 let ataque4 = document.getElementById("ataque4");
 let BotonAdopcion = document.getElementById("adoptar");
+
 let barravidaUsuario = document.getElementById("vida_chimuelo");
+let vidaTextoUsuario = document.getElementByid("vidaTexto_chimuelo")
+
 let barravidaEnemigo = document.getElementById("vida_amarillo");
+let vidaTextoEnemigo = document.getElementByid("vidaTexto_amarillo")
+
 let imagenamarillo = document.getElementById("amarillo");
 let gifAmarillo = document.getElementById("AtaqueAmarillo");
 let imagenchimuelo = document.getElementById("chimuelo");

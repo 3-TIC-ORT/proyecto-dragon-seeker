@@ -34,21 +34,38 @@ body{
     right: 180px;
 }
 .dragon .nombre {
-    font-size: 50px;
+    font-size: 40px;
     color: white;
     text-shadow: 2px 2px 2px black;
     margin: 0;
 }
 
-.dragon .vida {
-    background: rgba(255,255,255,0.7);
-    padding: 5px 15px;
+.vidaBarra {
+    position: relative;
+    width: 180px;
+    height: 22px;
+    background: rgb(60, 60, 60);
     border-radius: 10px;
-    border: 3px solid black;
+    overflow: hidden;
+}
+
+.vidaRelleno {
+    height: 100%;
     width: 100%;
-    font-size: x-large;
-    margin-top: 4px;
+    background: green;
+    transition: width 0.4s ease, background 0.3s ease;
+}
+
+.vidaTexto {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 2px;
+    font-size: 15px;
+    color: white;
+    z-index: 5;
     font-weight: bold;
+    text-shadow: 1px 1px 2px black;
 }
 .dragon .sprite {
     position: absolute;
