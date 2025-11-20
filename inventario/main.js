@@ -1,5 +1,7 @@
 connect2Server();
 
+localStorage.removeItem("dragonardo");
+
 let dragones = [];
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) {

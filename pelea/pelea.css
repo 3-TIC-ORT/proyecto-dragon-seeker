@@ -24,29 +24,30 @@ body{
 
 /* dragón malo (arriba derecha) */
 .dragon.malo {
-    bottom: 240px;
+    bottom: 320px;
     right: 160px;
 }
 
 /* dragón usuario (abajo izquierda) */
 .dragon.usuario {
-    bottom: 120px;
+    bottom: 160px;
     left: 220px;
 }
 .dragon .nombre {
     font-size: 40px;
     color: white;
     text-shadow: 2px 2px 2px black;
-    margin: 0;
+    margin-top: 25px;
 }
 
 .vidaBarra {
     position: relative;
-    width: 180px;
+    width: 100%;
     height: 22px;
     background: rgb(60, 60, 60);
     border-radius: 10px;
     overflow: hidden;
+    margin-top: -30px;
 }
 
 .vidaRelleno {
@@ -74,13 +75,28 @@ body{
     transform: translateX(-50%);
     width: 220px;
 }
+.pelear {
+
+}
+.adoptar {
+    display: flex;
+    background-color: red;
+    padding: 10px 20px;
+    width: auto;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    margin-left: 400px;
+}
 .menudeataques {
     position: absolute;
     transform: translateX(-200%);
     background-color: #2350ca;
-    width: 100%;
+    width: 100px;
     border-radius: 0px;
     transition: transform 1s ease-in;
+    z-index: 10;
 }
 .adopcionPelea {
     position: absolute;
