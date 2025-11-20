@@ -15,7 +15,7 @@ export class Game extends Phaser.Scene {
       return recorrerDragones();
     });
 
-    function recorrerDragones(mapa) {
+    function recorrerDragones() {
       let dragonesSeleccionados = [];
       for (let i = 0; i < dragones.length; i++) {
         let dragon = dragones[i];
@@ -30,7 +30,7 @@ export class Game extends Phaser.Scene {
 
           dragonesSeleccionados = new NPC(this, x, y);
         }
-        //mapa = mapa1
+
         dragon.setBounce(1, 1).setCollideWorldBounds(true);
       }
       return dragonesSeleccionados;
@@ -165,16 +165,26 @@ export class Game extends Phaser.Scene {
       null,
       this
     );
+
+    this.cokeGiven = false;
+
+    this.showingInteractMessage = false;
   }
   pickUpCoke(player, coke) {
     this.hasCoke = true; // variable que indica que el jugador tiene la coca
     coke.disableBody(true, true); // desaparece del mapa
     this.showMessage("Agarraste la coca!");
   }
+
   tryGiveCoke(player, chimuelo) {
-    // mostrar mensaje para presionar E
-    this.showMessage("Presioná E para ineractuar");
-    this.nearChimuelo = chimuelo; // guardamos referencia del chimuelo tocado
+    if (this.cokeGiven) return;
+
+    if (!this.showingInteractMessage) {
+      this.showMessage("Presioná E para interactuar");
+      this.showingInteractMessage = true;
+    }
+
+    this.nearChimuelo = chimuelo;
   }
 
   showMessage(text) {
@@ -194,14 +204,15 @@ export class Game extends Phaser.Scene {
     });
 
     if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      if (this.hasCoke) {
-        this.hasCoke = false;
-        this.showMessage("Gracias por la coca");
+      this.showingInteractMessage = false;
 
+      if (this.hasCoke && !this.cokeGiven) {
+        this.hasCoke = false;
+        this.cokeGiven = true;
+        this.showMessage("Gracias por la coca");
         this.chimuelo.setTint(0x00ff00);
         this.nearChimuelo = null;
-      } else {
-        console.log("hola");
+      } else if (!this.hasCoke) {
         this.showMessage("No tenés la Coca todavía!");
       }
     }
