@@ -24,14 +24,14 @@ body{
 
 /* dragón malo (arriba derecha) */
 .dragon.malo {
-    bottom: 180px;
-    left: 220px;
+    bottom: 240px;
+    right: 160px;
 }
 
 /* dragón usuario (abajo izquierda) */
 .dragon.usuario {
-    bottom: 340px;
-    right: 180px;
+    bottom: 120px;
+    left: 220px;
 }
 .dragon .nombre {
     font-size: 40px;

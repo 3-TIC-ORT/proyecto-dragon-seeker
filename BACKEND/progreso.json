@@ -3,10 +3,10 @@
     "user": 1,
     "dragon": 2,
     "habilitado": false,
-    "nivel": 1,
-    "exp": 50,
-    "vida": 100,
-    "fuerza": 10,
+    "nivel": 2,
+    "exp": 0,
+    "vida": 110,
+    "fuerza": 15,
     "ataques": [
       {
         "nombre": "Arañazo",
@@ -21,7 +21,9 @@
         "nivel": 13
       }
     ],
-    "desbloqueados": []
+    "desbloqueados": [
+      "Arañazo"
+    ]
   },
   {
     "user": 1,
