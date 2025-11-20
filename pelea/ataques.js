@@ -9,10 +9,10 @@ let ataque4 = document.getElementById("ataque4");
 let BotonAdopcion = document.getElementById("adoptar");
 
 let barravidaUsuario = document.getElementById("vida_chimuelo");
-let vidaTextoUsuario = document.getElementByid("vidaTexto_chimuelo")
+let vidaTextoUsuario = document.getElementById("vidaTexto_chimuelo")
 
 let barravidaEnemigo = document.getElementById("vida_amarillo");
-let vidaTextoEnemigo = document.getElementByid("vidaTexto_amarillo")
+let vidaTextoEnemigo = document.getElementById("vidaTexto_amarillo")
 
 let imagenamarillo = document.getElementById("amarillo");
 let gifAmarillo = document.getElementById("AtaqueAmarillo");
@@ -24,6 +24,11 @@ let nombredragonmalo = document.getElementById("nombreDragonMalo")
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 let dragon = JSON.parse(localStorage.getItem("dragonardo"));
 
+if (!dragon.vidaInicial) {
+  dragon.vidaInicial = dragon.vida;
+  localStorage.setItem("dragonardo", JSON.stringify(dragon));
+}
+
 let amarillo = {
   nombre: "amarillo",
   vidaAmarillo: 100,
@@ -31,6 +36,10 @@ let amarillo = {
   defense: 7,
   speed: 7,
 };
+
+if (!amarillo.vidaInicial) {
+  amarillo.vidaInicial = amarillo.vidaAmarillo; 
+}
 
 nombredragon.innerText = dragon.nombre
 nombredragonmalo.innerText = amarillo.nombre
@@ -40,8 +49,23 @@ let iddragon = dragon.id;
 
 let batallaTerminada = false;
 
-barravidaUsuario.innerText = dragon.vida;
-barravidaEnemigo.innerText = 100;
+vidaTextoUsuario.innerText = dragon.vida;
+vidaTextoEnemigo.innerText = amarillo.vidaAmarillo;
+
+actualizarBarraVida(barravidaUsuario, vidaTextoUsuario, dragon.vida, dragon.vidaInicial);
+actualizarBarraVida(barravidaEnemigo, vidaTextoEnemigo, amarillo.vidaAmarillo, amarillo.vidaInicial);
+
+function actualizarBarraVida(elementoRelleno, elementoTexto, vidaActual, vidaInicial) {
+  let porcentaje = (vidaActual / vidaInicial) * 100;
+
+  elementoRelleno.style.width = porcentaje + "%";
+
+  if (porcentaje > 60) elementoRelleno.style.background = "green";
+  else if (porcentaje > 30) elementoRelleno.style.background = "yellow";
+  else elementoRelleno.style.background = "red";
+
+  elementoTexto.innerText = `${vidaActual} / ${vidaInicial}`;
+}
 
 ataque1.innerText = dragon.ataques[0]?.nombre || "Sin ataque";
 ataque2.innerText = dragon.ataques[1]?.nombre || "Sin ataque";
@@ -122,7 +146,13 @@ function ataqueUsuario(i) {
   amarillo.vidaAmarillo -= danoTotal;
   if (amarillo.vidaAmarillo < 0) amarillo.vidaAmarillo = 0;
 
-  barravidaEnemigo.innerText = amarillo.vidaAmarillo;
+  //barravidaEnemigo.innerText = amarillo.vidaAmarillo;
+  actualizarBarraVida(
+    barravidaEnemigo,
+    vidaTextoEnemigo,
+    amarillo.vidaAmarillo,
+    amarillo.vidaInicial
+  );
 
   console.log(`Ataque del usuario: ${danoTotal}, vida rival: ${amarillo.vidaAmarillo}`);
 
@@ -144,7 +174,13 @@ function ataqueEnemigo() {
     dragon.vida -= dano;
     if (dragon.vida < 0) dragon.vida = 0;
 
-    barravidaUsuario.innerText = dragon.vida;
+    //barravidaUsuario.innerText = dragon.vida;
+    actualizarBarraVida(
+      barravidaUsuario,
+      vidaTextoUsuario,
+      dragon.vida,
+      dragon.vidaInicial
+    );
 
     console.log(`Ataque enemigo: ${dano}, vida dragón: ${dragon.vida}`);
 
