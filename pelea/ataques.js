@@ -41,6 +41,17 @@ if (!amarillo.vidaInicial) {
   amarillo.vidaInicial = amarillo.vidaAmarillo; 
 }
 
+if (amarillo.vidaAmarillo <= 30) {
+  desbloquearBoton();
+  BotonAdopcion.onclick = null;
+} else {
+  bloquearboton();
+  BotonAdopcion.onclick = (e) => {
+    e.preventDefault();
+    console.log("Todavía no lo podés adoptar");
+  };
+}
+
 nombredragon.innerText = dragon.nombre
 nombredragonmalo.innerText = amarillo.nombre
 
@@ -78,6 +89,8 @@ function checkFinDeBatalla() {
   if (dragon.vida <= 0) {
     batallaTerminada = true;
     deshabilitarAtaques();
+    bloquearboton()
+    BotonAdopcion.onclick = (e) => e.preventDefault();
 
     setTimeout(() => {
       gifChimuelo.style.display = "none";
@@ -104,6 +117,8 @@ function checkFinDeBatalla() {
   if (amarillo.vidaAmarillo <= 0) {
     batallaTerminada = true;
     deshabilitarAtaques();
+    bloquearboton()
+    BotonAdopcion.onclick = (e) => e.preventDefault();
 
     setTimeout(() => {
       gifChimuelo.style.display = "none";
@@ -205,8 +220,13 @@ function terminarTurno2() {
 
   if (amarillo.vidaAmarillo <= 30) {
     desbloquearBoton();
+    BotonAdopcion.onclick = null;
   } else {
     bloquearboton();
+      BotonAdopcion.onclick = (e) => {
+      e.preventDefault();
+      console.log("Todavía no lo podés adoptar");
+    };
   }
 }
 
@@ -217,11 +237,11 @@ function deshabilitarAtaques() {
   ataque4.disabled = true;
 }
 
-BotonAdopcion.addEventListener("click", () => {
-  if (amarillo.vidaAmarillo >= 30) {
-    BotonAdopcion.disabled = true;
-  }
-});
+//BotonAdopcion.addEventListener("click", (e) => {
+  //if (amarillo.vidaAmarillo >= 30) {
+    //e.preventDefault()
+  //}
+//});
 
 ataque1.addEventListener("click", () => ataqueUsuario(0));
 ataque2.addEventListener("click", () => ataqueUsuario(1));
