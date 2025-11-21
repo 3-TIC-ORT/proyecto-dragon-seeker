@@ -28,7 +28,7 @@ if (!dragon.vidaInicial) {
   dragon.vidaInicial = dragon.vida;
   localStorage.setItem("dragonardo", JSON.stringify(dragon));
 }
-
+imagenchimuelo.src = `../BACKEND/${dragon.imagen}`;
 let amarillo = {
   nombre: "amarillo",
   vidaAmarillo: 100,

@@ -40,6 +40,7 @@ function mostrarDragones() {
       <p>Vida: ${dragon.vida}</p>
       <p>Fuerza: ${dragon.fuerza}</p>
       <p>Mapa: ${dragon.mapa}</p>
+      <img src="../BACKEND/${dragon.imagen}" alt="${dragon.nombre}" class="imgDragon">
     `;
 
     containerDragon.appendChild(tarjeta);
