@@ -8,34 +8,38 @@ export class Game extends Phaser.Scene {
   constructor() {
     super("Game");
 
-    let dragones = [];
+    // Grupo donde irán los dragones instanciados
+    this.dragons = null;
 
+    // Lista de dragones seleccionados (solo mapa 1)
+    this.dragonesSeleccionados = [];
+
+    // Escuchar el evento que trae los dragones del JSON
     getEvent("obtenerdragones", (data) => {
-      dragones = data.dragones;
-      return recorrerDragones();
+      const dragones = data.dragones;
+
+      // FILTRAR SOLO LOS DRAGONES QUE QUIERO
+      // En este caso: solo los que están en mapa 1
+      this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
+
+      // Una vez filtrados, los creo en el mapa
+      this.spawnDragones();
     });
+  }
 
-    function recorrerDragones() {
-      let dragonesSeleccionados = [];
-      for (let i = 0; i < dragones.length; i++) {
-        let dragon = dragones[i];
+  spawnDragones() {
+    if (!this.dragons) return; // todavía no se creó el grupo
+
+    for (let dragonData of this.dragonesSeleccionados) {
+      for (let i = 0; i < 5 && i > 3; i++) {
+        const x = Phaser.Math.Between(896, 1424);
+        const y = Phaser.Math.Between(32, 352);
+        const dragon = new NPC(this, x, y);
         this.dragons.add(dragon);
-
-        if (dragon.nombre === "Rocabrava" || dragon.nombre === "Golem Verde") {
-          mapa1.dragonesSeleccionados.push(dragon);
-          //Rocabrava, Golem Verde
-
-          const y = Phaser.Math.Between(32, 352);
-          const x = Phaser.Math.Between(896, 1424);
-
-          dragonesSeleccionados = new NPC(this, x, y);
-        }
-
-        dragon.setBounce(1, 1).setCollideWorldBounds(true);
       }
-      return dragonesSeleccionados;
     }
   }
+
   preload() {
     //Carga del mapa
     this.load.image("tiles", "assets/town_forest_tiles.png");
@@ -109,17 +113,8 @@ export class Game extends Phaser.Scene {
     //dragon especial
     this.chimuelo = new Minero(this, 350, 160);
 
-    //dragon
+    // grupo para dragones
     this.dragons = this.physics.add.group();
-
-    /*for (let i = 0; i < 5; i++) {
-      const x = Phaser.Math.Between(896, 1424);
-      const y = Phaser.Math.Between(32, 352);
-      dragon = new NPC(this, x, y);
-      this.dragons.add(dragon);
-
-      dragon.setBounce(1, 1).setCollideWorldBounds(true);
-    }*/
 
     //colliders
     obstaculos.setCollisionByExclusion([-1]);
@@ -158,6 +153,7 @@ export class Game extends Phaser.Scene {
     /*this.physics.add.overlap(this.player, this.dragons, () => {
       window.location.href = "../../../../inventario/inventario.html";
     });*/
+
     this.physics.add.overlap(
       this.player,
       this.chimuelo,
@@ -170,6 +166,7 @@ export class Game extends Phaser.Scene {
 
     this.showingInteractMessage = false;
   }
+
   pickUpCoke(player, coke) {
     this.hasCoke = true; // variable que indica que el jugador tiene la coca
     coke.disableBody(true, true); // desaparece del mapa
@@ -177,11 +174,10 @@ export class Game extends Phaser.Scene {
   }
 
   tryGiveCoke(player, chimuelo) {
-    if (this.cokeGiven) return;
+    if (this.cokeGiven === true) return;
 
     if (!this.showingInteractMessage) {
       this.showMessage("Presioná E para interactuar");
-      this.showingInteractMessage = true;
     }
 
     this.nearChimuelo = chimuelo;
