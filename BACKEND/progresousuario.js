@@ -123,3 +123,15 @@ export function habilitardragon(user, dragon) {
         progreso: reg
     }
 }
+
+export function actualizarVida(idusuario, iddragon, vidaNueva) {
+    const lista = leer()
+    const reg = asegurar(lista, iddragon, idusuario)
+    reg.vida = vidaNueva
+    guardar(lista)
+    return {
+        exito: true,
+        mensaje: "vida actualizada",
+        progreso: reg
+    }
+}
