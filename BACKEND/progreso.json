@@ -31,7 +31,7 @@
     "habilitado": false,
     "nivel": 2,
     "exp": 50,
-    "vida": 110,
+    "vida": 0,
     "fuerza": 15,
     "ataques": [
       {

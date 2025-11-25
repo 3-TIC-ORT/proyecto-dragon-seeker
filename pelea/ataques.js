@@ -185,7 +185,7 @@ function ataqueEnemigo() {
     gifAmarillo.style.display = "block";
     imagenamarillo.style.display = "none";
 
-    let dano = 10;
+    let dano = 60;
     dragon.vida -= dano;
     if (dragon.vida < 0) dragon.vida = 0;
 
