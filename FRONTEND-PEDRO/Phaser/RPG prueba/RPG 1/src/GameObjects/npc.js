@@ -2,7 +2,7 @@ connect2Server();
 
 export class NPC extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
-    super(scene, x, y, "dragon");
+    super(scene, x, y, "spriteKey");
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -18,17 +18,11 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       loop: true,
     });
 
-    this.initanimations();
+    // es para las animacionesthis.initanimations();
   }
-
-  initanimations() {
-    this.anims.create({
-      key: "dragon-left",
-      frames: this.anims.generateFrameNumbers("dragon", { start: 0, end: 3 }),
-      frameRate: 8,
-      repeat: -1,
-    });
-  }
+  preload() {}
+  // aca van las animaciones de cada uno pero todavia no estan
+  // initanimations() {}
 
   preUpdate(t, dt) {
     super.preUpdate(t, dt);
@@ -45,10 +39,8 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       this.anims.stop();
     } else if (this.direction.x > 0) {
       this.setFlipX(true);
-      this.anims.play("dragon-left", true);
     } else if (this.direction.x < 0) {
       this.setFlipX(false);
-      this.anims.play("dragon-left", true);
     }
   }
 

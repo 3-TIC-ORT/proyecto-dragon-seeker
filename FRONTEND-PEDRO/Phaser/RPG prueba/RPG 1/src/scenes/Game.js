@@ -4,40 +4,17 @@ import { Minero } from "../GameObjects/minero.js";
 
 connect2Server();
 
+// Escuchar el evento que trae los dragones del JSON
+getEvent("obtenerdragones", (data) => {
+  const dragones = data.dragones;
+
+  // filtra los dragones que están en mapa 1
+  window.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
+});
+
 export class Game extends Phaser.Scene {
   constructor() {
     super("Game");
-
-    // Grupo donde irán los dragones instanciados
-    this.dragons = null;
-
-    // Lista de dragones seleccionados (solo mapa 1)
-    this.dragonesSeleccionados = [];
-
-    // Escuchar el evento que trae los dragones del JSON
-    getEvent("obtenerdragones", (data) => {
-      const dragones = data.dragones;
-
-      // FILTRAR SOLO LOS DRAGONES QUE QUIERO
-      // En este caso: solo los que están en mapa 1
-      this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
-
-      // Una vez filtrados, los creo en el mapa
-      this.spawnDragones();
-    });
-  }
-
-  spawnDragones() {
-    if (!this.dragons) return; // todavía no se creó el grupo
-
-    for (let dragonData of this.dragonesSeleccionados) {
-      for (let i = 0; i < 5 && i > 3; i++) {
-        const x = Phaser.Math.Between(896, 1424);
-        const y = Phaser.Math.Between(32, 352);
-        const dragon = new NPC(this, x, y);
-        this.dragons.add(dragon);
-      }
-    }
   }
 
   preload() {
@@ -52,16 +29,12 @@ export class Game extends Phaser.Scene {
     });
 
     //asignacion del sprite al dragon
-    this.load.spritesheet("dragon", "assets/dragon.png", {
-      frameWidth: 32,
-      frameHeight: 32,
+    window.dragonesData?.forEach((d) => {
+      this.load.image("dragon_" + d.id, d.imagen);
     });
 
     //asignacopn del spirte al viejo
-    this.load.spritesheet("chimuelo", "assets/pinguino.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
+    this.load.image("chimuelo", "assets/pinguino.png");
 
     //asignacion de la coke
     this.load.image("coke", "assets/coke.png");
@@ -104,6 +77,23 @@ export class Game extends Phaser.Scene {
     //creo el Player
     this.player = new Player(this, startX, startY, this.cursors);
 
+    //creacion de los dragones
+    this.dragons = this.physics.add.group();
+    // si ya llegaron por socket:
+    if (window.dragonesData) {
+      window.dragonesData.forEach((d) => {
+        // Crear NPC en la posición inicial del dragón
+        const x = Phaser.Math.Between(896, 1424);
+        const y = Phaser.Math.Between(32, 352);
+        const npc = new NPC(this, x, y);
+
+        // Asignar la imagen (textura) del dragón
+        npc.setTexture(d.imagenKey);
+
+        this.grupoDragones.add(npc);
+      });
+    }
+
     //creo la coke
     const coke = this.physics.add.sprite(256, 160, "coke");
 
@@ -112,9 +102,6 @@ export class Game extends Phaser.Scene {
 
     //dragon especial
     this.chimuelo = new Minero(this, 350, 160);
-
-    // grupo para dragones
-    this.dragons = this.physics.add.group();
 
     //colliders
     obstaculos.setCollisionByExclusion([-1]);
@@ -194,11 +181,6 @@ export class Game extends Phaser.Scene {
   }
 
   update() {
-    // actualizamos cada dragón
-    this.dragons.children.iterate((dragon) => {
-      dragon.update();
-    });
-
     if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
       this.showingInteractMessage = false;
 
