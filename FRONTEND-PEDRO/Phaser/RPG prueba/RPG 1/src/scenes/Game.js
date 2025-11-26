@@ -150,8 +150,7 @@ export class Game extends Phaser.Scene {
     );
 
     this.cokeGiven = false;
-
-    this.showingInteractMessage = false;
+    this.interactionProcess = false;
   }
 
   pickUpCoke(player, coke) {
@@ -162,10 +161,8 @@ export class Game extends Phaser.Scene {
 
   tryGiveCoke(player, chimuelo) {
     if (this.cokeGiven === true) return;
-
-    if (!this.showingInteractMessage) {
-      this.showMessage("Presioná E para interactuar");
-    }
+    if (this.interactionProcess === true) return;
+    this.showMessage("Presioná E para interactuar");
 
     this.nearChimuelo = chimuelo;
   }
@@ -182,8 +179,6 @@ export class Game extends Phaser.Scene {
 
   update() {
     if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      this.showingInteractMessage = false;
-
       if (this.hasCoke && !this.cokeGiven) {
         this.hasCoke = false;
         this.cokeGiven = true;
@@ -191,6 +186,7 @@ export class Game extends Phaser.Scene {
         this.chimuelo.setTint(0x00ff00);
         this.nearChimuelo = null;
       } else if (!this.hasCoke) {
+        this.interactionProcess === true;
         this.showMessage("No tenés la Coca todavía!");
       }
     }
