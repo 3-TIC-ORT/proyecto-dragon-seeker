@@ -100,5 +100,29 @@
       }
     ],
     "desbloqueados": []
+  },
+  {
+    "user": 2,
+    "dragon": 1,
+    "habilitado": false,
+    "nivel": 1,
+    "exp": 0,
+    "vida": 0,
+    "fuerza": 10,
+    "ataques": [
+      {
+        "nombre": "Arañazo",
+        "nivel": 1
+      },
+      {
+        "nombre": "Llamarada",
+        "nivel": 5
+      },
+      {
+        "nombre": "Terremoto",
+        "nivel": 13
+      }
+    ],
+    "desbloqueados": []
   }
 ]

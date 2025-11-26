@@ -75,19 +75,43 @@ body{
     transform: translateX(-50%);
     width: 220px;
 }
-.pelear {
-
+.adopcionPelea {
+    top: 20px;
+    right: 180px;
+    display: grid;
+    grid-template-columns: repeat(2, 160px);
+    gap: 100px;
+    position: absolute;
+    transform: translateX(0%);
 }
-.adoptar {
+.btn {
+    background-size: cover !important;
+    width: 259px;
+    height: 90px;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+
     display: flex;
-    background-color: red;
-    padding: 10px 20px;
-    width: auto;
-    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+
     color: white;
-    text-decoration: none;
+    font-size: 40px;
+    font-weight: bold;
     text-align: center;
-    margin-left: 400px;
+    text-decoration: none;
+}
+.luchar { 
+    background-image: url("../imagenes/boton luchar.png"); 
+}
+.luchar:hover {
+    background-image: url("../imagenes/boton luchar apretado.png");
 }
 .menudeataques {
     position: absolute;
@@ -98,20 +122,18 @@ body{
     transition: transform 1s ease-in;
     z-index: 10;
 }
-.adopcionPelea {
+/*.adopcionPelea {
     position: absolute;
     transform: translateX(0%);
-}
+}*/
 .ataquechimuelo {
     position: absolute;
     display: flex;
     display: none;
 }
 .adoptarAbilitado {
-    background-color: green;
+    background-image: url("../imagenes/boton adoptar habilitado.png");
 }
 .adoptarBloqueado {
-    background-color:red;
+    background-image: url("../imagenes/boton adoptar bloqueado.png");
 }
-
-
