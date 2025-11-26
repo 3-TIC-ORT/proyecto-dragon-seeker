@@ -4,17 +4,17 @@ import { Minero } from "../GameObjects/minero.js";
 
 connect2Server();
 
-// Escuchar el evento que trae los dragones del JSON
-getEvent("obtenerdragones", (data) => {
-  const dragones = data.dragones;
-
-  // filtra los dragones que están en mapa 1
-  window.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
-});
-
 export class Game extends Phaser.Scene {
   constructor() {
     super("Game");
+
+    // Escuchar el evento que trae los dragones del JSON
+    getEvent("obtenerdragones", (data) => {
+      const dragones = data.dragones;
+
+      // filtra los dragones que están en mapa 1
+      this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
+    });
   }
 
   preload() {
@@ -29,7 +29,7 @@ export class Game extends Phaser.Scene {
     });
 
     //asignacion del sprite al dragon
-    window.dragonesData?.forEach((d) => {
+    this.dragonesSeleccionados?.forEach((d) => {
       this.load.image("dragon_" + d.id, d.imagen);
     });
 
@@ -77,21 +77,42 @@ export class Game extends Phaser.Scene {
     //creo el Player
     this.player = new Player(this, startX, startY, this.cursors);
 
+    this.sceneStarted = true;
+
     //creacion de los dragones
     this.dragons = this.physics.add.group();
-    // si ya llegaron por socket:
-    if (window.dragonesData) {
-      window.dragonesData.forEach((d) => {
-        // Crear NPC en la posición inicial del dragón
+
+    this.spawnDragons = (cantidad) => {
+      if (!this.dragonesSeleccionados) return;
+
+      const dragones_mapa1 = Phaser.Utils.Array.Shuffle([
+        ...this.dragonesSeleccionados,
+      ]).slice(0, cantidad);
+
+      dragones_mapa1.forEach((d) => {
         const x = Phaser.Math.Between(896, 1424);
         const y = Phaser.Math.Between(32, 352);
-        const npc = new NPC(this, x, y);
 
-        // Asignar la imagen (textura) del dragón
-        npc.setTexture(d.imagenKey);
+        const dragon = new NPC(this, x, y);
+        dragon.setTexture("dragon_" + d.id);
 
-        this.grupoDragones.add(npc);
+        this.dragons.add(dragon);
       });
+    };
+
+    //funcion que crea los  5 dragones iniciales
+    this.spawnInitialDragons = () => {
+      if (!this.dragonesSeleccionados) return;
+
+      if (!this.initialSpawnDone) {
+        this.spawnDragons(5);
+        this.initialSpawnDone = true;
+      }
+    };
+
+    // Si el JSON ya llegó crear los dragones ahora
+    if (this.dragonesSeleccionados) {
+      this.spawnInitialDragons();
     }
 
     //creo la coke
@@ -189,6 +210,11 @@ export class Game extends Phaser.Scene {
         this.interactionProcess === true;
         this.showMessage("No tenés la Coca todavía!");
       }
+    }
+
+    //si quedan menos de 4 dragones spawnean 2
+    if (this.dragons.countActive(true) < 4 && this.dragonesSeleccionados) {
+      this.spawnDragons(2);
     }
   }
 }
