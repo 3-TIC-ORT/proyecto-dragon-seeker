@@ -51,7 +51,6 @@ body{
     display: flex;
     align-items: center;
     padding-left: 12px;
-    box-shadow: inset 0 0 3px #b9c2b9;
     image-rendering: pixelated;
 }
 
@@ -59,21 +58,22 @@ body{
     height: 65%;
     width: 100%;
     background:linear-gradient(#5cff33, #28a30d);
+    image-rendering: pixelated;
     transition: width 0.4s ease, background 0.3s ease;
     margin-left: 120px;
-    margin-right: 5px;
+    margin-right: 8px;
 }
 
 .vidaTexto {
     position: absolute;
     width: 100%;
     text-align: left;
-    top: 2px;
-    font-size: 15px;
-    color: white;
+    top: -1px;
+    font-size: 20px;
+    color: #30c20b;
     z-index: 5;
     font-weight: bold;
-    text-shadow: 1px 1px 2px black;
+    margin-left: -10px;
 }
 .dragon .sprite {
     position: absolute;

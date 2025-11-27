@@ -75,7 +75,7 @@ function actualizarBarraVida(elementoRelleno, elementoTexto, vidaActual, vidaIni
   else if (porcentaje > 30) elementoRelleno.style.background = "yellow";
   else elementoRelleno.style.background = "red";
 
-  elementoTexto.innerText = `${vidaActual} / ${vidaInicial}`;
+  elementoTexto.innerText = `Hp (${vidaActual} / ${vidaInicial})`;
 }
 
 ataque1.innerText = dragon.ataques[0]?.nombre || "Sin ataque";
