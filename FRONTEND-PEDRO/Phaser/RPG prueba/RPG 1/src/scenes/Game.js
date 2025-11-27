@@ -14,6 +14,12 @@ export class Game extends Phaser.Scene {
 
       // filtra los dragones que están en mapa 1
       this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
+
+      this.dragonesSeleccionados?.forEach((d) => {
+        this.load.image("dragon_" + d.id, "../../../../BACKEND/" + d.imagen);
+      });
+
+      this.load.start();
     });
   }
 
@@ -29,9 +35,6 @@ export class Game extends Phaser.Scene {
     });
 
     //asignacion del sprite al dragon
-    this.dragonesSeleccionados?.forEach((d) => {
-      this.load.image("dragon_" + d.id, d.imagen);
-    });
 
     //asignacopn del spirte al viejo
     this.load.image("chimuelo", "assets/pinguino.png");
