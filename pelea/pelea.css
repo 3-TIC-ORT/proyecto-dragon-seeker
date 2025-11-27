@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    font-family: "Pixelify Sans", sans-serif;
 }
 body{
     background-image: url(../imagenes/Frame\ 340.png)
@@ -85,7 +86,8 @@ body{
     transform: translateX(0%);
 }
 .btn {
-    background-size: cover !important;
+    /*background-size: cover !important;*/
+    background-size: contain;
     width: 259px;
     height: 90px;
 
@@ -102,7 +104,8 @@ body{
     justify-content: center;
 
     color: white;
-    font-size: 40px;
+    font-size: clamp(16px, 2.5vw, 32px);
+    white-space: nowrap;
     font-weight: bold;
     text-align: center;
     text-decoration: none;
@@ -116,12 +119,25 @@ body{
 .menudeataques {
     position: absolute;
     transform: translateX(-200%);
-    background-color: #2350ca;
-    width: 100px;
+    /*background-color: #2350ca;
+    width: 100px;*/
     border-radius: 0px;
     transition: transform 1s ease-in;
     z-index: 10;
+    top: 0px;
+    left: 180px;
+    display: grid;
+    grid-template-columns: repeat(2, 160px);
+    column-gap: 100px;
+    row-gap: 0px;
 }
+.ataque {
+   background-image: url("../imagenes/boton ataque.png");
+}
+.ataque:hover {
+    background-image: url("../imagenes/boton ataque apretado.png");
+}
+
 /*.adopcionPelea {
     position: absolute;
     transform: translateX(0%);
