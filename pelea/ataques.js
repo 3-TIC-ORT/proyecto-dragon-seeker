@@ -1,6 +1,6 @@
 connect2Server();
 
-import { bloquearboton, desbloquearBoton } from './pelea.js';
+import { bloquearboton, desbloquearBoton } from "./pelea.js";
 
 let ataque1 = document.getElementById("ataque1");
 let ataque2 = document.getElementById("ataque2");
@@ -9,20 +9,21 @@ let ataque4 = document.getElementById("ataque4");
 let BotonAdopcion = document.getElementById("adoptar");
 
 let barravidaUsuario = document.getElementById("vida_chimuelo");
-let vidaTextoUsuario = document.getElementById("vidaTexto_chimuelo")
+let vidaTextoUsuario = document.getElementById("vidaTexto_chimuelo");
 
 let barravidaEnemigo = document.getElementById("vida_amarillo");
-let vidaTextoEnemigo = document.getElementById("vidaTexto_amarillo")
+let vidaTextoEnemigo = document.getElementById("vidaTexto_amarillo");
 
 let imagenamarillo = document.getElementById("amarillo");
 let gifAmarillo = document.getElementById("AtaqueAmarillo");
 let imagenchimuelo = document.getElementById("chimuelo");
 let gifChimuelo = document.getElementById("AtaqueChimuelo");
-let nombredragon = document.getElementById("nombreDragon")
-let nombredragonmalo = document.getElementById("nombreDragonMalo")
+let nombredragon = document.getElementById("nombreDragon");
+let nombredragonmalo = document.getElementById("nombreDragonMalo");
 
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 let dragon = JSON.parse(localStorage.getItem("dragonardo"));
+let dragonEnemigo = JSON.parse(localStorage.getItem("dragon_enemigo"));
 
 if (!dragon.vidaInicial) {
   dragon.vidaInicial = dragon.vida;
@@ -53,8 +54,8 @@ if (dragonEnemigo.vida <= 30) {
   };
 }
 
-nombredragon.innerText = dragon.nombre
-nombredragonmalo.innerText = dragonEnemigo.nombre
+nombredragon.innerText = dragon.nombre;
+nombredragonmalo.innerText = dragonEnemigo.nombre;
 
 let idusuario = usuario.id;
 let iddragon = dragon.id;
@@ -64,10 +65,25 @@ let batallaTerminada = false;
 vidaTextoUsuario.innerText = dragon.vida;
 vidaTextoEnemigo.innerText = dragonEnemigo.vida;
 
-actualizarBarraVida(barravidaUsuario, vidaTextoUsuario, dragon.vida, dragon.vidaInicial);
-actualizarBarraVida(barravidaEnemigo, vidaTextoEnemigo, dragonEnemigo.vida, dragonEnemigo.vidaInicial);
+actualizarBarraVida(
+  barravidaUsuario,
+  vidaTextoUsuario,
+  dragon.vida,
+  dragon.vidaInicial
+);
+actualizarBarraVida(
+  barravidaEnemigo,
+  vidaTextoEnemigo,
+  dragonEnemigo.vida,
+  dragonEnemigo.vidaInicial
+);
 
-function actualizarBarraVida(elementoRelleno, elementoTexto, vidaActual, vidaInicial) {
+function actualizarBarraVida(
+  elementoRelleno,
+  elementoTexto,
+  vidaActual,
+  vidaInicial
+) {
   let porcentaje = (vidaActual / vidaInicial) * 100;
 
   elementoRelleno.style.width = porcentaje + "%";
@@ -86,12 +102,12 @@ ataque3.innerText = dragon.ataques[2]?.nombre || "Sin ataque";
 ataque4.innerText = dragon.ataques[3]?.nombre || "Sin ataque";
 
 function checkFinDeBatalla() {
-  if (batallaTerminada) return true; 
+  if (batallaTerminada) return true;
 
   if (dragon.vida <= 0) {
     batallaTerminada = true;
     deshabilitarAtaques();
-    bloquearboton()
+    bloquearboton();
     BotonAdopcion.onclick = (e) => e.preventDefault();
 
     setTimeout(() => {
@@ -102,15 +118,19 @@ function checkFinDeBatalla() {
 
       alert("Game over fraca, perdiste");
 
-      postEvent("actualizarVida", {
-        idusuario: idusuario,
-        iddragon: iddragon,
-        vida: dragon.vida,
-      }, (data) => {
-        if (data.exito) {
-          localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+      postEvent(
+        "actualizarVida",
+        {
+          idusuario: idusuario,
+          iddragon: iddragon,
+          vida: dragon.vida,
+        },
+        (data) => {
+          if (data.exito) {
+            localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+          }
         }
-      });
+      );
     }, 800);
 
     return true;
@@ -119,7 +139,7 @@ function checkFinDeBatalla() {
   if (dragonEnemigo.vida <= 0) {
     batallaTerminada = true;
     deshabilitarAtaques();
-    bloquearboton()
+    bloquearboton();
     BotonAdopcion.onclick = (e) => e.preventDefault();
 
     setTimeout(() => {
@@ -131,15 +151,19 @@ function checkFinDeBatalla() {
       alert("¡Ganaste brooo!");
 
       let expGanada = 50;
-      postEvent("sumarexperiencia", {
-        iddragon: iddragon,
-        cantidad: expGanada,
-        idusuario: idusuario
-      }, (data) => {
-        console.log(data.mensaje);
-        console.log("Nuevo nivel:", data.progreso.nivel);
-        localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
-      });
+      postEvent(
+        "sumarexperiencia",
+        {
+          iddragon: iddragon,
+          cantidad: expGanada,
+          idusuario: idusuario,
+        },
+        (data) => {
+          console.log(data.mensaje);
+          console.log("Nuevo nivel:", data.progreso.nivel);
+          localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+        }
+      );
     }, 800);
 
     return true;
@@ -171,7 +195,9 @@ function ataqueUsuario(i) {
     dragonEnemigo.vidaInicial
   );
 
-  console.log(`Ataque del usuario: ${danoTotal}, vida rival: ${dragonEnemigo.vida}`);
+  console.log(
+    `Ataque del usuario: ${danoTotal}, vida rival: ${dragonEnemigo.vida}`
+  );
 
   if (checkFinDeBatalla()) return;
 
@@ -224,10 +250,11 @@ function terminarTurno2() {
     desbloquearBoton();
     BotonAdopcion.onclick = null;
     BotonAdopcion.onclick = () => {
-      localStorage.setItem("vidaFinalRival", dragonEnemigo.vida);}
+      localStorage.setItem("vidaFinalRival", dragonEnemigo.vida);
+    };
   } else {
     bloquearboton();
-      BotonAdopcion.onclick = (e) => {
+    BotonAdopcion.onclick = (e) => {
       e.preventDefault();
       console.log("Todavía no lo podés adoptar");
     };
@@ -242,9 +269,9 @@ function deshabilitarAtaques() {
 }
 
 //BotonAdopcion.addEventListener("click", (e) => {
-  //if (amarillo.vidaAmarillo >= 30) {
-    //e.preventDefault()
-  //}
+//if (amarillo.vidaAmarillo >= 30) {
+//e.preventDefault()
+//}
 //});
 
 ataque1.addEventListener("click", () => ataqueUsuario(0));
