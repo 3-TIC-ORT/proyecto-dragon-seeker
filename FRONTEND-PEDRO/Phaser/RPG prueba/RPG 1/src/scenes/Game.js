@@ -177,11 +177,11 @@ export class Game extends Phaser.Scene {
   }
 
   dragonEnemigo(player, dragon) {
-    const dataDragonEnemigo = dragon.info;
+    const dragonEnemigo = dragon.info;
     dragon.active = false;
     dragon.body.enable = false;
 
-    localStorage.setItem("dragon_enemigo", JSON.stringify(dataDragonEnemigo));
+    localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
 
     window.location.href = "../../../../inventario/inventario.html";
   }
