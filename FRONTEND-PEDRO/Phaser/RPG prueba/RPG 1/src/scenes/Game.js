@@ -96,14 +96,16 @@ export class Game extends Phaser.Scene {
         const y = Phaser.Math.Between(32, 320);
 
         const dragon = new NPC(this, x, y);
+
+        //guardamos la info del dragon
+        dragon.info = d;
+
         //dragon.setTexture("dragon_" + d.id);
-        
-        
+
         this.dragons.add(dragon);
       });
     };
 
-    console.log(dragones)
     //funcion que crea los  5 dragones iniciales
     this.spawnInitialDragons = () => {
       if (!this.dragonesSeleccionados) return;
@@ -161,28 +163,27 @@ export class Game extends Phaser.Scene {
       this.scene.start("Casa", { x: 368, y: 448 }); // posición inicial en Mapa2
     });
 
-    this.dragonEnemigo(this.player, this.dragons){
-      const dataDragoneEnemigo{
-
-      }
-    }
-
-    //cambio de escena a la batalla
-    this.physics.add.overlap(this.player, this.dragons, this.dragonEnemigo () => {
-      //localStorage.setItem("dragon enemigo", JSON.stringify(dragon_enemigo));
-      //window.location.href = "../../../../inventario/inventario.html";
-    });
-
+    //paso de informacion del dragonEnemigo y cambio de escena
     this.physics.add.overlap(
       this.player,
-      this.chimuelo,
-      this.tryGiveCoke,
+      this.dragons,
+      this.dragonEnemigo,
       null,
       this
     );
 
     this.cokeGiven = false;
     this.interactionProcess = false;
+  }
+
+  dragonEnemigo(player, dragon) {
+    const dataDragonEnemigo = dragon.info;
+    dragon.active = false;
+    dragon.body.enable = false;
+
+    localStorage.setItem("dragon_enemigo", JSON.stringify(dataDragonEnemigo));
+
+    window.location.href = "../../../../inventario/inventario.html";
   }
 
   pickUpCoke(player, coke) {
