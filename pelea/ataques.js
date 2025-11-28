@@ -222,6 +222,8 @@ function terminarTurno2() {
   if (amarillo.vidaAmarillo <= 30) {
     desbloquearBoton();
     BotonAdopcion.onclick = null;
+    BotonAdopcion.onclick = () => {
+      localStorage.setItem("vidaFinalRival", amarillo.vidaAmarillo);}
   } else {
     bloquearboton();
       BotonAdopcion.onclick = (e) => {
