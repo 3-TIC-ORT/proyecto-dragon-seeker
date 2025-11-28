@@ -71,7 +71,8 @@ function actualizarBarraVida(elementoRelleno, elementoTexto, vidaActual, vidaIni
 
   elementoRelleno.style.width = porcentaje + "%";
 
-  if (porcentaje > 60) elementoRelleno.style.background = "green";
+  if (porcentaje > 80) elementoRelleno.style.background = "green";
+  else if (porcentaje > 60) elementoRelleno.style.background = "orange";
   else if (porcentaje > 30) elementoRelleno.style.background = "yellow";
   else elementoRelleno.style.background = "red";
 

@@ -4,7 +4,7 @@
     "dragon": 2,
     "habilitado": false,
     "nivel": 2,
-    "exp": 0,
+    "exp": 50,
     "vida": 110,
     "fuerza": 15,
     "ataques": [

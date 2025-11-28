@@ -44,7 +44,7 @@ body{
     position: relative;
     width: 100%;
     height: 22px;
-    background: rgb(60, 60, 60);
+    background: #E0E0E0;
     border-radius: 6px;
     overflow: hidden;
     margin-top: -30px;
@@ -57,7 +57,7 @@ body{
 .vidaRelleno {
     height: 65%;
     width: 100%;
-    background:linear-gradient(#5cff33, #28a30d);
+    background:#5cff33;
     image-rendering: pixelated;
     transition: width 0.4s ease, background 0.3s ease;
     margin-left: 120px;
