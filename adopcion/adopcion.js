@@ -4,10 +4,21 @@ let intento = 1;           // Tiene 2 intentos
 
 const botones = document.querySelectorAll(".btn");
 
-// Genera una secuencia de longitud N
-function generarSecuencia(n = 4) {
+function obtenerLongitudPorVida() {
+    let vida = Number(localStorage.getItem("vidaFinalRival"));
+
+    if (vida <= 5) return 3;
+    if (vida <= 10) return 4;
+    if (vida <= 15) return 5;
+    if (vida <= 20) return 6;
+    if (vida <= 25) return 7;
+    if (vida <= 30) return 8;
+}
+
+function generarSecuencia() {
+    let longitud = obtenerLongitudPorVida();
     secuencia = [];
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < longitud; i++) {
         const num = Math.floor(Math.random() * 8) + 1; // 1 a 8
         secuencia.push(num);
     }

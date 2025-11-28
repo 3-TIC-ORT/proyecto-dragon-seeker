@@ -37,11 +37,12 @@ let amarillo = {
   speed: 7,
 };
 
-if (!amarillo.vidaInicial) {
-  amarillo.vidaInicial = amarillo.vidaAmarillo; 
+if (!dragonEnemigo.vidaInicial) {
+  dragonEnemigo.vidaInicial = dragonEnemigo.vida;
+  localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
 }
-
-if (amarillo.vidaAmarillo <= 30) {
+imagenamarillo.src = `../BACKEND/${dragonEnemigo.imagen}`;
+if (dragonEnemigo.vida <= 30) {
   desbloquearBoton();
   BotonAdopcion.onclick = null;
 } else {
@@ -53,7 +54,7 @@ if (amarillo.vidaAmarillo <= 30) {
 }
 
 nombredragon.innerText = dragon.nombre
-nombredragonmalo.innerText = amarillo.nombre
+nombredragonmalo.innerText = dragonEnemigo.nombre
 
 let idusuario = usuario.id;
 let iddragon = dragon.id;
@@ -61,10 +62,10 @@ let iddragon = dragon.id;
 let batallaTerminada = false;
 
 vidaTextoUsuario.innerText = dragon.vida;
-vidaTextoEnemigo.innerText = amarillo.vidaAmarillo;
+vidaTextoEnemigo.innerText = dragonEnemigo.vida;
 
 actualizarBarraVida(barravidaUsuario, vidaTextoUsuario, dragon.vida, dragon.vidaInicial);
-actualizarBarraVida(barravidaEnemigo, vidaTextoEnemigo, amarillo.vidaAmarillo, amarillo.vidaInicial);
+actualizarBarraVida(barravidaEnemigo, vidaTextoEnemigo, dragonEnemigo.vida, dragonEnemigo.vidaInicial);
 
 function actualizarBarraVida(elementoRelleno, elementoTexto, vidaActual, vidaInicial) {
   let porcentaje = (vidaActual / vidaInicial) * 100;
@@ -115,7 +116,7 @@ function checkFinDeBatalla() {
     return true;
   }
 
-  if (amarillo.vidaAmarillo <= 0) {
+  if (dragonEnemigo.vida <= 0) {
     batallaTerminada = true;
     deshabilitarAtaques();
     bloquearboton()
@@ -159,18 +160,18 @@ function ataqueUsuario(i) {
   let danoBase = ataque.dano ?? 0;
   let fuerzaBase = dragon.fuerza ?? 0;
   let danoTotal = danoBase + fuerzaBase;
-  amarillo.vidaAmarillo -= danoTotal;
-  if (amarillo.vidaAmarillo < 0) amarillo.vidaAmarillo = 0;
+  dragonEnemigo.vida -= danoTotal;
+  if (dragonEnemigo.vida < 0) dragonEnemigo.vida = 0;
 
   //barravidaEnemigo.innerText = amarillo.vidaAmarillo;
   actualizarBarraVida(
     barravidaEnemigo,
     vidaTextoEnemigo,
-    amarillo.vidaAmarillo,
-    amarillo.vidaInicial
+    dragonEnemigo.vida,
+    dragonEnemigo.vidaInicial
   );
 
-  console.log(`Ataque del usuario: ${danoTotal}, vida rival: ${amarillo.vidaAmarillo}`);
+  console.log(`Ataque del usuario: ${danoTotal}, vida rival: ${dragonEnemigo.vida}`);
 
   if (checkFinDeBatalla()) return;
 
@@ -219,9 +220,11 @@ function terminarTurno2() {
     imagenamarillo.style.display = "block";
   }, 1500);
 
-  if (amarillo.vidaAmarillo <= 30) {
+  if (dragonEnemigo.vida <= 30) {
     desbloquearBoton();
     BotonAdopcion.onclick = null;
+    BotonAdopcion.onclick = () => {
+      localStorage.setItem("vidaFinalRival", dragonEnemigo.vida);}
   } else {
     bloquearboton();
       BotonAdopcion.onclick = (e) => {
