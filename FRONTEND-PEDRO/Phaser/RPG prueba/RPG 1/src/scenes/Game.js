@@ -15,6 +15,7 @@ export class Game extends Phaser.Scene {
       // filtra los dragones que están en mapa 1
       this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
 
+      //asignacion del sprite al dragon
       this.dragonesSeleccionados?.forEach((d) => {
         this.load.image("dragon_" + d.id, "../../../../BACKEND/" + d.imagen);
       });
@@ -33,8 +34,6 @@ export class Game extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 46,
     });
-
-    //asignacion del sprite al dragon
 
     //asignacopn del spirte al viejo
     this.load.image("chimuelo", "assets/pinguino.png");
@@ -94,15 +93,17 @@ export class Game extends Phaser.Scene {
 
       dragones_mapa1.forEach((d) => {
         const x = Phaser.Math.Between(896, 1424);
-        const y = Phaser.Math.Between(32, 352);
+        const y = Phaser.Math.Between(32, 320);
 
         const dragon = new NPC(this, x, y);
-        dragon.setTexture("dragon_" + d.id);
-
+        //dragon.setTexture("dragon_" + d.id);
+        
+        
         this.dragons.add(dragon);
       });
     };
 
+    console.log(dragones)
     //funcion que crea los  5 dragones iniciales
     this.spawnInitialDragons = () => {
       if (!this.dragonesSeleccionados) return;
@@ -160,10 +161,17 @@ export class Game extends Phaser.Scene {
       this.scene.start("Casa", { x: 368, y: 448 }); // posición inicial en Mapa2
     });
 
+    this.dragonEnemigo(this.player, this.dragons){
+      const dataDragoneEnemigo{
+
+      }
+    }
+
     //cambio de escena a la batalla
-    /*this.physics.add.overlap(this.player, this.dragons, () => {
-      window.location.href = "../../../../inventario/inventario.html";
-    });*/
+    this.physics.add.overlap(this.player, this.dragons, this.dragonEnemigo () => {
+      //localStorage.setItem("dragon enemigo", JSON.stringify(dragon_enemigo));
+      //window.location.href = "../../../../inventario/inventario.html";
+    });
 
     this.physics.add.overlap(
       this.player,

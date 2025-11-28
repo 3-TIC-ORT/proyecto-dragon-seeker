@@ -2,7 +2,7 @@ connect2Server();
 
 export class NPC extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
-    super(scene, x, y, "spriteKey");
+    super(scene, x, y, "dragons");
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -28,7 +28,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     super.preUpdate(t, dt);
 
     // Movimiento
-    this.setVelocity(
+    /* this.setVelocity(
       this.direction.x * this.speed,
       this.direction.y * this.speed
     );
@@ -67,6 +67,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       new Phaser.Math.Vector2(0, -1), // arriba
       new Phaser.Math.Vector2(0, 0), // quieto
     ];
-    this.direction = Phaser.Utils.Array.GetRandom(dirs);
+    this.direction = Phaser.Utils.Array.GetRandom(dirs);*/
   }
 }
