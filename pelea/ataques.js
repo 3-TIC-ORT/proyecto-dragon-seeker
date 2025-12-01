@@ -1,6 +1,6 @@
-connect2Server();
-
 import { bloquearboton, desbloquearBoton } from "./pelea.js";
+
+connect2Server();
 
 let ataque1 = document.getElementById("ataque1");
 let ataque2 = document.getElementById("ataque2");
@@ -233,11 +233,15 @@ function ataqueEnemigo() {
 }
 
 function terminarTurno() {
+  if (batallaTerminada) return;
   setTimeout(() => {
+    if (batallaTerminada) return; 
     gifChimuelo.style.display = "none";
     imagenchimuelo.style.display = "block";
   }, 1500);
-  ataqueEnemigo();
+  if (!batallaTerminada) {
+    ataqueEnemigo();
+  }
 }
 
 function terminarTurno2() {
