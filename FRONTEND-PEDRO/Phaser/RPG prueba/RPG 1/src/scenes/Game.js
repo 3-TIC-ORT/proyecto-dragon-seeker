@@ -81,6 +81,11 @@ export class Game extends Phaser.Scene {
 
     this.sceneStarted = true;
 
+    const spawnZone = map.findObject(
+      "spawn dragons",
+      (obj) => obj.name === "spawn_dragons",
+    );
+
     //creacion de los dragones
     this.dragons = this.physics.add.group();
 
@@ -92,13 +97,26 @@ export class Game extends Phaser.Scene {
       ]).slice(0, cantidad);
 
       dragones_mapa1.forEach((d) => {
-        const x = Phaser.Math.Between(896, 1424);
-        const y = Phaser.Math.Between(32, 320);
+        const x = Phaser.Math.Between(
+          spawnZone.x,
+          spawnZone.x + spawnZone.width,
+        );
+
+        const y = Phaser.Math.Between(
+          spawnZone.y,
+          spawnZone.y + spawnZone.height,
+        );
 
         const dragon = new NPC(this, x, y);
 
+        dragon.setBounce(1);
+        dragon.setCollideWorldBounds(true);
+        dragon.body.setAllowGravity(false);
+
         //guardamos la info del dragon
         dragon.info = d;
+
+        dragon.setCollideWorldBounds(true);
 
         //dragon.setTexture("dragon_" + d.id);
 
@@ -143,7 +161,10 @@ export class Game extends Phaser.Scene {
     this.physics.add.collider(this.dragons, obstaculos);
     this.physics.add.collider(this.dragons, corral_dragones);
     this.physics.add.collider(this.dragons, casa);
-    this.physics.add.collider(this.dragons, this.dragons);
+    this.physics.add.collider(this.dragons, this.dragons, (d1, d2) => {
+      d1.handleDragonCollision(d2);
+      d2.handleDragonCollision(d1);
+    });
 
     //worldbounds
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -169,14 +190,14 @@ export class Game extends Phaser.Scene {
       this.dragons,
       this.dragonEnemigo,
       null,
-      this
+      this,
     );
 
     this.cokeGiven = false;
     this.interactionProcess = false;
   }
 
-  dragonEnemigo(player, dragon) {
+  /*dragonEnemigo(player, dragon) {
     const dragonEnemigo = dragon.info;
     dragon.active = false;
     dragon.body.enable = false;
@@ -184,7 +205,7 @@ export class Game extends Phaser.Scene {
     localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
 
     window.location.href = "../../../../inventario/inventario.html";
-  }
+  }*/
 
   pickUpCoke(player, coke) {
     this.hasCoke = true; // variable que indica que el jugador tiene la coca
@@ -219,7 +240,7 @@ export class Game extends Phaser.Scene {
         this.chimuelo.setTint(0x00ff00);
         this.nearChimuelo = null;
       } else if (!this.hasCoke) {
-        this.interactionProcess === true;
+        this.interactionProcess = true;
         this.showMessage("No tenés la Coca todavía!");
       }
     }

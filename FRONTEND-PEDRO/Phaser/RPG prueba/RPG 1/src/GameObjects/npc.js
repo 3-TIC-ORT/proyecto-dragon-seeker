@@ -10,6 +10,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     this.speed = 50;
     this.direction = new Phaser.Math.Vector2(1, 0); // comienza yendo a la derecha
 
+    // Activar world bounds
+    this.setCollideWorldBounds(true);
+
     // cada dragón tiene un temporizador para cambiar de dirección
     this.changeDirEvent = scene.time.addEvent({
       delay: 2000, // cada 2 segundos
@@ -18,7 +21,10 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       loop: true,
     });
 
-    // es para las animacionesthis.initanimations();
+    this.lastCollision = 0;
+
+    // es para las animaciones
+    // this.initanimations();
   }
   preload() {}
   // aca van las animaciones de cada uno pero todavia no estan
@@ -28,36 +34,55 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     super.preUpdate(t, dt);
 
     // Movimiento
-    /* this.setVelocity(
+    this.setVelocity(
       this.direction.x * this.speed,
-      this.direction.y * this.speed
+      this.direction.y * this.speed,
     );
 
-    // --- Animaciones según dirección ---
-    if (this.direction.x === 0 && this.direction.y === 0) {
+    if (
+      this.body.blocked.left ||
+      this.body.blocked.right ||
+      this.body.blocked.up ||
+      this.body.blocked.down
+    ) {
+      this.updatePatrol();
+    }
+
+    // Animaciones según dirección
+    /*if (this.direction.x === 0 && this.direction.y === 0) {
       // Pausa → quieto
       this.anims.stop();
     } else if (this.direction.x > 0) {
       this.setFlipX(true);
     } else if (this.direction.x < 0) {
       this.setFlipX(false);
-    }
+    }*/
   }
 
-  update() {
-    // Si choca con los bordes del mundo o con algo sólido:
-    if (this.body.blocked.left || this.body.blocked.right) {
-      this.direction.x *= -1;
-      this.setVelocityX(this.direction.x * this.speed);
-      this.flipX = this.direction.x < 0;
-    }
+  update() {}
 
-    if (this.body.blocked.up || this.body.blocked.down) {
-      this.direction.y *= -1;
-      this.setVelocityY(this.direction.y * this.speed);
-    }
+  // 🔥 Rebote real contra otro dragón
+  handleDragonCollision(otherDragon) {
+    if (this.scene.time.now - this.lastCollision < 200) return;
+
+    // Normal del choque
+    const normal = new Phaser.Math.Vector2(
+      this.x - otherDragon.x,
+      this.y - otherDragon.y,
+    ).normalize();
+
+    // Copiamos velocidad actual
+    const velocity = new Phaser.Math.Vector2(
+      this.body.velocity.x,
+      this.body.velocity.y,
+    );
+
+    // Reflejar velocidad
+    velocity.reflect(normal);
+
+    // Actualizar direction para que coincida
+    this.direction = velocity.clone().normalize();
   }
-
   // cambio de dirección aleatorio
   updatePatrol() {
     const dirs = [
@@ -67,6 +92,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       new Phaser.Math.Vector2(0, -1), // arriba
       new Phaser.Math.Vector2(0, 0), // quieto
     ];
-    this.direction = Phaser.Utils.Array.GetRandom(dirs);*/
+    this.direction = Phaser.Utils.Array.GetRandom(dirs);
   }
 }
