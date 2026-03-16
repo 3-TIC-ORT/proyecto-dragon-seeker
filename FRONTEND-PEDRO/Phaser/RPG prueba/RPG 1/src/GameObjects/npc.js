@@ -78,7 +78,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
 
     this.direction = velocity.clone().normalize();
 
-    // 🔥 cambiar dirección de patrulla después del choque
+    //cambiar dirección de patrulla después del choque
     this.updatePatrol();
   }
   // cambio de dirección aleatorio
