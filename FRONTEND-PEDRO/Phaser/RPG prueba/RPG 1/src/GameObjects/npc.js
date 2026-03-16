@@ -36,7 +36,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     // Movimiento
     this.setVelocity(
       this.direction.x * this.speed,
-      this.direction.y * this.speed,
+      this.direction.y * this.speed
     );
 
     if (
@@ -61,27 +61,25 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
 
   update() {}
 
-  // 🔥 Rebote real contra otro dragón
   handleDragonCollision(otherDragon) {
-    if (this.scene.time.now - this.lastCollision < 200) return;
-
-    // Normal del choque
     const normal = new Phaser.Math.Vector2(
       this.x - otherDragon.x,
-      this.y - otherDragon.y,
+      this.y - otherDragon.y
     ).normalize();
 
-    // Copiamos velocidad actual
     const velocity = new Phaser.Math.Vector2(
       this.body.velocity.x,
-      this.body.velocity.y,
+      this.body.velocity.y
     );
 
-    // Reflejar velocidad
     velocity.reflect(normal);
 
-    // Actualizar direction para que coincida
+    this.setVelocity(velocity.x, velocity.y);
+
     this.direction = velocity.clone().normalize();
+
+    // 🔥 cambiar dirección de patrulla después del choque
+    this.updatePatrol();
   }
   // cambio de dirección aleatorio
   updatePatrol() {

@@ -83,7 +83,7 @@ export class Game extends Phaser.Scene {
 
     const spawnZone = map.findObject(
       "spawn dragons",
-      (obj) => obj.name === "spawn_dragons",
+      (obj) => obj.name === "spawn_dragons"
     );
 
     //creacion de los dragones
@@ -99,12 +99,12 @@ export class Game extends Phaser.Scene {
       dragones_mapa1.forEach((d) => {
         const x = Phaser.Math.Between(
           spawnZone.x,
-          spawnZone.x + spawnZone.width,
+          spawnZone.x + spawnZone.width
         );
 
         const y = Phaser.Math.Between(
           spawnZone.y,
-          spawnZone.y + spawnZone.height,
+          spawnZone.y + spawnZone.height
         );
 
         const dragon = new NPC(this, x, y);
@@ -190,7 +190,7 @@ export class Game extends Phaser.Scene {
       this.dragons,
       this.dragonEnemigo,
       null,
-      this,
+      this
     );
 
     this.cokeGiven = false;
