@@ -42,18 +42,25 @@ export class Game extends Phaser.Scene {
     this.load.image("coke", "assets/coke.png");
   }
   create(data) {
+    const margin = 10;
+    const cam = this.cameras.main;
+
     this.messageText = this.add
-      .text(860, 15, "", {
+      .text(0, 0, "", {
         fontSize: "20px",
         fill: "#000000",
         backgroundColor: "#f7e8ad",
         padding: { x: 10, y: 5 },
         fontFamily: "Pixelify Sans",
+        wordWrap: { width: cam.width * 0.3 },
       })
-      .setOrigin(0.5)
+      .setOrigin(1, 0)
       .setScrollFactor(0)
       .setDepth(1000)
       .setVisible(false);
+
+    // esto lo deja PERFECTO arriba derecha
+    this.messageText.setPosition(cam.width - margin, margin);
 
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("mapa 2", "tiles");
@@ -65,6 +72,8 @@ export class Game extends Phaser.Scene {
     const casa = map.createLayer("casa", tileset, 0, 0);
     const puertas = map.createLayer("puertas visibles", tileset, 0, 0);
     const corral_dragones = map.createLayer("corral dragones", tileset, 0, 0);
+
+    corral_dragones.setVisible(false);
 
     //spawn jugador
     const startX = data?.x ?? 16;
@@ -83,7 +92,7 @@ export class Game extends Phaser.Scene {
 
     const spawnZone = map.findObject(
       "spawn dragons",
-      (obj) => obj.name === "spawn_dragons"
+      (obj) => obj.name === "spawn_dragons",
     );
 
     //creacion de los dragones
@@ -99,12 +108,12 @@ export class Game extends Phaser.Scene {
       dragones_mapa1.forEach((d) => {
         const x = Phaser.Math.Between(
           spawnZone.x,
-          spawnZone.x + spawnZone.width
+          spawnZone.x + spawnZone.width,
         );
 
         const y = Phaser.Math.Between(
           spawnZone.y,
-          spawnZone.y + spawnZone.height
+          spawnZone.y + spawnZone.height,
         );
 
         const dragon = new NPC(this, x, y);
@@ -190,11 +199,19 @@ export class Game extends Phaser.Scene {
       this.dragons,
       this.dragonEnemigo,
       null,
-      this
+      this,
     );
 
     this.cokeGiven = false;
     this.interactionProcess = false;
+
+    this.physics.add.overlap(
+      this.player,
+      this.chimuelo,
+      this.tryGiveCoke,
+      null,
+      this,
+    );
   }
 
   /*dragonEnemigo(player, dragon) {
@@ -218,15 +235,20 @@ export class Game extends Phaser.Scene {
     if (this.interactionProcess === true) return;
     this.showMessage("Presioná E para interactuar");
 
-    this.nearChimuelo = chimuelo;
+    this.nearChimuelo = true;
   }
 
   showMessage(text) {
     this.messageText.setText(text);
     this.messageText.setVisible(true);
 
-    // Oculta el mensaje después de 2 segundos
-    this.time.delayedCall(2000, () => {
+    // cancela timer anterior
+    if (this.hideMessageTimer) {
+      this.hideMessageTimer.remove(false);
+    }
+
+    // crea nuevo timer
+    this.hideMessageTimer = this.time.delayedCall(2000, () => {
       this.messageText.setVisible(false);
     });
   }
