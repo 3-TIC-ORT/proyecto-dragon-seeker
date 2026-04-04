@@ -203,7 +203,10 @@ export class Game extends Phaser.Scene {
     );
 
     this.cokeGiven = false;
-    this.interactionProcess = false;
+    this.interactionMessage = false;
+
+    this.nearChimuelo = false;
+    this.showingInteractMessage = false;
 
     this.physics.add.overlap(
       this.player,
@@ -214,15 +217,12 @@ export class Game extends Phaser.Scene {
     );
   }
 
-  /*dragonEnemigo(player, dragon) {
-    const dragonEnemigo = dragon.info;
-    dragon.active = false;
-    dragon.body.enable = false;
+  dragonEnemigo(player, dragon) {
+    localStorage.setItem("dragon_enemigo", JSON.stringify(dragon.info));
 
-    localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
-
-    window.location.href = "../../../../inventario/inventario.html";
-  }*/
+    console.log(dragon.info);
+    //window.location.href = "../../../../inventario/inventario.html";
+  }
 
   pickUpCoke(player, coke) {
     this.hasCoke = true; // variable que indica que el jugador tiene la coca
@@ -231,14 +231,12 @@ export class Game extends Phaser.Scene {
   }
 
   tryGiveCoke(player, chimuelo) {
-    if (this.cokeGiven === true) return;
-    if (this.interactionProcess === true) return;
-    this.showMessage("Presioná E para interactuar");
-
     this.nearChimuelo = true;
   }
 
   showMessage(text) {
+    this.interactionMessage = true;
+
     this.messageText.setText(text);
     this.messageText.setVisible(true);
 
@@ -250,22 +248,39 @@ export class Game extends Phaser.Scene {
     // crea nuevo timer
     this.hideMessageTimer = this.time.delayedCall(2000, () => {
       this.messageText.setVisible(false);
+      this.interactionMessage = false;
     });
   }
 
   update() {
+    if (this.nearChimuelo) {
+      if (!this.showingInteractMessage) {
+        this.messageText.setText("Presioná E para interactuar");
+        this.messageText.setVisible(true);
+        this.showingInteractMessage = true;
+      }
+    } else {
+      // si te alejás, se oculta
+      if (!this.interactionMessage) {
+        this.messageText.setVisible(false);
+      }
+      this.showingInteractMessage = false;
+    }
+
     if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
       if (this.hasCoke && !this.cokeGiven) {
         this.hasCoke = false;
         this.cokeGiven = true;
         this.showMessage("Gracias por la coca");
         this.chimuelo.setTint(0x00ff00);
-        this.nearChimuelo = null;
+        this.nearChimuelo = false;
       } else if (!this.hasCoke) {
-        this.interactionProcess = true;
+        this.interactionMessage = true;
         this.showMessage("No tenés la Coca todavía!");
       }
     }
+
+    this.nearChimuelo = false;
 
     //si quedan menos de 4 dragones spawnean 2
     if (this.dragons.countActive(true) < 4 && this.dragonesSeleccionados) {
