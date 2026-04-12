@@ -1,6 +1,7 @@
 import { Player } from "../GameObjects/player.js";
 import { NPC } from "../GameObjects/npc.js";
 import { Minero } from "../GameObjects/minero.js";
+import { gameData } from "./Objetos.js";
 
 connect2Server();
 
@@ -149,10 +150,12 @@ export class Game extends Phaser.Scene {
     }
 
     //creo la coke
-    const coke = this.physics.add.sprite(256, 160, "coke");
+    if (!gameData.hasCoke && !gameData.cokeGiven) {
+      const coke = this.physics.add.sprite(256, 160, "coke");
 
-    coke.setImmovable(true); // no se mueve
-    this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
+      coke.setImmovable(true);
+      this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
+    }
 
     //dragon especial
     this.chimuelo = new Minero(this, 350, 160);
@@ -225,7 +228,8 @@ export class Game extends Phaser.Scene {
   }
 
   pickUpCoke(player, coke) {
-    this.hasCoke = true; // variable que indica que el jugador tiene la coca
+    gameData.hasCoke = true; // variable que indica que el jugador tiene la coca
+
     coke.disableBody(true, true); // desaparece del mapa
     this.showMessage("Agarraste la coca!");
   }
@@ -254,7 +258,7 @@ export class Game extends Phaser.Scene {
 
   update() {
     if (this.nearChimuelo) {
-      if (!this.showingInteractMessage) {
+      if (!this.showingInteractMessage && !gameData.cokeGiven) {
         this.messageText.setText("Presioná E para interactuar");
         this.messageText.setVisible(true);
         this.showingInteractMessage = true;
@@ -268,13 +272,14 @@ export class Game extends Phaser.Scene {
     }
 
     if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      if (this.hasCoke && !this.cokeGiven) {
-        this.hasCoke = false;
-        this.cokeGiven = true;
+      if (gameData.hasCoke && !gameData.cokeGiven) {
+        gameData.hasCoke = false;
+        gameData.cokeGiven = true;
+
         this.showMessage("Gracias por la coca");
         this.chimuelo.setTint(0x00ff00);
         this.nearChimuelo = false;
-      } else if (!this.hasCoke) {
+      } else if (!gameData.hasCoke && !gameData.cokeGiven) {
         this.interactionMessage = true;
         this.showMessage("No tenés la Coca todavía!");
       }

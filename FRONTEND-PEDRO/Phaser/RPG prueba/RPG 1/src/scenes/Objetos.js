@@ -1,3 +1,4 @@
 export const gameData = {
-  cokeRecogida: false,
+  hasCoke: false,
+  cokeGiven: false,
 };
