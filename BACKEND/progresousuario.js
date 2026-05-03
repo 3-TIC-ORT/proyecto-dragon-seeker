@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const ruta = "./progreso.json"
+const ruta = "./BACKEND/progreso.json"
 
 export function leer() {
     try {

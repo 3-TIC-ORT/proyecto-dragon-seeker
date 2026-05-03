@@ -1,7 +1,7 @@
 import fs from "fs"
 
-const ruta = "./dragones.json"
-const rutaprogreso = "./progreso.json"
+const ruta = "./BACKEND/dragones.json"
+const rutaprogreso = "./BACKEND/progreso.json"
 
 function leerdragones () {
     const texto = fs.readFileSync(ruta, "utf-8")
@@ -59,9 +59,13 @@ export function obtenerlistadragones() {
     const dragoensactualizados = base.dragones.map(d => {
         const prog = progreso.find(p => p.dragon === d.id)
 
-        if (!prog) return d
+        if (!prog) return {
+        ...d,
+        habilitado: false
+    }
         return {
             ...d,
+            habilitado: prog.habilitado ?? false,
             nivel: prog.nivel ?? d.nivel,
             exp: prog.exp ?? 0,
             vida: prog.vida ?? d.vida,

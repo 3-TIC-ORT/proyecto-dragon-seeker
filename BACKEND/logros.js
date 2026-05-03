@@ -1,6 +1,6 @@
 import fs from "fs"
 
-let logros = "./logros.json"
+let logros = "./BACKEND/logros.json"
 
 function leer12() {
     const texto = fs.readFileSync(logros, "utf-8")

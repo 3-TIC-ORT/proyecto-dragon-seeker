@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const rutaitems = "./items.json"
+const rutaitems = "./BACKEND/items.json"
 
 function leeritems() {
     const texto = fs.readFileSync(rutaitems, "utf-8")

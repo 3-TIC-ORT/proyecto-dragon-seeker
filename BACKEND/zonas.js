@@ -1,6 +1,6 @@
 import fs from "fs"
 
-const rutazonas = "./zonas.json"
+const rutazonas = "./BACKEND/zonas.json"
 
 function leerzonas() {
     const texto = fs.readFileSync(rutazonas, "utf-8")
