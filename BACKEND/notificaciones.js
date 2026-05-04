@@ -1,6 +1,10 @@
 import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const rutanotificaciones = "./BACKEND/notificaciones.json"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const rutanotificaciones = path.join(__dirname, "notificaciones.json")
 
 function leerarchivo(){
     if (!fs.existsSync(rutanotificaciones)) {

@@ -28,7 +28,7 @@
   {
     "user": 1,
     "dragon": 1,
-    "habilitado": false,
+    "habilitado": true,
     "nivel": 2,
     "exp": 50,
     "vida": 0,
@@ -56,7 +56,7 @@
     "dragon": 3,
     "habilitado": true,
     "nivel": 2,
-    "exp": 100,
+    "exp": 150,
     "vida": 110,
     "fuerza": 15,
     "ataques": [

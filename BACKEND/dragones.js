@@ -1,7 +1,11 @@
 import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const ruta = "./BACKEND/dragones.json"
-const rutaprogreso = "./BACKEND/progreso.json"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const ruta = path.join(__dirname, "dragones.json")
+const rutaprogreso = path.join(__dirname, "progreso.json")
 
 function leerdragones () {
     const texto = fs.readFileSync(ruta, "utf-8")
@@ -35,13 +39,15 @@ export function iniciarbatalledragon(idusuario, iddragon, ubicacion) {
     if (!dragon) {
         return {exito: false, mensaje: "No se encontro el dragon para la batalla."}
     }
+    // Los dragones enemigos siempre comienzan con vida máxima
     const batalla = {
         idusuario,
         ubicacion,
         dragon: {
             nombre: dragon.nombre,
             tipo: dragon.tipo,
-            vida: dragon.vida,
+            vida: dragon.vida,  // Vida máxima del dragón base
+            vidaMaxima: dragon.vida,  // Guardar vida máxima para referencia
             fuerza: dragon.fuerza,
             ataques: dragon.ataques
         }

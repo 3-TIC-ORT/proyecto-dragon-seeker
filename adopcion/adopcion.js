@@ -3,6 +3,18 @@ let secuenciaUsuario = []; // Secuencia ingresada por el usuario
 let intento = 1;           // Tiene 2 intentos
 
 const botones = document.querySelectorAll(".btn");
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+const dragonEnemigo = JSON.parse(localStorage.getItem("dragon_enemigo"));
+
+if (!usuario) {
+  alert("Debes iniciar sesión antes de adoptar.");
+  window.location.href = "/inicioSesion/inicioSesion.html";
+}
+
+if (!dragonEnemigo) {
+  alert("No se encontró el dragón enemigo para adoptar.");
+  window.location.href = "../FRONTEND-PEDRO/Phaser/RPG prueba/RPG 1/index.html";
+}
 
 function obtenerLongitudPorVida() {
     let vida = Number(localStorage.getItem("vidaFinalRival"));
@@ -49,6 +61,19 @@ function iniciarJuego() {
     setTimeout(mostrarSecuencia, 500);
 }
 
+function adoptarDragon() {
+    postEvent("adoptarDragon", { user: usuario.id, dragon: dragonEnemigo.id }, (respuesta) => {
+        if (!respuesta || respuesta.exito === false) {
+            alert(respuesta?.mensaje || "No se pudo adoptar el dragón.");
+            return;
+        }
+
+        alert("¡Adoptaste al dragón correctamente!");
+        localStorage.setItem("dragonardo", JSON.stringify(dragonEnemigo));
+        window.location.href = "../inventario/inventario.html";
+    });
+}
+
 // Compara lo que puso el usuario
 function verificar() {
     if (secuenciaUsuario.length !== secuencia.length) return;
@@ -57,8 +82,7 @@ function verificar() {
 
     if (correcta) {
         console.log("¡Secuencia correcta! Pasás.");
-        alert("¡Secuencia correcta! Lo adoptaste!")
-        // ACÁ VA LO QUE PASA SI GANA
+        adoptarDragon();
         return;
     }
 

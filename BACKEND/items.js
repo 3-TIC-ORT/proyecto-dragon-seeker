@@ -1,6 +1,10 @@
 import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const rutaitems = "./BACKEND/items.json"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const rutaitems = path.join(__dirname, "items.json")
 
 function leeritems() {
     const texto = fs.readFileSync(rutaitems, "utf-8")

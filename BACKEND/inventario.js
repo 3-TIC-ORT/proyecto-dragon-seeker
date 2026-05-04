@@ -1,6 +1,10 @@
 import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const rutainventario = "./BACKEND/inventario.json"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const rutainventario = path.join(__dirname, "inventario.json")
 
 function leerarchivo() {
     const texto = fs.readFileSync(rutainventario, "utf-8")

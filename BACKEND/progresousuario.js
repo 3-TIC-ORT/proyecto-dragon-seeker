@@ -1,6 +1,10 @@
 import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const ruta = "./BACKEND/progreso.json"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const ruta = path.join(__dirname, "progreso.json")
 
 export function leer() {
     try {
@@ -126,7 +130,17 @@ export function habilitardragon(user, dragon) {
 
 export function actualizarVida(idusuario, iddragon, vidaNueva) {
     const lista = leer()
-    const reg = asegurar(lista, iddragon, idusuario)
+    // Buscar si el dragón ya existe en el progreso del usuario
+    let reg = buscar(lista, idusuario, iddragon)
+    
+    // Solo actualizar si el dragón ya existe en progreso del usuario (es su dragón)
+    if (!reg) {
+        return {
+            exito: false,
+            mensaje: "Este dragón no pertenece al usuario"
+        }
+    }
+    
     reg.vida = vidaNueva
     guardar(lista)
     return {
