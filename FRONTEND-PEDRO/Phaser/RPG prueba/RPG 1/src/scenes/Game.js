@@ -224,7 +224,7 @@ export class Game extends Phaser.Scene {
     localStorage.setItem("dragon_enemigo", JSON.stringify(dragon.info));
 
     console.log(dragon.info);
-    //window.location.href = "../../../../inventario/inventario.html";
+    window.location.href = "../../../../inventario/inventario.html";
   }
 
   pickUpCoke(player, coke) {
