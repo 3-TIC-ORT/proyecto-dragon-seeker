@@ -11,6 +11,8 @@ if (!usuario) {
 
 const containerDragon = document.getElementById("dragonContainer");
 
+
+
 getEvent("obtenerdragones", (data) => {
   dragones = data.dragones;
   mostrarDragones();
@@ -21,6 +23,7 @@ function mostrarDragones() {
 
   for (let i = 0; i < dragones.length; i++) {
     let dragon = dragones[i];
+    let habilitado = dragon.habilitado === true;
     
     let tarjeta = document.createElement("div");
     tarjeta.classList.add("tarjeta");
@@ -32,9 +35,13 @@ function mostrarDragones() {
       tarjeta.classList.add("dragonNormal");
     }
 
+    if (!habilitado) {
+      tarjeta.classList.add("dragonBloqueado");
+    }
+
     tarjeta.innerHTML = `
       <h4>${dragon.nombre}</h4>
-      <p>Tipo: ${dragon.tipo}</p>
+      <p class="tipo">Tipo: ${habilitado ? dragon.tipo : "No adoptado"}</p>
       <p>Xp: ${dragon.exp}</p>
       <p>Nivel: ${dragon.nivel}</p>
       <p>Vida: ${dragon.vida}</p>
@@ -49,7 +56,7 @@ function mostrarDragones() {
 
 function guardarEnLocalStorage(e) {
   let tarjeta = e.target.closest(".tarjeta");
-  if (tarjeta) {
+  if (tarjeta && !tarjeta.classList.contains("dragonBloqueado")) {
     let indice = tarjeta.dataset.index;
     let dragon = dragones[indice];
     localStorage.setItem("dragonardo", JSON.stringify(dragon));

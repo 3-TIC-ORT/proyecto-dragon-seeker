@@ -1,9 +1,13 @@
 import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
-let logros = "./logros.json"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const logrosPath = path.join(__dirname, "logros.json")
 
 function leer12() {
-    const texto = fs.readFileSync(logros, "utf-8")
+    const texto = fs.readFileSync(logrosPath, "utf-8")
     return JSON.parse(texto)
 }
 

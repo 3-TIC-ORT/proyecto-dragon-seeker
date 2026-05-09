@@ -1,6 +1,10 @@
 import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const rutapersonalizacion = "./personalizacion.json"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const rutapersonalizacion = path.join(__dirname, "personalizacion.json")
 
 function leerarchivo() {
   const texto = fs.readFileSync(rutapersonalizacion, "utf-8")
