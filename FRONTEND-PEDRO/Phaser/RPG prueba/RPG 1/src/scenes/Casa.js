@@ -98,6 +98,14 @@ export class Casa extends Phaser.Scene {
 
     this.nearHealer = false;
     this.showingInteractMessage = false;
+
+    this.physics.add.overlap(
+      this.player,
+      this.healer,
+      this.handleHealer,
+      null,
+      this,
+    );
   }
 
   showMessage(text) {
@@ -118,9 +126,54 @@ export class Casa extends Phaser.Scene {
     });
   }
 
-  update() {
-    this.nearHealer = false;
+  handleHealer() {
+    // mostrar mensaje
+    console.log("handleHealer ejecutándose");
 
+    if (!this.showingInteractMessage) {
+      this.messageText.setText("Presioná E para interactuar");
+      this.messageText.setVisible(true);
+      this.showingInteractMessage = true;
+    }
+
+    console.log("keyE state:", this.keyE.isDown);
+    console.log("JustDown:", Phaser.Input.Keyboard.JustDown(this.keyE));
+
+    if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+      console.log("E presionado, llamando al servidor...");
+      let usuario = JSON.parse(localStorage.getItem("usuario"));
+
+      postEvent("obtenerdragones", { idusuario: usuario.id }, (data) => {
+        let dragones = data.dragones;
+        let dragonesDelUsuario = dragones.filter((d) => d.habilitado === true);
+
+        let todosCurados = dragonesDelUsuario.every(
+          (d) => d.vida === d.vidaMax,
+        );
+
+        if (todosCurados) {
+          this.showMessage("¡Todos tus dragones ya tienen la vida máxima!");
+        } else {
+          dragonesDelUsuario.forEach((dragon) => {
+            postEvent(
+              "actualizarVida",
+              {
+                idusuario: usuario.id,
+                iddragon: dragon.id,
+                vida: dragon.vidaMax,
+              },
+              (respuesta) => {
+                console.log("Respuesta:", respuesta);
+              },
+            );
+          });
+          this.showMessage("¡Tus dragones fueron curados!");
+        }
+      });
+    }
+  }
+
+  update() {
     if (
       this.cursors.left.isDown ||
       this.cursors.right.isDown ||
@@ -141,28 +194,6 @@ export class Casa extends Phaser.Scene {
       }
     } else {
       this.player.idle();
-    }
-
-    this.physics.overlap(this.player, this.healer, () => {
-      this.nearHealer = true;
-    });
-
-    if (this.nearHealer) {
-      if (!this.showingInteractMessage) {
-        this.messageText.setText("Presioná E para interactuar");
-        this.messageText.setVisible(true);
-        this.showingInteractMessage = true;
-      }
-    } else {
-      // si te alejás, se oculta
-      if (!this.interactionMessage) {
-        this.messageText.setVisible(false);
-      }
-      this.showingInteractMessage = false;
-    }
-
-    if (this.nearHealer && Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      this.messageText.setText("Curando...");
     }
   }
 }

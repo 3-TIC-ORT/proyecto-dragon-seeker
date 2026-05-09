@@ -6,12 +6,10 @@ let dragones = [];
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) {
   alert("No hay usuario registrado, logueate");
-  window.location.href = '/inicioSesion/inicioSesion.html';
+  window.location.href = "/inicioSesion/inicioSesion.html";
 }
 
 const containerDragon = document.getElementById("dragonContainer");
-
-
 
 getEvent("obtenerdragones", (data) => {
   dragones = data.dragones;
@@ -24,7 +22,7 @@ function mostrarDragones() {
   for (let i = 0; i < dragones.length; i++) {
     let dragon = dragones[i];
     let habilitado = dragon.habilitado === true;
-    
+
     let tarjeta = document.createElement("div");
     tarjeta.classList.add("tarjeta");
     tarjeta.dataset.index = i;
@@ -61,6 +59,8 @@ function guardarEnLocalStorage(e) {
     let dragon = dragones[indice];
     localStorage.setItem("dragonardo", JSON.stringify(dragon));
     console.log(dragon);
+    //direccionamiento a la pelea
+    window.location.href = "../pelea/peleadesplegada.html";
   }
 }
 
