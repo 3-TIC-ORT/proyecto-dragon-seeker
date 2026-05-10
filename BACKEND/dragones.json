@@ -1,6 +1,19 @@
 {
   "dragones": [
-    { "id": 1, "nombre": "Terragon", "tipo": "tierra", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 60, "fuerza": 10, "especial": false, "esBoss": false, "mapa": 1, "imagen": "img/1.avif",
+    {
+      "id": 1,
+      "nombre": "Terragon",
+      "tipo": "tierra",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 60,
+      "vidaMax": 60,
+      "fuerza": 10,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/1.avif",
       "ataques": [
         { "nombre": "Coletazo", "dano": 7, "nivel": 1 },
         { "nombre": "Bola de barro", "dano": 12, "nivel": 5 },
@@ -8,7 +21,20 @@
         { "nombre": "Arañazo", "dano": 8, "nivel": 1 }
       ]
     },
-    { "id": 2, "nombre": "Rocabrava", "tipo": "tierra", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 75, "fuerza": 12, "especial": false, "esBoss": false, "mapa": 2, "imagen": "img/2.png",
+    {
+      "id": 2,
+      "nombre": "Rocabrava",
+      "tipo": "tierra",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 75,
+      "vidaMax": 75,
+      "fuerza": 12,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 2,
+      "imagen": "img/2.png",
       "ataques": [
         { "nombre": "Coletazo", "dano": 10, "nivel": 1 },
         { "nombre": "Bola de barro", "dano": 16, "nivel": 5 },
@@ -16,7 +42,20 @@
         { "nombre": "Patada", "dano": 12, "nivel": 1 }
       ]
     },
-    { "id": 3, "nombre": "Golem Verde", "tipo": "tierra", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 90, "fuerza": 15, "especial": true, "esBoss": false, "mapa": 3, "imagen": "img/3.png",
+    {
+      "id": 3,
+      "nombre": "Golem Verde",
+      "tipo": "tierra",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 90,
+      "vidaMax": 90,
+      "fuerza": 15,
+      "especial": true,
+      "esBoss": false,
+      "mapa": 3,
+      "imagen": "img/3.png",
       "ataques": [
         { "nombre": "Coletazo", "dano": 13, "nivel": 1 },
         { "nombre": "Bola de barro", "dano": 20, "nivel": 5 },
@@ -25,7 +64,20 @@
       ]
     },
 
-    { "id": 4, "nombre": "Chimuelo", "tipo": "fuego", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 55, "fuerza": 10, "especial": true, "esBoss": false, "mapa": 1, "imagen": "img/4.png",
+    {
+      "id": 4,
+      "nombre": "Chimuelo",
+      "tipo": "fuego",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 55,
+      "vidaMax": 55,
+      "fuerza": 10,
+      "especial": true,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/4.png",
       "ataques": [
         { "nombre": "Llamarada", "dano": 8, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 13, "nivel": 5 },
@@ -33,7 +85,20 @@
         { "nombre": "Arañazo", "dano": 7, "nivel": 1 }
       ]
     },
-    { "id": 5, "nombre": "Llamafuria", "tipo": "fuego", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 70, "fuerza": 13, "especial": false, "esBoss": false, "mapa": 2, "imagen": "img/5.png",
+    {
+      "id": 5,
+      "nombre": "Llamafuria",
+      "tipo": "fuego",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 70,
+      "vidaMax": 70,
+      "fuerza": 13,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 2,
+      "imagen": "img/5.png",
       "ataques": [
         { "nombre": "Llamarada", "dano": 11, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 17, "nivel": 5 },
@@ -41,7 +106,20 @@
         { "nombre": "Patada", "dano": 12, "nivel": 1 }
       ]
     },
-    { "id": 6, "nombre": "Pyrosombra", "tipo": "fuego", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 85, "fuerza": 16, "especial": false, "esBoss": false, "mapa": 3, "imagen": "img/6.png",
+    {
+      "id": 6,
+      "nombre": "Pyrosombra",
+      "tipo": "fuego",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 85,
+      "vidaMax": 85,
+      "fuerza": 16,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 3,
+      "imagen": "img/6.png",
       "ataques": [
         { "nombre": "Llamarada", "dano": 14, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 21, "nivel": 5 },
@@ -50,7 +128,20 @@
       ]
     },
 
-    { "id": 7, "nombre": "Amarillo", "tipo": "electrico", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 50, "fuerza": 9, "especial": false, "esBoss": false, "mapa": 1, "imagen": "img/7.png",
+    {
+      "id": 7,
+      "nombre": "Amarillo",
+      "tipo": "electrico",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 50,
+      "vidaMax": 50,
+      "fuerza": 9,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/7.png",
       "ataques": [
         { "nombre": "Chispa", "dano": 7, "nivel": 1 },
         { "nombre": "Tormenta electrica", "dano": 12, "nivel": 5 },
@@ -58,7 +149,20 @@
         { "nombre": "Arañazo", "dano": 7, "nivel": 1 }
       ]
     },
-    { "id": 8, "nombre": "Centella", "tipo": "electrico", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 65, "fuerza": 12, "especial": false, "esBoss": false, "mapa": 2, "imagen": "img/8.png",
+    {
+      "id": 8,
+      "nombre": "Centella",
+      "tipo": "electrico",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 65,
+      "vidaMax": 65,
+      "fuerza": 12,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 2,
+      "imagen": "img/8.png",
       "ataques": [
         { "nombre": "Chispa", "dano": 10, "nivel": 1 },
         { "nombre": "Tormenta electrica", "dano": 16, "nivel": 5 },
@@ -66,7 +170,20 @@
         { "nombre": "Patada", "dano": 13, "nivel": 1 }
       ]
     },
-    { "id": 9, "nombre": "Truenoz", "tipo": "electrico", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 80, "fuerza": 15, "especial": true, "esBoss": false, "mapa": 3, "imagen": "img/9.png",
+    {
+      "id": 9,
+      "nombre": "Truenoz",
+      "tipo": "electrico",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 80,
+      "vidaMax": 80,
+      "fuerza": 15,
+      "especial": true,
+      "esBoss": false,
+      "mapa": 3,
+      "imagen": "img/9.png",
       "ataques": [
         { "nombre": "Chispa", "dano": 13, "nivel": 1 },
         { "nombre": "Tormenta electrica", "dano": 20, "nivel": 5 },
@@ -75,7 +192,20 @@
       ]
     },
 
-    { "id": 10, "nombre": "Burbu", "tipo": "agua", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 55, "fuerza": 10, "especial": false, "esBoss": false, "mapa": 1, "imagen": "img/10.png",
+    {
+      "id": 10,
+      "nombre": "Burbu",
+      "tipo": "agua",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 55,
+      "vidaMax": 55,
+      "fuerza": 10,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/10.png",
       "ataques": [
         { "nombre": "Burbuja", "dano": 6, "nivel": 1 },
         { "nombre": "Salpicadura", "dano": 12, "nivel": 5 },
@@ -83,7 +213,20 @@
         { "nombre": "Arañazo", "dano": 7, "nivel": 1 }
       ]
     },
-    { "id": 11, "nombre": "Tsunami", "tipo": "agua", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 70, "fuerza": 13, "especial": false, "esBoss": false, "mapa": 2, "imagen": "img/11.png",
+    {
+      "id": 11,
+      "nombre": "Tsunami",
+      "tipo": "agua",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 70,
+      "vidaMax": 70,
+      "fuerza": 13,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 2,
+      "imagen": "img/11.png",
       "ataques": [
         { "nombre": "Burbuja", "dano": 10, "nivel": 1 },
         { "nombre": "Salpicadura", "dano": 17, "nivel": 5 },
@@ -91,7 +234,20 @@
         { "nombre": "Patada", "dano": 13, "nivel": 1 }
       ]
     },
-    { "id": 12, "nombre": "Maremus", "tipo": "agua", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 85, "fuerza": 16, "especial": true, "esBoss": false, "mapa": 3, "imagen": "img/12.png",
+    {
+      "id": 12,
+      "nombre": "Maremus",
+      "tipo": "agua",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 85,
+      "vidaMax": 85,
+      "fuerza": 16,
+      "especial": true,
+      "esBoss": false,
+      "mapa": 3,
+      "imagen": "img/12.png",
       "ataques": [
         { "nombre": "Burbuja", "dano": 14, "nivel": 1 },
         { "nombre": "Salpicadura", "dano": 21, "nivel": 5 },
@@ -100,7 +256,20 @@
       ]
     },
 
-    { "id": 13, "nombre": "Escarcha", "tipo": "hielo", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 55, "fuerza": 10, "especial": false, "esBoss": false, "mapa": 1, "imagen": "img/13.png",
+    {
+      "id": 13,
+      "nombre": "Escarcha",
+      "tipo": "hielo",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 55,
+      "vidaMax": 55,
+      "fuerza": 10,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/13.png",
       "ataques": [
         { "nombre": "Ventisca", "dano": 7, "nivel": 1 },
         { "nombre": "Nevada", "dano": 13, "nivel": 5 },
@@ -108,7 +277,20 @@
         { "nombre": "Arañazo", "dano": 7, "nivel": 1 }
       ]
     },
-    { "id": 14, "nombre": "Nevazon", "tipo": "hielo", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 70, "fuerza": 13, "especial": false, "esBoss": false, "mapa": 2, "imagen": "img/14.png",
+    {
+      "id": 14,
+      "nombre": "Nevazon",
+      "tipo": "hielo",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 70,
+      "vidaMax": 70,
+      "fuerza": 13,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 2,
+      "imagen": "img/14.png",
       "ataques": [
         { "nombre": "Ventisca", "dano": 10, "nivel": 1 },
         { "nombre": "Nevada", "dano": 17, "nivel": 5 },
@@ -116,7 +298,20 @@
         { "nombre": "Patada", "dano": 12, "nivel": 1 }
       ]
     },
-    { "id": 15, "nombre": "Yetihelado", "tipo": "hielo", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 85, "fuerza": 16, "especial": true, "esBoss": false, "mapa": 3, "imagen": "img/15.png",
+    {
+      "id": 15,
+      "nombre": "Yetihelado",
+      "tipo": "hielo",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 85,
+      "vidaMax": 85,
+      "fuerza": 16,
+      "especial": true,
+      "esBoss": false,
+      "mapa": 3,
+      "imagen": "img/15.png",
       "ataques": [
         { "nombre": "Ventisca", "dano": 14, "nivel": 1 },
         { "nombre": "Nevada", "dano": 21, "nivel": 5 },
@@ -125,7 +320,20 @@
       ]
     },
 
-    { "id": 16, "nombre": "Oso", "tipo": "normal", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 60, "fuerza": 10, "especial": false, "esBoss": false, "mapa": 1, "imagen": "img/16.png",
+    {
+      "id": 16,
+      "nombre": "Oso",
+      "tipo": "normal",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 60,
+      "vidaMax": 60,
+      "fuerza": 10,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/16.png",
       "ataques": [
         { "nombre": "Arañazo", "dano": 7, "nivel": 1 },
         { "nombre": "Patada", "dano": 9, "nivel": 1 },
@@ -133,7 +341,20 @@
         { "nombre": "Coletazo", "dano": 5, "nivel": 1 }
       ]
     },
-    { "id": 17, "nombre": "Oso Hormiguero", "tipo": "normal", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 75, "fuerza": 13, "especial": false, "esBoss": false, "mapa": 2, "imagen": "img/17.png",
+    {
+      "id": 17,
+      "nombre": "Oso Hormiguero",
+      "tipo": "normal",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 75,
+      "vidaMax": 75,
+      "fuerza": 13,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 2,
+      "imagen": "img/17.png",
       "ataques": [
         { "nombre": "Arañazo", "dano": 11, "nivel": 1 },
         { "nombre": "Patada", "dano": 13, "nivel": 1 },
@@ -141,7 +362,20 @@
         { "nombre": "Bola de barro", "dano": 17, "nivel": 5 }
       ]
     },
-    { "id": 18, "nombre": "Drakko", "tipo": "normal", "nivel": 1, "nivelMin": 1, "nivelMax": 13, "vida": 90, "fuerza": 16, "especial": true, "esBoss": false, "mapa": 3, "imagen": "img/18.png",
+    {
+      "id": 18,
+      "nombre": "Drakko",
+      "tipo": "normal",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 90,
+      "vidaMax": 90,
+      "fuerza": 16,
+      "especial": true,
+      "esBoss": false,
+      "mapa": 3,
+      "imagen": "img/18.png",
       "ataques": [
         { "nombre": "Arañazo", "dano": 13, "nivel": 1 },
         { "nombre": "Patado", "dano": 15, "nivel": 1 },
@@ -200,7 +434,11 @@
         { "nombre": "Soplido helado", "dano": 0, "efecto": "pasar_turno" },
         { "nombre": "Daga de hielo", "dano": 30 },
         { "nombre": "Bola de nieve", "dano": 40 },
-        { "nombre": "Bola de nieve + Daga", "dano": 55, "requiere": "desbloqueo_combo" }
+        {
+          "nombre": "Bola de nieve + Daga",
+          "dano": 55,
+          "requiere": "desbloqueo_combo"
+        }
       ]
     }
   ]

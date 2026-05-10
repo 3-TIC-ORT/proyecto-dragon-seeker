@@ -127,46 +127,18 @@ export class Casa extends Phaser.Scene {
   }
 
   handleHealer() {
-    // mostrar mensaje
-    console.log("handleHealer ejecutándose");
-
     if (!this.showingInteractMessage) {
       this.messageText.setText("Presioná E para interactuar");
       this.messageText.setVisible(true);
       this.showingInteractMessage = true;
     }
 
-    console.log("keyE state:", this.keyE.isDown);
-    console.log("JustDown:", Phaser.Input.Keyboard.JustDown(this.keyE));
-
     if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      console.log("E presionado, llamando al servidor...");
       let usuario = JSON.parse(localStorage.getItem("usuario"));
 
-      postEvent("obtenerdragones", { idusuario: usuario.id }, (data) => {
-        let dragones = data.dragones;
-        let dragonesDelUsuario = dragones.filter((d) => d.habilitado === true);
-
-        let todosCurados = dragonesDelUsuario.every(
-          (d) => d.vida === d.vidaMax,
-        );
-
-        if (todosCurados) {
-          this.showMessage("¡Todos tus dragones ya tienen la vida máxima!");
-        } else {
-          dragonesDelUsuario.forEach((dragon) => {
-            postEvent(
-              "actualizarVida",
-              {
-                idusuario: usuario.id,
-                iddragon: dragon.id,
-                vida: dragon.vidaMax,
-              },
-              (respuesta) => {
-                console.log("Respuesta:", respuesta);
-              },
-            );
-          });
+      postEvent("curarDragones", { idusuario: usuario.id }, (respuesta) => {
+        console.log("Respuesta:", respuesta);
+        if (respuesta.exito) {
           this.showMessage("¡Tus dragones fueron curados!");
         }
       });

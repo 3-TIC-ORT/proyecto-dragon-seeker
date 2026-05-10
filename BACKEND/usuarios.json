@@ -1,20 +1,14 @@
 [
   {
     "id": 1,
-    "nombre": "zeide",
-    "correo": "zeide@gmail.com",
+    "nombre": "prueba",
+    "correo": "prueba",
     "contrasena": "1234"
   },
   {
     "id": 2,
     "nombre": "pedro",
-    "correo": "pedrogoAT",
-    "contrasena": "laviejadeliquiestadetonable"
-  },
-  {
-    "id": 3,
-    "nombre": "prueba",
-    "correo": "prueba",
+    "correo": "pedro",
     "contrasena": "1234"
   }
 ]

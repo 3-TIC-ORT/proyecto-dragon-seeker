@@ -1,62 +1,72 @@
-import fs from "fs"
+import fs from "fs";
+import { habilitardragon } from "./progresousuario.js";
 
-const rutausuarios = "./usuarios.json"
+const rutausuarios = "./usuarios.json";
 
 function leerusuarios() {
-    const texto = fs.readFileSync(rutausuarios, "utf-8")
-    return JSON.parse(texto) 
+  const texto = fs.readFileSync(rutausuarios, "utf-8");
+  return JSON.parse(texto);
 }
 
 function guardarusuarios(usuarios) {
-    const texto = JSON.stringify(usuarios, null, 2)
-    fs.writeFileSync(rutausuarios, texto)
+  const texto = JSON.stringify(usuarios, null, 2);
+  fs.writeFileSync(rutausuarios, texto);
 }
 
 export function registrarusuario(nombre, correo, contrasena) {
-    const usuarios = leerusuarios()
+  const usuarios = leerusuarios();
 
-    let existe = false 
-    let i = 0
-    while (i < usuarios.length) {
-        if (usuarios[i].correo === correo) {
-            existe = true 
-        }
-        i = i + 1
+  let existe = false;
+  let i = 0;
+  while (i < usuarios.length) {
+    if (usuarios[i].correo === correo) {
+      existe = true;
     }
+    i = i + 1;
+  }
 
-    if (existe) {
-        return { exito: false, mensaje: "El correo ya esta registrado"}
-    }
+  if (existe) {
+    return { exito: false, mensaje: "El correo ya esta registrado" };
+  }
 
-    const nuevo = {
-        id: usuarios.length + 1,
-        nombre: nombre,
-        correo: correo,
-        contrasena: contrasena
-    }
+  const nuevo = {
+    id: usuarios.length + 1,
+    nombre: nombre,
+    correo: correo,
+    contrasena: contrasena,
+  };
 
-    usuarios.push(nuevo)
-    guardarusuarios(usuarios)
+  usuarios.push(nuevo);
+  guardarusuarios(usuarios);
 
-    return { exito: true, mensaje: "Usuario registrado con exito", usuario: nuevo }
+  // darle Chimuelo al nuevo usuario
+  habilitardragon(nuevo.id, 4);
+
+  return {
+    exito: true,
+    mensaje: "Usuario registrado con exito",
+    usuario: nuevo,
+  };
 }
 
 export function iniciarsesion(correo, contrasena) {
-    const usuarios = leerusuarios()
+  const usuarios = leerusuarios();
 
-    let usuario = null
-    let i = 0
-    while (i < usuarios.length) {
-        if (usuarios[i].correo === correo && usuarios[i].contrasena === contrasena) {
-            usuario = usuarios[i]
-        }
-    i = i + 1
-        }
+  let usuario = null;
+  let i = 0;
+  while (i < usuarios.length) {
+    if (
+      usuarios[i].correo === correo &&
+      usuarios[i].contrasena === contrasena
+    ) {
+      usuario = usuarios[i];
+    }
+    i = i + 1;
+  }
 
+  if (usuario === null) {
+    return { exito: false, mensaje: "Correo o contraseña incorrectos" };
+  }
 
-if (usuario === null) {
-    return { exito: false, mensaje: "Correo o contraseña incorrectos"}
-}
-
-return { exito: true, mensaje: "Sesion iniciada", usuario: usuario }
+  return { exito: true, mensaje: "Sesion iniciada", usuario: usuario };
 }

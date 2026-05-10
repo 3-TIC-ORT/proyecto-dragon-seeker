@@ -69,20 +69,20 @@ actualizarBarraVida(
   barravidaUsuario,
   vidaTextoUsuario,
   dragon.vida,
-  dragon.vidaInicial
+  dragon.vidaInicial,
 );
 actualizarBarraVida(
   barravidaEnemigo,
   vidaTextoEnemigo,
   dragonEnemigo.vida,
-  dragonEnemigo.vidaInicial
+  dragonEnemigo.vidaInicial,
 );
 
 function actualizarBarraVida(
   elementoRelleno,
   elementoTexto,
   vidaActual,
-  vidaInicial
+  vidaInicial,
 ) {
   let porcentaje = (vidaActual / vidaInicial) * 100;
 
@@ -129,7 +129,9 @@ function checkFinDeBatalla() {
           if (data.exito) {
             localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
           }
-        }
+          window.location.href =
+            "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
+        },
       );
     }, 800);
 
@@ -151,6 +153,21 @@ function checkFinDeBatalla() {
       alert("¡Ganaste brooo!");
 
       let expGanada = 50;
+
+      postEvent(
+        "actualizarVida",
+        {
+          idusuario: idusuario,
+          iddragon: iddragon,
+          vida: dragon.vida,
+        },
+        (data) => {
+          if (data.exito) {
+            localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+          }
+        },
+      );
+
       postEvent(
         "sumarexperiencia",
         {
@@ -162,7 +179,9 @@ function checkFinDeBatalla() {
           console.log(data.mensaje);
           console.log("Nuevo nivel:", data.progreso.nivel);
           localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
-        }
+          window.location.href =
+            "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
+        },
       );
     }, 800);
 
@@ -192,11 +211,11 @@ function ataqueUsuario(i) {
     barravidaEnemigo,
     vidaTextoEnemigo,
     dragonEnemigo.vida,
-    dragonEnemigo.vidaInicial
+    dragonEnemigo.vidaInicial,
   );
 
   console.log(
-    `Ataque del usuario: ${danoTotal}, vida rival: ${dragonEnemigo.vida}`
+    `Ataque del usuario: ${danoTotal}, vida rival: ${dragonEnemigo.vida}`,
   );
 
   if (checkFinDeBatalla()) return;
@@ -222,7 +241,7 @@ function ataqueEnemigo() {
       barravidaUsuario,
       vidaTextoUsuario,
       dragon.vida,
-      dragon.vidaInicial
+      dragon.vidaInicial,
     );
 
     console.log(`Ataque enemigo: ${dano}, vida dragón: ${dragon.vida}`);
@@ -235,7 +254,7 @@ function ataqueEnemigo() {
 function terminarTurno() {
   if (batallaTerminada) return;
   setTimeout(() => {
-    if (batallaTerminada) return; 
+    if (batallaTerminada) return;
     gifChimuelo.style.display = "none";
     imagenchimuelo.style.display = "block";
   }, 1500);

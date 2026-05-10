@@ -11,7 +11,7 @@ if (!usuario) {
 
 const containerDragon = document.getElementById("dragonContainer");
 
-getEvent("obtenerdragones", (data) => {
+postEvent("obtenerdragonesUsuario", { idusuario: usuario.id }, (data) => {
   dragones = data.dragones;
   mostrarDragones();
 });
