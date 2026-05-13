@@ -16,11 +16,6 @@ export class Game extends Phaser.Scene {
       // filtra los dragones que están en mapa 1
       this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
 
-      //asignacion del sprite al dragon
-      this.dragonesSeleccionados?.forEach((d) => {
-        this.load.image("dragon_" + d.id, "../../../../BACKEND/" + d.imagen);
-      });
-
       this.load.start();
     });
   }
@@ -31,13 +26,55 @@ export class Game extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", "assets/mapa_grande.json");
 
     //asignacion del sprite al personaje
-    this.load.spritesheet("dude", "assets/dude.png", {
+    this.load.spritesheet("player", "assets/player.png", {
       frameWidth: 32,
-      frameHeight: 46,
+      frameHeight: 32,
     });
 
+    // spritesheets de los 6 dragones del mapa 1
+    this.load.spritesheet(
+      "terragon",
+      "../../../../../../BACKEND/img/terragon.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet("oso", "../../../../../../BACKEND/img/oso.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet(
+      "escarcha",
+      "../../../../../../BACKEND/img/escarcha.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet("burbu", "../../../../../../BACKEND/img/burbu.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet(
+      "chimuelo",
+      "../../../../../../BACKEND/img/chimuelo.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "amarillo",
+      "../../../../../../BACKEND/img/amarillo.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+
     //asignacopn del spirte al viejo
-    this.load.image("chimuelo", "assets/pinguino.png");
+    this.load.image("minero", "assets/pinguino.png");
 
     //asignacion de la coke
     this.load.image("coke", "assets/coke.png");
@@ -98,6 +135,15 @@ export class Game extends Phaser.Scene {
 
     //creacion de los dragones
     this.dragons = this.physics.add.group();
+    //mapa de imagen del JSON → key del spritesheet
+    const keyMap = {
+      "terragon.png": "terragon",
+      "oso.png": "oso",
+      "escarcha.png": "escarcha",
+      "burbu.png": "burbu",
+      "chimuelo.png": "chimuelo",
+      "amarillo.png": "amarillo",
+    };
 
     this.spawnDragons = (cantidad) => {
       if (!this.dragonesSeleccionados) return;
@@ -117,7 +163,10 @@ export class Game extends Phaser.Scene {
           spawnZone.y + spawnZone.height,
         );
 
-        const dragon = new NPC(this, x, y);
+        //se pasa la key del spritesheet al NPC
+        const key = keyMap[d.imagen];
+
+        const dragon = new NPC(this, x, y, key);
 
         dragon.setBounce(1);
         dragon.setCollideWorldBounds(true);
@@ -158,7 +207,7 @@ export class Game extends Phaser.Scene {
     }
 
     //dragon especial
-    this.chimuelo = new Minero(this, 350, 160);
+    this.minero = new Minero(this, 350, 160);
 
     //colliders
     obstaculos.setCollisionByExclusion([-1]);
@@ -208,12 +257,12 @@ export class Game extends Phaser.Scene {
     this.cokeGiven = false;
     this.interactionMessage = false;
 
-    this.nearChimuelo = false;
+    this.nearMinero = false;
     this.showingInteractMessage = false;
 
     this.physics.add.overlap(
       this.player,
-      this.chimuelo,
+      this.minero,
       this.tryGiveCoke,
       null,
       this,
@@ -234,8 +283,8 @@ export class Game extends Phaser.Scene {
     this.showMessage("Agarraste la coca!");
   }
 
-  tryGiveCoke(player, chimuelo) {
-    this.nearChimuelo = true;
+  tryGiveCoke(player, minero) {
+    this.nearMinero = true;
   }
 
   showMessage(text) {
@@ -257,7 +306,7 @@ export class Game extends Phaser.Scene {
   }
 
   update() {
-    if (this.nearChimuelo) {
+    if (this.nearMinero) {
       if (!this.showingInteractMessage && !gameData.cokeGiven) {
         this.messageText.setText("Presioná E para interactuar");
         this.messageText.setVisible(true);
@@ -271,21 +320,21 @@ export class Game extends Phaser.Scene {
       this.showingInteractMessage = false;
     }
 
-    if (this.nearChimuelo && Phaser.Input.Keyboard.JustDown(this.keyE)) {
+    if (this.nearMinero && Phaser.Input.Keyboard.JustDown(this.keyE)) {
       if (gameData.hasCoke && !gameData.cokeGiven) {
         gameData.hasCoke = false;
         gameData.cokeGiven = true;
 
         this.showMessage("Gracias por la coca");
-        this.chimuelo.setTint(0x00ff00);
-        this.nearChimuelo = false;
+        this.minero.setTint(0x00ff00);
+        this.nearMinero = false;
       } else if (!gameData.hasCoke && !gameData.cokeGiven) {
         this.interactionMessage = true;
         this.showMessage("No tenés la Coca todavía!");
       }
     }
 
-    this.nearChimuelo = false;
+    this.nearMinero = false;
 
     //si quedan menos de 4 dragones spawnean 2
     if (this.dragons.countActive(true) < 4 && this.dragonesSeleccionados) {

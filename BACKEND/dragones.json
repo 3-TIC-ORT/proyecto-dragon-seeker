@@ -13,7 +13,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/1.avif",
+      "imagen": "img/terragon.png",
       "ataques": [
         { "nombre": "Coletazo", "dano": 7, "nivel": 1 },
         { "nombre": "Bola de barro", "dano": 12, "nivel": 5 },
@@ -77,7 +77,7 @@
       "especial": true,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/4.png",
+      "imagen": "img/chimuelo.png",
       "ataques": [
         { "nombre": "Llamarada", "dano": 8, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 13, "nivel": 5 },
@@ -141,7 +141,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/7.png",
+      "imagen": "img/amarillo.png",
       "ataques": [
         { "nombre": "Chispa", "dano": 7, "nivel": 1 },
         { "nombre": "Tormenta electrica", "dano": 12, "nivel": 5 },
@@ -205,7 +205,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/10.png",
+      "imagen": "img/burbu.png",
       "ataques": [
         { "nombre": "Burbuja", "dano": 6, "nivel": 1 },
         { "nombre": "Salpicadura", "dano": 12, "nivel": 5 },
@@ -269,7 +269,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/13.png",
+      "imagen": "img/escarcha.png",
       "ataques": [
         { "nombre": "Ventisca", "dano": 7, "nivel": 1 },
         { "nombre": "Nevada", "dano": 13, "nivel": 5 },
@@ -333,7 +333,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/16.png",
+      "imagen": "img/oso.png",
       "ataques": [
         { "nombre": "Arañazo", "dano": 7, "nivel": 1 },
         { "nombre": "Patada", "dano": 9, "nivel": 1 },

@@ -1,8 +1,8 @@
 connect2Server();
 
 export class NPC extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y) {
-    super(scene, x, y, "dragons");
+  constructor(scene, x, y, dragonKey) {
+    super(scene, x, y, dragonKey);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -28,7 +28,30 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
   }
   preload() {}
   // aca van las animaciones de cada uno pero todavia no estan
-  // initanimations() {}
+  initAnimations() {
+    // walk
+    if (!this.scene.anims.exists(this.dragonKey + "_walk")) {
+      this.scene.anims.create({
+        key: this.dragonKey + "_walk",
+        frames: this.anims.generateFrameNumbers(this.dragonKey, {
+          start: 0,
+          end: 1,
+        }),
+        frameRate: 6,
+        repeat: -1,
+      });
+    }
+    // idle
+    if (!this.scene.anims.exists(this.dragonKey + "_idle")) {
+      this.scene.anims.create({
+        key: this.dragonKey + "_idle",
+        frames: [{ key: this.dragonKey, frame: 0 }],
+        frameRate: 1,
+      });
+    }
+
+    this.anims.play(this.dragonKey + "_idle");
+  }
 
   preUpdate(t, dt) {
     super.preUpdate(t, dt);
@@ -36,7 +59,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     // Movimiento
     this.setVelocity(
       this.direction.x * this.speed,
-      this.direction.y * this.speed
+      this.direction.y * this.speed,
     );
 
     if (
@@ -64,12 +87,12 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
   handleDragonCollision(otherDragon) {
     const normal = new Phaser.Math.Vector2(
       this.x - otherDragon.x,
-      this.y - otherDragon.y
+      this.y - otherDragon.y,
     ).normalize();
 
     const velocity = new Phaser.Math.Vector2(
       this.body.velocity.x,
-      this.body.velocity.y
+      this.body.velocity.y,
     );
 
     velocity.reflect(normal);
