@@ -24,24 +24,37 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     this.lastCollision = 0;
 
     // es para las animaciones
-    // this.initanimations();
+    this.initAnimations();
   }
   preload() {}
   // aca van las animaciones de cada uno pero todavia no estan
   initAnimations() {
-    // walk
-    if (!this.scene.anims.exists(this.dragonKey + "_walk")) {
-      this.scene.anims.create({
-        key: this.dragonKey + "_walk",
-        frames: this.anims.generateFrameNumbers(this.dragonKey, {
-          start: 0,
-          end: 1,
-        }),
-        frameRate: 6,
-        repeat: -1,
-      });
+    // Verificar si la textura existe y tiene más de un frame
+    if (!this.scene.textures.exists(this.dragonKey)) {
+      console.error("La textura no existe:", this.dragonKey);
+      return;
     }
-    // idle
+
+    // Animación de Caminar
+    if (!this.scene.anims.exists(this.dragonKey + "_walk")) {
+      // Obtenemos los frames de forma segura
+      const frames = this.scene.anims.generateFrameNumbers(this.dragonKey, {
+        start: 0,
+        end: 1,
+      });
+
+      // Si por alguna razón frames está vacío o es indefinido, evitamos el crash
+      if (frames && frames.length > 0) {
+        this.scene.anims.create({
+          key: this.dragonKey + "_walk",
+          frames: frames,
+          frameRate: 6,
+          repeat: -1,
+        });
+      }
+    }
+
+    // Animación de Idle
     if (!this.scene.anims.exists(this.dragonKey + "_idle")) {
       this.scene.anims.create({
         key: this.dragonKey + "_idle",
@@ -50,7 +63,10 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       });
     }
 
-    this.anims.play(this.dragonKey + "_idle");
+    // Solo dar play si la animación se creó correctamente
+    if (this.scene.anims.exists(this.dragonKey + "_idle")) {
+      this.play(this.dragonKey + "_idle");
+    }
   }
 
   preUpdate(t, dt) {
@@ -59,7 +75,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     // Movimiento
     this.setVelocity(
       this.direction.x * this.speed,
-      this.direction.y * this.speed,
+      this.direction.y * this.speed
     );
 
     if (
@@ -70,16 +86,6 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     ) {
       this.updatePatrol();
     }
-
-    // Animaciones según dirección
-    /*if (this.direction.x === 0 && this.direction.y === 0) {
-      // Pausa → quieto
-      this.anims.stop();
-    } else if (this.direction.x > 0) {
-      this.setFlipX(true);
-    } else if (this.direction.x < 0) {
-      this.setFlipX(false);
-    }*/
   }
 
   update() {}
@@ -87,12 +93,12 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
   handleDragonCollision(otherDragon) {
     const normal = new Phaser.Math.Vector2(
       this.x - otherDragon.x,
-      this.y - otherDragon.y,
+      this.y - otherDragon.y
     ).normalize();
 
     const velocity = new Phaser.Math.Vector2(
       this.body.velocity.x,
-      this.body.velocity.y,
+      this.body.velocity.y
     );
 
     velocity.reflect(normal);

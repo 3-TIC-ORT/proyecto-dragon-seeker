@@ -38,7 +38,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet("oso", "../../../../../../BACKEND/img/oso.png", {
       frameWidth: 32,
@@ -50,7 +50,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet("burbu", "../../../../../../BACKEND/img/burbu.png", {
       frameWidth: 32,
@@ -62,7 +62,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "amarillo",
@@ -70,7 +70,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
 
     //asignacopn del spirte al viejo
@@ -130,19 +130,19 @@ export class Game extends Phaser.Scene {
 
     const spawnZone = map.findObject(
       "spawn dragons",
-      (obj) => obj.name === "spawn_dragons",
+      (obj) => obj.name === "spawn_dragons"
     );
 
     //creacion de los dragones
     this.dragons = this.physics.add.group();
     //mapa de imagen del JSON → key del spritesheet
     const keyMap = {
-      "terragon.png": "terragon",
-      "oso.png": "oso",
-      "escarcha.png": "escarcha",
-      "burbu.png": "burbu",
-      "chimuelo.png": "chimuelo",
-      "amarillo.png": "amarillo",
+      "img/terragon.png": "terragon",
+      "img/oso.png": "oso",
+      "img/escarcha.png": "escarcha",
+      "img/burbu.png": "burbu",
+      "img/chimuelo.png": "chimuelo",
+      "img/amarillo.png": "amarillo",
     };
 
     this.spawnDragons = (cantidad) => {
@@ -155,16 +155,17 @@ export class Game extends Phaser.Scene {
       dragones_mapa1.forEach((d) => {
         const x = Phaser.Math.Between(
           spawnZone.x,
-          spawnZone.x + spawnZone.width,
+          spawnZone.x + spawnZone.width
         );
 
         const y = Phaser.Math.Between(
           spawnZone.y,
-          spawnZone.y + spawnZone.height,
+          spawnZone.y + spawnZone.height
         );
 
         //se pasa la key del spritesheet al NPC
         const key = keyMap[d.imagen];
+        console.log(d.nombre, d.imagen, key);
 
         const dragon = new NPC(this, x, y, key);
 
@@ -251,7 +252,7 @@ export class Game extends Phaser.Scene {
       this.dragons,
       this.dragonEnemigo,
       null,
-      this,
+      this
     );
 
     this.cokeGiven = false;
@@ -265,7 +266,7 @@ export class Game extends Phaser.Scene {
       this.minero,
       this.tryGiveCoke,
       null,
-      this,
+      this
     );
   }
 
