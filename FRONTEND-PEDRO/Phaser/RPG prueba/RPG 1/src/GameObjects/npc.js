@@ -4,6 +4,8 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, dragonKey) {
     super(scene, x, y, dragonKey);
 
+    this.dragonKey = dragonKey;
+
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -77,6 +79,12 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       this.direction.x * this.speed,
       this.direction.y * this.speed
     );
+
+    if (this.direction.length() > 0) {
+      this.play(this.dragonKey + "_walk", true);
+    } else {
+      this.play(this.dragonKey + "_idle", true);
+    }
 
     if (
       this.body.blocked.left ||
