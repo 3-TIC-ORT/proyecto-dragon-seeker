@@ -23,7 +23,14 @@ export class Game extends Phaser.Scene {
   preload() {
     //Carga del mapa
     this.load.image("tiles", "assets/town_forest_tiles.png");
-    this.load.tilemapTiledJSON("map", "assets/mapa_grande.json");
+    this.load.image("todos_los_conjuntos", "assets/todos_los_conjuntos.png")
+    this.load.image("cp_camino_ciudad", "assets/cp_camino_ciudad.png")
+    this.load.image("casa_doble_naturaleza", "assets/casa_doble_naturaleza.png")
+    this.load.image("casa", "assets/casa.png")
+    this.load.image("camino_normal", "assets/camino_normal.png")
+    this.load.image("arbol_manzanas", "assets/arbol_manzanas.png")
+    this.load.image("arbol", "assets/arbol.png");
+    this.load.tilemapTiledJSON("map", "assets/mapa1.json");
 
     //asignacion del sprite al personaje
     this.load.spritesheet("player", "assets/player.png", {

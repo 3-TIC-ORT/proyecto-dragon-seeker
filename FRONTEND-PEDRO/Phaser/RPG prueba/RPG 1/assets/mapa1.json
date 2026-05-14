@@ -372,7 +372,7 @@
         {
          "columns":4,
          "firstgid":1,
-         "image":"TODOS los conjuntos de patrones.aseprite",
+         "image":"todos_los_conjuntos.png",
          "imageheight":224,
          "imagewidth":128,
          "margin":0,
@@ -385,7 +385,7 @@
         {
          "columns":4,
          "firstgid":29,
-         "image":"Arbol con manzanas.ase",
+         "image":"arbol_manzanas.png",
          "imageheight":128,
          "imagewidth":128,
          "margin":0,
