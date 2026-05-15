@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="93" height="49" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="93" height="49" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="2">
  <editorsettings>
-  <export target="Real Mapa 1 Tiled.tmx" format="tmx"/>
+  <export target="Mapa 1 Tiled.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="TODOS los conjuntos de patrones" tilewidth="32" tileheight="32" tilecount="28" columns="4">
   <image source="TODOS los conjuntos de patrones.aseprite" width="128" height="224"/>
@@ -12,10 +12,18 @@
  <tileset firstgid="45" name="Casa" tilewidth="32" tileheight="32" tilecount="64" columns="8">
   <image source="Casa.aseprite" width="256" height="256"/>
  </tileset>
- <tileset firstgid="109" source="Arbol 128x128 Tiled.tsx"/>
- <tileset firstgid="125" source="Casa doble naturaleza Tiled.tsx"/>
- <tileset firstgid="381" source="Camino normal +.tsx"/>
- <tileset firstgid="382" source="CP Camino Ciudad.tsx"/>
+ <tileset firstgid="109" name="Arbol 128x128" tilewidth="32" tileheight="32" tilecount="16" columns="4">
+  <image source="arbol.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="125" name="Casa doble naturaleza" tilewidth="32" tileheight="32" tilecount="256" columns="16">
+  <image source="casa_doble_naturaleza.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="381" name="Camino normal +" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="camino_normal.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="382" name="CP Camino Ciudad" tilewidth="32" tileheight="32" tilecount="64" columns="8">
+  <image source="cp_camino_ciudad.png" width="256" height="256"/>
+ </tileset>
  <layer id="1" name="suelo" width="93" height="49">
   <data encoding="csv">
 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
@@ -281,6 +289,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="14" name="spawn dragons">
+  <object id="1" name="spawn_dragons" x="2120" y="964" width="662" height="300"/>
+ </objectgroup>
  <layer id="10" name="casas ciudad" width="93" height="49">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

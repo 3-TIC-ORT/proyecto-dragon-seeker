@@ -22,13 +22,16 @@ export class Game extends Phaser.Scene {
 
   preload() {
     //Carga del mapa
-    this.load.image("tiles", "assets/town_forest_tiles.png");
-    this.load.image("todos_los_conjuntos", "assets/todos_los_conjuntos.png")
-    this.load.image("cp_camino_ciudad", "assets/cp_camino_ciudad.png")
-    this.load.image("casa_doble_naturaleza", "assets/casa_doble_naturaleza.png")
-    this.load.image("casa", "assets/casa.png")
-    this.load.image("camino_normal", "assets/camino_normal.png")
-    this.load.image("arbol_manzanas", "assets/arbol_manzanas.png")
+    //this.load.image("tiles", "assets/town_forest_tiles.png");
+    this.load.image("todos_los_conjuntos", "assets/todos_los_conjuntos.png");
+    this.load.image("cp_camino_ciudad", "assets/cp_camino_ciudad.png");
+    this.load.image(
+      "casa_doble_naturaleza",
+      "assets/casa_doble_naturaleza.png",
+    );
+    this.load.image("casa", "assets/casa.png");
+    this.load.image("camino_normal", "assets/camino_normal.png");
+    this.load.image("arbol_manzanas", "assets/arbol_manzanas.png");
     this.load.image("arbol", "assets/arbol.png");
     this.load.tilemapTiledJSON("map", "assets/mapa1.json");
 
@@ -45,7 +48,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
+      },
     );
     this.load.spritesheet("oso", "../../../../../../BACKEND/img/oso.png", {
       frameWidth: 32,
@@ -57,7 +60,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
+      },
     );
     this.load.spritesheet("burbu", "../../../../../../BACKEND/img/burbu.png", {
       frameWidth: 32,
@@ -69,7 +72,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
+      },
     );
     this.load.spritesheet(
       "amarillo",
@@ -77,7 +80,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
+      },
     );
 
     //asignacopn del spirte al viejo
@@ -108,17 +111,32 @@ export class Game extends Phaser.Scene {
     this.messageText.setPosition(cam.width - margin, margin);
 
     const map = this.make.tilemap({ key: "map" });
-    const tileset = map.addTilesetImage("mapa 2", "tiles");
+    console.log("tilesets del mapa:", map.tilesets);
 
     //creacion de las capas
-    const ground = map.createLayer("piso", tileset, 0, 0);
-    const camino = map.createLayer("camino", tileset, 0, 0);
-    const obstaculos = map.createLayer("obstaculos", tileset, 0, 0);
-    const casa = map.createLayer("casa", tileset, 0, 0);
-    const puertas = map.createLayer("puertas visibles", tileset, 0, 0);
-    const corral_dragones = map.createLayer("corral dragones", tileset, 0, 0);
 
-    corral_dragones.setVisible(false);
+    const ts1 = map.addTilesetImage(
+      "TODOS los conjuntos de patrones",
+      "todos_los_conjuntos",
+    );
+    const ts2 = map.addTilesetImage("Arbol con manzanas", "arbol_manzanas");
+    const ts3 = map.addTilesetImage("Casa", "casa");
+    const ts4 = map.addTilesetImage("Arbol 128x128", "arbol");
+    const ts5 = map.addTilesetImage(
+      "Casa doble naturaleza",
+      "casa_doble_naturaleza",
+    );
+    const ts6 = map.addTilesetImage("Camino normal +", "camino_normal");
+    const ts7 = map.addTilesetImage("CP Camino Ciudad", "cp_camino_ciudad");
+
+    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7];
+
+    const suelo = map.createLayer("suelo", allTilesets, 0, 0);
+    const caminoCiud = map.createLayer("camino ciudad", allTilesets, 0, 0);
+    const caminoNorm = map.createLayer("Camino normal", allTilesets, 0, 0);
+    const decoracion = map.createLayer("decoracion", allTilesets, 0, 0);
+    const pasto = map.createLayer("Pasto", allTilesets, 0, 0);
+    const casasCiudad = map.createLayer("casas ciudad", allTilesets, 0, 0);
 
     //spawn jugador
     const startX = data?.x ?? 16;
@@ -137,7 +155,7 @@ export class Game extends Phaser.Scene {
 
     const spawnZone = map.findObject(
       "spawn dragons",
-      (obj) => obj.name === "spawn_dragons"
+      (obj) => obj.name === "spawn_dragons",
     );
 
     //creacion de los dragones
@@ -162,12 +180,12 @@ export class Game extends Phaser.Scene {
       dragones_mapa1.forEach((d) => {
         const x = Phaser.Math.Between(
           spawnZone.x,
-          spawnZone.x + spawnZone.width
+          spawnZone.x + spawnZone.width,
         );
 
         const y = Phaser.Math.Between(
           spawnZone.y,
-          spawnZone.y + spawnZone.height
+          spawnZone.y + spawnZone.height,
         );
 
         //se pasa la key del spritesheet al NPC
@@ -207,29 +225,29 @@ export class Game extends Phaser.Scene {
     }
 
     //creo la coke
-    if (!gameData.hasCoke && !gameData.cokeGiven) {
+    /* if (!gameData.hasCoke && !gameData.cokeGiven) {
       const coke = this.physics.add.sprite(256, 160, "coke");
 
       coke.setImmovable(true);
       this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
-    }
+    }*/
 
     //dragon especial
-    this.minero = new Minero(this, 350, 160);
+    //this.minero = new Minero(this, 350, 160);
 
     //colliders
-    obstaculos.setCollisionByExclusion([-1]);
+    /*obstaculos.setCollisionByExclusion([-1]);
     casa.setCollisionByExclusion([-1]);
     corral_dragones.setCollisionByExclusion([-1]);
 
     //colliders con el player
     this.physics.add.collider(this.player, obstaculos);
     this.physics.add.collider(this.player, casa);
-
+*/
     //colliders con el dragon
-    this.physics.add.collider(this.dragons, obstaculos);
-    this.physics.add.collider(this.dragons, corral_dragones);
-    this.physics.add.collider(this.dragons, casa);
+    this.physics.add.collider(this.dragons, decoracion);
+    //this.physics.add.collider(this.dragons, corral_dragones);
+    //this.physics.add.collider(this.dragons, casa);
     this.physics.add.collider(this.dragons, this.dragons, (d1, d2) => {
       d1.handleDragonCollision(d2);
       d2.handleDragonCollision(d1);
@@ -243,10 +261,10 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
     // trigger para pasar al Mapa2
-    const trigger = map.findObject("puertas", (obj) => obj.name === "door");
+    /*const trigger = map.findObject("puertas", (obj) => obj.name === "door");
     this.door = this.physics.add.sprite(trigger.x, trigger.y, null);
     this.door.setSize(trigger.width, trigger.height);
-    this.door.setVisible(false);
+    this.door.setVisible(false);*/
 
     //puerta de acceso a la casa (cambio de escena)
     this.physics.add.overlap(this.player, this.door, () => {
@@ -259,7 +277,7 @@ export class Game extends Phaser.Scene {
       this.dragons,
       this.dragonEnemigo,
       null,
-      this
+      this,
     );
 
     this.cokeGiven = false;
@@ -273,7 +291,7 @@ export class Game extends Phaser.Scene {
       this.minero,
       this.tryGiveCoke,
       null,
-      this
+      this,
     );
   }
 
