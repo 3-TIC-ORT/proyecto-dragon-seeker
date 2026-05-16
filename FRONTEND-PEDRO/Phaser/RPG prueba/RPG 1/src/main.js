@@ -14,6 +14,11 @@ const config = {
     arcade: {
       debug: false,
     },
+    render: {
+      antialias: false,
+      pixelArt: true,
+      roundPixels: true,
+    },
   },
   scale: {
     mode: Phaser.Scale.RESIZE,

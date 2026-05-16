@@ -93,7 +93,7 @@ export class Casa extends Phaser.Scene {
     this.healer.setVisible(true);
 
     this.physics.add.overlap(this.player, this.door, () => {
-      this.scene.start("Game", { x: 1232, y: 624 }); // posición inicial en Mapa2
+      this.scene.start("Game", { x: 992, y: 320 }); // posición cuando sale del mapa 2
     });
 
     this.nearHealer = false;

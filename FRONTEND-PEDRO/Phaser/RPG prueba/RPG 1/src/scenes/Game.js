@@ -137,10 +137,22 @@ export class Game extends Phaser.Scene {
     const decoracion = map.createLayer("decoracion", allTilesets, 0, 0);
     const pasto = map.createLayer("Pasto", allTilesets, 0, 0);
     const casasCiudad = map.createLayer("casas ciudad", allTilesets, 0, 0);
+    const corralDragones = map.createLayer(
+      "corral dragones",
+      allTilesets,
+      0,
+      0,
+    );
+    const puertasVisibles = map.createLayer(
+      "puertas visibles",
+      allTilesets,
+      0,
+      0,
+    );
 
     //spawn jugador
-    const startX = data?.x ?? 16;
-    const startY = data?.y ?? 160;
+    const startX = data?.x ?? 720;
+    const startY = data?.y ?? 460;
 
     //movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -203,8 +215,6 @@ export class Game extends Phaser.Scene {
 
         dragon.setCollideWorldBounds(true);
 
-        //dragon.setTexture("dragon_" + d.id);
-
         this.dragons.add(dragon);
       });
     };
@@ -236,18 +246,20 @@ export class Game extends Phaser.Scene {
     //this.minero = new Minero(this, 350, 160);
 
     //colliders
-    /*obstaculos.setCollisionByExclusion([-1]);
-    casa.setCollisionByExclusion([-1]);
-    corral_dragones.setCollisionByExclusion([-1]);
+    decoracion.setCollisionByExclusion([-1]);
+    casasCiudad.setCollisionByExclusion([-1]);
+    corralDragones.setCollisionByExclusion([-1]);
+    corralDragones.setVisible(false);
 
     //colliders con el player
-    this.physics.add.collider(this.player, obstaculos);
-    this.physics.add.collider(this.player, casa);
-*/
+    this.physics.add.collider(this.player, decoracion);
+    this.physics.add.collider(this.player, casasCiudad);
+
     //colliders con el dragon
     this.physics.add.collider(this.dragons, decoracion);
-    //this.physics.add.collider(this.dragons, corral_dragones);
-    //this.physics.add.collider(this.dragons, casa);
+    this.physics.add.collider(this.dragons, casasCiudad);
+    this.physics.add.collider(this.dragons, corralDragones);
+
     this.physics.add.collider(this.dragons, this.dragons, (d1, d2) => {
       d1.handleDragonCollision(d2);
       d2.handleDragonCollision(d1);
@@ -259,12 +271,13 @@ export class Game extends Phaser.Scene {
     //camara
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.cameras.main.setRoundPixels(true);
 
     // trigger para pasar al Mapa2
-    /*const trigger = map.findObject("puertas", (obj) => obj.name === "door");
+    const trigger = map.findObject("puertas", (obj) => obj.name === "door");
     this.door = this.physics.add.sprite(trigger.x, trigger.y, null);
     this.door.setSize(trigger.width, trigger.height);
-    this.door.setVisible(false);*/
+    this.door.setVisible(false);
 
     //puerta de acceso a la casa (cambio de escena)
     this.physics.add.overlap(this.player, this.door, () => {
