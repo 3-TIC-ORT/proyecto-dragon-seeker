@@ -16,6 +16,18 @@ export class Game extends Phaser.Scene {
       // filtra los dragones que están en mapa 1
       this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
 
+      console.log(
+        "obtenerdragones llegó, estadoJuegoRecibido:",
+        this.estadoJuegoRecibido,
+      );
+      // solo marca que los dragones están listos, no spawnea
+      this.dragonesListos = true;
+
+      // si el estado del backend ya llegó antes, procesá ahora
+      if (this.estadoJuegoRecibido) {
+        this.procesarEstadoInicial();
+      }
+
       this.load.start();
     });
   }
@@ -90,6 +102,13 @@ export class Game extends Phaser.Scene {
     this.load.image("coke", "assets/coke.png");
   }
   create(data) {
+    const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
+    this.userId = usuarioActual?.id;
+
+    // posición default hasta que llegue el estado del backend
+    const startX = data?.x ?? 720;
+    const startY = data?.y ?? 460;
+
     const margin = 10;
     const cam = this.cameras.main;
 
@@ -114,7 +133,6 @@ export class Game extends Phaser.Scene {
     console.log("tilesets del mapa:", map.tilesets);
 
     //creacion de las capas
-
     const ts1 = map.addTilesetImage(
       "TODOS los conjuntos de patrones",
       "todos_los_conjuntos",
@@ -150,10 +168,6 @@ export class Game extends Phaser.Scene {
       0,
     );
 
-    //spawn jugador
-    const startX = data?.x ?? 720;
-    const startY = data?.y ?? 460;
-
     //movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -172,8 +186,9 @@ export class Game extends Phaser.Scene {
 
     //creacion de los dragones
     this.dragons = this.physics.add.group();
+
     //mapa de imagen del JSON → key del spritesheet
-    const keyMap = {
+    this.keyMap = {
       "img/terragon.png": "terragon",
       "img/oso.png": "oso",
       "img/escarcha.png": "escarcha",
@@ -194,53 +209,61 @@ export class Game extends Phaser.Scene {
           spawnZone.x,
           spawnZone.x + spawnZone.width,
         );
-
         const y = Phaser.Math.Between(
           spawnZone.y,
           spawnZone.y + spawnZone.height,
         );
-
-        //se pasa la key del spritesheet al NPC
-        const key = keyMap[d.imagen];
-        console.log(d.nombre, d.imagen, key);
-
+        const key = this.keyMap[d.imagen];
         const dragon = new NPC(this, x, y, key);
-
         dragon.setBounce(1);
         dragon.setCollideWorldBounds(true);
         dragon.body.setAllowGravity(false);
-
-        //guardamos la info del dragon
         dragon.info = d;
-
-        dragon.setCollideWorldBounds(true);
-
+        // ✅ id único por instancia
+        dragon.instanceId = `${d.id}_${Date.now()}_${Math.random()}`;
         this.dragons.add(dragon);
       });
     };
 
-    //funcion que crea los  5 dragones iniciales
+    //funcion que crea los 5 dragones iniciales
     this.spawnInitialDragons = () => {
-      if (!this.dragonesSeleccionados) return;
-
-      if (!this.initialSpawnDone) {
-        this.spawnDragons(5);
-        this.initialSpawnDone = true;
-      }
+      if (!this.dragonesSeleccionados || this.initialSpawnDone) return;
+      this.spawnDragons(5);
+      this.initialSpawnDone = true;
     };
 
-    // Si el JSON ya llegó crear los dragones ahora
-    if (this.dragonesSeleccionados) {
-      this.spawnInitialDragons();
-    }
+    // ÚNICO lugar donde se restauran o spawnean dragones
+    postEvent(
+      "obtenerEstadoJuego",
+      { idusuario: this.userId, mapa: 1 },
+      (res) => {
+        console.log(
+          "obtenerEstadoJuego llegó, dragonesListos:",
+          this.dragonesListos,
+        );
+        console.log("estado recibido:", res.estado);
+        this.estadoGuardado = res.estado;
+        this.estadoJuegoRecibido = true;
+
+        // si los dragones ya llegaron antes, procesá ahora
+        if (this.dragonesListos) {
+          this.procesarEstadoInicial();
+        }
+      },
+    );
+
+    // ✅ guardar estado al cerrar/recargar
+    window.addEventListener("beforeunload", () => {
+      this.guardarEstado();
+    });
 
     //creo la coke
     /* if (!gameData.hasCoke && !gameData.cokeGiven) {
-      const coke = this.physics.add.sprite(256, 160, "coke");
+    const coke = this.physics.add.sprite(256, 160, "coke");
 
-      coke.setImmovable(true);
-      this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
-    }*/
+    coke.setImmovable(true);
+    this.physics.add.overlap(this.player, coke, this.pickUpCoke, null, this);
+  }*/
 
     //dragon especial
     //this.minero = new Minero(this, 350, 160);
@@ -308,10 +331,92 @@ export class Game extends Phaser.Scene {
     );
   }
 
+  procesarEstadoInicial() {
+    console.log("procesarEstadoInicial ejecutado");
+    if (this.initialSpawnDone) return;
+
+    const dragonEliminadoId = localStorage.getItem("dragon_eliminado") ?? "";
+    localStorage.removeItem("dragon_eliminado");
+
+    const dragonesGuardados = (
+      this.estadoGuardado?.dragonesSpawneados ?? []
+    ).filter((d) => d.instanceId !== dragonEliminadoId);
+    console.log("dragonesGuardados:", dragonesGuardados);
+
+    if (dragonesGuardados.length > 0) {
+      if (this.estadoGuardado?.x)
+        this.player.setPosition(this.estadoGuardado.x, this.estadoGuardado.y);
+
+      dragonesGuardados.forEach((ds) => {
+        const dragonInfo = this.dragonesSeleccionados?.find(
+          (d) => d.id === ds.id,
+        );
+        if (!dragonInfo) return;
+        const dragon = new NPC(
+          this,
+          ds.x,
+          ds.y,
+          this.keyMap[dragonInfo.imagen],
+        );
+        dragon.setBounce(1);
+        dragon.setCollideWorldBounds(true);
+        dragon.body.setAllowGravity(false);
+        dragon.info = dragonInfo;
+        dragon.instanceId = ds.instanceId;
+        this.dragons.add(dragon);
+      });
+      this.initialSpawnDone = true;
+    } else {
+      this.spawnInitialDragons();
+    }
+  }
+
+  // ✅ NUEVO método para guardar
+  guardarEstado() {
+    const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
+    postEvent(
+      "guardarEstadoJuego",
+      {
+        idusuario: usuarioActual.id,
+        estado: {
+          mapa: 1,
+          x: Math.round(this.player.x),
+          y: Math.round(this.player.y),
+          dragonesSpawneados: this.dragons.getChildren().map((d) => ({
+            instanceId: d.instanceId,
+            id: d.info.id,
+            x: Math.round(d.x),
+            y: Math.round(d.y),
+          })),
+        },
+      },
+      () => {},
+    );
+  }
+
   dragonEnemigo(player, dragon) {
+    if (this.battleCooldown) return;
+    this.battleCooldown = true; // ✅ evita que se llame dos veces seguidas
+
+    // ✅ eliminás el dragón del grupo antes de salir
+    dragon.disableBody(true, true);
+    this.dragons.remove(dragon, true, true);
+
+    // ✅ guardar estado antes de la batalla (sin el dragón con el que chocaste)
+    const dragonesActuales = this.dragons
+      .getChildren()
+      .filter((d) => d !== dragon)
+      .map((d) => ({
+        instanceId: d.instanceId,
+        id: d.info.id,
+        x: Math.round(d.x),
+        y: Math.round(d.y),
+      }));
+
+    localStorage.setItem("dragon_eliminado", dragon.instanceId); // ✅ instanceId, no id numérico
     localStorage.setItem("dragon_enemigo", JSON.stringify(dragon.info));
 
-    console.log(dragon.info);
+    this.guardarEstado();
     window.location.href = "../../../../inventario/inventario.html";
   }
 
@@ -376,7 +481,11 @@ export class Game extends Phaser.Scene {
     this.nearMinero = false;
 
     //si quedan menos de 4 dragones spawnean 2
-    if (this.dragons.countActive(true) < 4 && this.dragonesSeleccionados) {
+    if (
+      this.initialSpawnDone &&
+      this.dragons.countActive(true) < 4 &&
+      this.dragonesSeleccionados
+    ) {
       this.spawnDragons(2);
     }
   }

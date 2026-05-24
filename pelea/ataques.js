@@ -150,6 +150,8 @@ function checkFinDeBatalla() {
       gifAmarillo.style.display = "none";
       imagenamarillo.style.display = "block";
 
+      localStorage.setItem("dragon_eliminado", dragonEnemigo.id);
+
       alert("¡Ganaste brooo!");
 
       let expGanada = 50;
@@ -273,6 +275,7 @@ function terminarTurno2() {
     desbloquearBoton();
     BotonAdopcion.onclick = null;
     BotonAdopcion.onclick = () => {
+      localStorage.setItem("dragon_eliminado", dragonEnemigo.id);
       localStorage.setItem("vidaFinalRival", dragonEnemigo.vida);
     };
   } else {

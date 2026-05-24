@@ -10,5 +10,17 @@
     "nombre": "pedro",
     "correo": "pedro",
     "contrasena": "1234"
+  },
+  {
+    "id": 3,
+    "nombre": "prueba2",
+    "correo": "1234",
+    "contrasena": ""
+  },
+  {
+    "id": 4,
+    "nombre": "prueba2",
+    "correo": "prueba2",
+    "contrasena": "1234"
   }
 ]

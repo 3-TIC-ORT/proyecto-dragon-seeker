@@ -3,10 +3,10 @@
     "user": 1,
     "dragon": 4,
     "habilitado": true,
-    "nivel": 1,
-    "exp": 50,
-    "vida": 55,
-    "fuerza": 10,
+    "nivel": 2,
+    "exp": 0,
+    "vida": 65,
+    "fuerza": 15,
     "ataques": [
       {
         "nombre": "Arañazo",
@@ -21,16 +21,18 @@
         "nivel": 13
       }
     ],
-    "desbloqueados": []
+    "desbloqueados": [
+      "Arañazo"
+    ]
   },
   {
     "user": 1,
     "dragon": 1,
     "habilitado": true,
-    "nivel": 1,
+    "nivel": 3,
     "exp": 0,
-    "vida": 60,
-    "fuerza": 10,
+    "vida": 80,
+    "fuerza": 20,
     "ataques": [
       {
         "nombre": "Arañazo",
@@ -45,7 +47,9 @@
         "nivel": 13
       }
     ],
-    "desbloqueados": []
+    "desbloqueados": [
+      "Arañazo"
+    ]
   },
   {
     "user": 2,
@@ -70,5 +74,55 @@
       }
     ],
     "desbloqueados": []
+  },
+  {
+    "user": 3,
+    "dragon": 4,
+    "habilitado": true,
+    "nivel": 1,
+    "exp": 0,
+    "vida": 100,
+    "fuerza": 10,
+    "ataques": [
+      {
+        "nombre": "Arañazo",
+        "nivel": 1
+      },
+      {
+        "nombre": "Llamarada",
+        "nivel": 5
+      },
+      {
+        "nombre": "Terremoto",
+        "nivel": 13
+      }
+    ],
+    "desbloqueados": []
+  },
+  {
+    "user": 4,
+    "dragon": 4,
+    "habilitado": true,
+    "nivel": 3,
+    "exp": 150,
+    "vida": 110,
+    "fuerza": 20,
+    "ataques": [
+      {
+        "nombre": "Arañazo",
+        "nivel": 1
+      },
+      {
+        "nombre": "Llamarada",
+        "nivel": 5
+      },
+      {
+        "nombre": "Terremoto",
+        "nivel": 13
+      }
+    ],
+    "desbloqueados": [
+      "Arañazo"
+    ]
   }
 ]

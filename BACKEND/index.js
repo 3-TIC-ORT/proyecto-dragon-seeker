@@ -28,6 +28,7 @@ import {
 } from "./dragones.js";
 import { objeto, obtenerdatosobjeto } from "./items.js";
 //lo puse yo (doble)
+import { guardarEstadoUsuario, obtenerEstadoUsuario } from "./estadoJuego.js";
 
 subscribePOSTEvent("registrarusuario", (data) => {
   const { nombre, correo, contrasena } = data;
@@ -172,6 +173,17 @@ subscribePOSTEvent("actualizarVida", (data) => {
 subscribePOSTEvent("curarDragones", (data) => {
   const { idusuario } = data;
   return curarDragones(idusuario);
+});
+
+subscribePOSTEvent("guardarEstadoJuego", (data) => {
+  const { idusuario, estado } = data;
+  return guardarEstadoUsuario(idusuario, estado);
+});
+
+subscribePOSTEvent("obtenerEstadoJuego", (data) => {
+  const { idusuario, mapa } = data;
+  const estado = obtenerEstadoUsuario(Number(idusuario), Number(mapa));
+  return { exito: true, estado };
 });
 
 console.log("Servidor iniciado");
