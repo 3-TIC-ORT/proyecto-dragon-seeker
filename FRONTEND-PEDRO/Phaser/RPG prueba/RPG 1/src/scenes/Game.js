@@ -16,10 +16,6 @@ export class Game extends Phaser.Scene {
       // filtra los dragones que están en mapa 1
       this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
 
-      console.log(
-        "obtenerdragones llegó, estadoJuegoRecibido:",
-        this.estadoJuegoRecibido,
-      );
       // solo marca que los dragones están listos, no spawnea
       this.dragonesListos = true;
 
@@ -130,7 +126,6 @@ export class Game extends Phaser.Scene {
     this.messageText.setPosition(cam.width - margin, margin);
 
     const map = this.make.tilemap({ key: "map" });
-    console.log("tilesets del mapa:", map.tilesets);
 
     //creacion de las capas
     const ts1 = map.addTilesetImage(
@@ -155,6 +150,8 @@ export class Game extends Phaser.Scene {
     const decoracion = map.createLayer("decoracion", allTilesets, 0, 0);
     const pasto = map.createLayer("Pasto", allTilesets, 0, 0);
     const casasCiudad = map.createLayer("casas ciudad", allTilesets, 0, 0);
+    const hojasArboles = map.createLayer("hojas arboles", allTilesets, 0, 0);
+    hojasArboles.setDepth(2);
     const corralDragones = map.createLayer(
       "corral dragones",
       allTilesets,
@@ -176,6 +173,7 @@ export class Game extends Phaser.Scene {
 
     //creo el Player
     this.player = new Player(this, startX, startY, this.cursors);
+    this.player.setDepth(1);
 
     this.sceneStarted = true;
 
@@ -237,11 +235,6 @@ export class Game extends Phaser.Scene {
       "obtenerEstadoJuego",
       { idusuario: this.userId, mapa: 1 },
       (res) => {
-        console.log(
-          "obtenerEstadoJuego llegó, dragonesListos:",
-          this.dragonesListos,
-        );
-        console.log("estado recibido:", res.estado);
         this.estadoGuardado = res.estado;
         this.estadoJuegoRecibido = true;
 
@@ -270,13 +263,27 @@ export class Game extends Phaser.Scene {
 
     //colliders
     decoracion.setCollisionByExclusion([-1]);
-    casasCiudad.setCollisionByExclusion([-1]);
+    const colisionesGroup = this.physics.add.staticGroup();
+    const colisionesObjetos = map.getObjectLayer("collisions").objects;
+
+    colisionesObjetos.forEach((obj) => {
+      const rect = this.add.rectangle(
+        obj.x + obj.width / 2,
+        obj.y + obj.height / 2,
+        obj.width,
+        obj.height,
+      );
+      this.physics.add.existing(rect, true); // true = estático
+      colisionesGroup.add(rect);
+    });
+
     corralDragones.setCollisionByExclusion([-1]);
     corralDragones.setVisible(false);
 
     //colliders con el player
     this.physics.add.collider(this.player, decoracion);
     this.physics.add.collider(this.player, casasCiudad);
+    this.physics.add.collider(this.player, colisionesGroup);
 
     //colliders con el dragon
     this.physics.add.collider(this.dragons, decoracion);
@@ -332,7 +339,6 @@ export class Game extends Phaser.Scene {
   }
 
   procesarEstadoInicial() {
-    console.log("procesarEstadoInicial ejecutado");
     if (this.initialSpawnDone) return;
 
     const dragonEliminadoId = localStorage.getItem("dragon_eliminado") ?? "";
@@ -341,7 +347,6 @@ export class Game extends Phaser.Scene {
     const dragonesGuardados = (
       this.estadoGuardado?.dragonesSpawneados ?? []
     ).filter((d) => d.instanceId !== dragonEliminadoId);
-    console.log("dragonesGuardados:", dragonesGuardados);
 
     if (dragonesGuardados.length > 0) {
       if (this.estadoGuardado?.x)
