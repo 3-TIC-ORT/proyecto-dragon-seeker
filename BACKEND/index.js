@@ -150,6 +150,11 @@ subscribePOSTEvent("obtenerdragonesUsuario", (data) => {
   return obtenerlistadragones(Number(idusuario));
 });
 
+subscribePOSTEvent("obtenerdragonesMapa", (data) => {
+  const { idusuario } = data;
+  return obtenerlistadragones(Number(idusuario), true);
+});
+
 subscribePOSTEvent("crearobjeto", (data) => {
   const { nombre, tipo, efectos, rareza } = data;
   return objeto(nombre, tipo, efectos, rareza);

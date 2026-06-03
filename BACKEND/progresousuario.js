@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ruta = path.join(__dirname, "progreso.json");
+const rutaCatalogo = path.join(__dirname, "dragones.json");
 
 export function leer() {
   try {
@@ -13,6 +14,10 @@ export function leer() {
     fs.writeFileSync(ruta, "[]");
     return [];
   }
+}
+
+function leerCatalogo() {
+  return JSON.parse(fs.readFileSync(rutaCatalogo, "utf-8")).dragones;
 }
 
 function guardar(datos) {
@@ -27,20 +32,26 @@ function asegurar(lista, user, dragon) {
   let reg = buscar(lista, user, dragon);
 
   if (!reg) {
+    const base = leerCatalogo().find((d) => d.id === dragon);
+    const ataquesBase = base?.ataques ?? [];
     reg = {
       user,
       dragon,
-      habilitado: dragon === 3,
+      habilitado: false,
       nivel: 1,
       exp: 0,
-      vida: 100,
-      fuerza: 10,
-      ataques: [
-        { nombre: "Arañazo", nivel: 1 },
-        { nombre: "Llamarada", nivel: 5 },
-        { nombre: "Terremoto", nivel: 13 },
-      ],
-      desbloqueados: [],
+      vida: base?.vidaMax ?? 100,
+      vidaMax: base?.vidaMax ?? 100,
+      fuerza: base?.fuerza ?? 10,
+      tipo: base?.tipo ?? "normal",
+      ataques: ataquesBase.map((a) => ({
+        nombre: a.nombre,
+        nivel: a.nivel,
+        dano: a.dano,
+      })),
+      desbloqueados: ataquesBase
+        .filter((a) => a.nivel <= 1)
+        .map((a) => a.nombre),
     };
     lista.push(reg);
   }

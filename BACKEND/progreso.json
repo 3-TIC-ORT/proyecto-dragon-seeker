@@ -6,24 +6,16 @@
     "nivel": 2,
     "exp": 0,
     "vida": 65,
+    "vidaMax": 65,
     "fuerza": 15,
+    "tipo": "fuego",
     "ataques": [
-      {
-        "nombre": "Arañazo",
-        "nivel": 1
-      },
-      {
-        "nombre": "Llamarada",
-        "nivel": 5
-      },
-      {
-        "nombre": "Terremoto",
-        "nivel": 13
-      }
+      { "nombre": "Llamarada", "nivel": 1, "dano": 8 },
+      { "nombre": "Bola de fuego", "nivel": 5, "dano": 13 },
+      { "nombre": "Puño de fuego", "nivel": 13, "dano": 21 },
+      { "nombre": "Arañazo", "nivel": 1, "dano": 7 }
     ],
-    "desbloqueados": [
-      "Arañazo"
-    ]
+    "desbloqueados": ["Llamarada", "Arañazo"]
   },
   {
     "user": 1,
@@ -32,24 +24,16 @@
     "nivel": 3,
     "exp": 0,
     "vida": 80,
+    "vidaMax": 80,
     "fuerza": 20,
+    "tipo": "tierra",
     "ataques": [
-      {
-        "nombre": "Arañazo",
-        "nivel": 1
-      },
-      {
-        "nombre": "Llamarada",
-        "nivel": 5
-      },
-      {
-        "nombre": "Terremoto",
-        "nivel": 13
-      }
+      { "nombre": "Coletazo", "nivel": 1, "dano": 7 },
+      { "nombre": "Bola de barro", "nivel": 5, "dano": 12 },
+      { "nombre": "Terremoto", "nivel": 13, "dano": 20 },
+      { "nombre": "Arañazo", "nivel": 1, "dano": 8 }
     ],
-    "desbloqueados": [
-      "Arañazo"
-    ]
+    "desbloqueados": ["Coletazo", "Arañazo"]
   },
   {
     "user": 2,
@@ -57,23 +41,17 @@
     "habilitado": true,
     "nivel": 1,
     "exp": 0,
-    "vida": 100,
+    "vida": 55,
+    "vidaMax": 55,
     "fuerza": 10,
+    "tipo": "fuego",
     "ataques": [
-      {
-        "nombre": "Arañazo",
-        "nivel": 1
-      },
-      {
-        "nombre": "Llamarada",
-        "nivel": 5
-      },
-      {
-        "nombre": "Terremoto",
-        "nivel": 13
-      }
+      { "nombre": "Llamarada", "nivel": 1, "dano": 8 },
+      { "nombre": "Bola de fuego", "nivel": 5, "dano": 13 },
+      { "nombre": "Puño de fuego", "nivel": 13, "dano": 21 },
+      { "nombre": "Arañazo", "nivel": 1, "dano": 7 }
     ],
-    "desbloqueados": []
+    "desbloqueados": ["Llamarada", "Arañazo"]
   },
   {
     "user": 3,
@@ -81,23 +59,17 @@
     "habilitado": true,
     "nivel": 1,
     "exp": 0,
-    "vida": 100,
+    "vida": 55,
+    "vidaMax": 55,
     "fuerza": 10,
+    "tipo": "fuego",
     "ataques": [
-      {
-        "nombre": "Arañazo",
-        "nivel": 1
-      },
-      {
-        "nombre": "Llamarada",
-        "nivel": 5
-      },
-      {
-        "nombre": "Terremoto",
-        "nivel": 13
-      }
+      { "nombre": "Llamarada", "nivel": 1, "dano": 8 },
+      { "nombre": "Bola de fuego", "nivel": 5, "dano": 13 },
+      { "nombre": "Puño de fuego", "nivel": 13, "dano": 21 },
+      { "nombre": "Arañazo", "nivel": 1, "dano": 7 }
     ],
-    "desbloqueados": []
+    "desbloqueados": ["Llamarada", "Arañazo"]
   },
   {
     "user": 4,
@@ -105,24 +77,16 @@
     "habilitado": true,
     "nivel": 3,
     "exp": 150,
-    "vida": 110,
+    "vida": 75,
+    "vidaMax": 75,
     "fuerza": 20,
+    "tipo": "fuego",
     "ataques": [
-      {
-        "nombre": "Arañazo",
-        "nivel": 1
-      },
-      {
-        "nombre": "Llamarada",
-        "nivel": 5
-      },
-      {
-        "nombre": "Terremoto",
-        "nivel": 13
-      }
+      { "nombre": "Llamarada", "nivel": 1, "dano": 8 },
+      { "nombre": "Bola de fuego", "nivel": 5, "dano": 13 },
+      { "nombre": "Puño de fuego", "nivel": 13, "dano": 21 },
+      { "nombre": "Arañazo", "nivel": 1, "dano": 7 }
     ],
-    "desbloqueados": [
-      "Arañazo"
-    ]
+    "desbloqueados": ["Llamarada", "Arañazo"]
   }
 ]

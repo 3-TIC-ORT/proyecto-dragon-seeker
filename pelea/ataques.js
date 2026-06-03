@@ -20,6 +20,26 @@ let imagenchimuelo = document.getElementById("chimuelo");
 let gifChimuelo = document.getElementById("AtaqueChimuelo");
 let nombredragon = document.getElementById("nombreDragon");
 let nombredragonmalo = document.getElementById("nombreDragonMalo");
+let tipoUsuario = document.getElementById("tipo_usuario");
+let nivelUsuario = document.getElementById("nivel_usuario");
+let tipoEnemigo = document.getElementById("tipo_enemigo");
+let nivelEnemigo = document.getElementById("nivel_enemigo");
+
+const TIPO_RELACIONES = {
+  tierra: { efectivo: "electrico", debil: ["agua", "hielo"] },
+  fuego: { efectivo: "hielo", debil: ["agua"] },
+  hielo: { efectivo: "tierra", debil: ["fuego"] },
+  electrico: { efectivo: "agua", debil: ["tierra"] },
+  agua: { efectivo: "fuego", debil: ["electrico"] },
+};
+
+function multiplicadorTipo(tipoAtaque, tipoDefensor) {
+  const rel = TIPO_RELACIONES[tipoAtaque];
+  if (!rel) return 1;
+  if (rel.efectivo === tipoDefensor) return 2;
+  if (rel.debil.includes(tipoDefensor)) return 0.5;
+  return 1;
+}
 
 let usuario = JSON.parse(localStorage.getItem("usuario"));
 let dragon = JSON.parse(localStorage.getItem("dragonardo"));
@@ -30,13 +50,6 @@ if (!dragon.vidaInicial) {
   localStorage.setItem("dragonardo", JSON.stringify(dragon));
 }
 imagenchimuelo.src = `../BACKEND/${dragon.imagen}`;
-let amarillo = {
-  nombre: "amarillo",
-  vidaAmarillo: 100,
-  strength: 8,
-  defense: 7,
-  speed: 7,
-};
 
 if (!dragonEnemigo.vidaInicial) {
   dragonEnemigo.vidaInicial = dragonEnemigo.vida;
@@ -57,10 +70,18 @@ if (dragonEnemigo.vida <= 30) {
 nombredragon.innerText = dragon.nombre;
 nombredragonmalo.innerText = dragonEnemigo.nombre;
 
+if (tipoUsuario) tipoUsuario.innerText = (dragon.tipo ?? "?").toUpperCase();
+if (nivelUsuario) nivelUsuario.innerText = `Nv ${dragon.nivel ?? 1}`;
+if (tipoEnemigo) tipoEnemigo.innerText = (dragonEnemigo.tipo ?? "?").toUpperCase();
+if (nivelEnemigo) nivelEnemigo.innerText = `Nv ${dragonEnemigo.nivel ?? 1}`;
+if (tipoUsuario) tipoUsuario.dataset.tipo = dragon.tipo ?? "normal";
+if (tipoEnemigo) tipoEnemigo.dataset.tipo = dragonEnemigo.tipo ?? "normal";
+
 let idusuario = usuario.id;
 let iddragon = dragon.id;
 
 let batallaTerminada = false;
+let turnoUsuario = true;
 
 vidaTextoUsuario.innerText = dragon.vida;
 vidaTextoEnemigo.innerText = dragonEnemigo.vida;
@@ -96,10 +117,27 @@ function actualizarBarraVida(
   elementoTexto.innerText = `Hp (${vidaActual} / ${vidaInicial})`;
 }
 
-ataque1.innerText = dragon.ataques[0]?.nombre || "Sin ataque";
-ataque2.innerText = dragon.ataques[1]?.nombre || "Sin ataque";
-ataque3.innerText = dragon.ataques[2]?.nombre || "Sin ataque";
-ataque4.innerText = dragon.ataques[3]?.nombre || "Sin ataque";
+function etiquetaAtaque(i) {
+  const a = dragon.ataques[i];
+  if (!a) return "Sin ataque";
+  const desbloqueado =
+    a.desbloqueado ?? dragon.desbloqueados?.includes(a.nombre) ?? a.nivel <= 1;
+  if (!desbloqueado) return `${a.nombre} (Nv ${a.nivel})`;
+  const mult = multiplicadorTipo(dragon.tipo, dragonEnemigo.tipo);
+  const clase = mult > 1 ? "modBueno" : mult < 1 ? "modMalo" : "modNeutro";
+  return `${a.nombre} <span class="mod ${clase}">×${mult}</span>`;
+}
+
+[ataque1, ataque2, ataque3, ataque4].forEach((btn, i) => {
+  btn.innerHTML = etiquetaAtaque(i);
+  const a = dragon.ataques[i];
+  const desbloqueado = a
+    ? (a.desbloqueado ??
+      dragon.desbloqueados?.includes(a.nombre) ??
+      a.nivel <= 1)
+    : false;
+  btn.dataset.desbloqueado = desbloqueado ? "true" : "false";
+});
 
 function checkFinDeBatalla() {
   if (batallaTerminada) return true;
@@ -195,20 +233,30 @@ function checkFinDeBatalla() {
 
 function ataqueUsuario(i) {
   if (batallaTerminada) return;
+  if (!turnoUsuario) return;
 
   let ataque = dragon.ataques[i];
   if (!ataque) return;
+
+  const desbloqueado =
+    ataque.desbloqueado ??
+    dragon.desbloqueados?.includes(ataque.nombre) ??
+    ataque.nivel <= 1;
+  if (!desbloqueado) return;
+
+  turnoUsuario = false;
+  deshabilitarAtaques();
 
   gifChimuelo.style.display = "block";
   imagenchimuelo.style.display = "none";
 
   let danoBase = ataque.dano ?? 0;
   let fuerzaBase = dragon.fuerza ?? 0;
-  let danoTotal = danoBase + fuerzaBase;
+  let mult = multiplicadorTipo(dragon.tipo, dragonEnemigo.tipo);
+  let danoTotal = Math.round((danoBase + fuerzaBase) * mult);
   dragonEnemigo.vida -= danoTotal;
   if (dragonEnemigo.vida < 0) dragonEnemigo.vida = 0;
 
-  //barravidaEnemigo.innerText = amarillo.vidaAmarillo;
   actualizarBarraVida(
     barravidaEnemigo,
     vidaTextoEnemigo,
@@ -225,6 +273,15 @@ function ataqueUsuario(i) {
   terminarTurno();
 }
 
+function elegirAtaqueRival() {
+  const nivelRival = dragonEnemigo.nivel ?? 1;
+  const disponibles = (dragonEnemigo.ataques || []).filter(
+    (a) => a.nivel <= nivelRival,
+  );
+  if (disponibles.length === 0) return { nombre: "Golpe", dano: 5 };
+  return disponibles[Math.floor(Math.random() * disponibles.length)];
+}
+
 function ataqueEnemigo() {
   if (batallaTerminada) return;
 
@@ -234,11 +291,14 @@ function ataqueEnemigo() {
     gifAmarillo.style.display = "block";
     imagenamarillo.style.display = "none";
 
-    let dano = 10;
+    const ataqueRival = elegirAtaqueRival();
+    const danoBase = ataqueRival.dano ?? 0;
+    const fuerzaBase = dragonEnemigo.fuerza ?? 0;
+    const mult = multiplicadorTipo(dragonEnemigo.tipo, dragon.tipo);
+    const dano = Math.round((danoBase + fuerzaBase) * mult);
     dragon.vida -= dano;
     if (dragon.vida < 0) dragon.vida = 0;
 
-    //barravidaUsuario.innerText = dragon.vida;
     actualizarBarraVida(
       barravidaUsuario,
       vidaTextoUsuario,
@@ -269,6 +329,10 @@ function terminarTurno2() {
   setTimeout(() => {
     gifAmarillo.style.display = "none";
     imagenamarillo.style.display = "block";
+    if (!batallaTerminada) {
+      turnoUsuario = true;
+      habilitarAtaques();
+    }
   }, 1500);
 
   if (dragonEnemigo.vida <= 30) {
@@ -294,11 +358,12 @@ function deshabilitarAtaques() {
   ataque4.disabled = true;
 }
 
-//BotonAdopcion.addEventListener("click", (e) => {
-//if (amarillo.vidaAmarillo >= 30) {
-//e.preventDefault()
-//}
-//});
+function habilitarAtaques() {
+  ataque1.disabled = false;
+  ataque2.disabled = false;
+  ataque3.disabled = false;
+  ataque4.disabled = false;
+}
 
 ataque1.addEventListener("click", () => ataqueUsuario(0));
 ataque2.addEventListener("click", () => ataqueUsuario(1));

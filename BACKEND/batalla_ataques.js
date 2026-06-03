@@ -135,13 +135,13 @@ export function aplicarbbeneficiosdebilidades(tipoataque, tipodefensor, modifica
     const rel = relaciones[tipoataque]
     if (rel) {
         if (rel.efectivo === tipodefensor) {
-            multiplicador = 1.5
+            multiplicador = 2
         }
 
         let i = 0
         while (i < rel.debil.length) {
             if (rel.debil[i] === tipodefensor) {
-                multiplicador = 0.75
+                multiplicador = 0.5
             }
             i = i + 1
         }

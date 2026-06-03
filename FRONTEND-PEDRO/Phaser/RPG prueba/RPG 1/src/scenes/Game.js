@@ -9,8 +9,11 @@ export class Game extends Phaser.Scene {
   constructor() {
     super("Game");
 
-    // Escuchar el evento que trae los dragones del JSON
-    getEvent("obtenerdragones", (data) => {
+    const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
+    const idusuario = usuarioActual?.id;
+
+    // Trae rivales del mapa ya escalados al nivel del jugador
+    postEvent("obtenerdragonesMapa", { idusuario }, (data) => {
       const dragones = data.dragones;
 
       // filtra los dragones que están en mapa 1

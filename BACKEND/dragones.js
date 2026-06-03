@@ -62,7 +62,40 @@ export function iniciarbatalledragon(idusuario, iddragon, ubicacion) {
   return { exito: true, mensaje: "Batalla bien iniciada", batalla };
 }
 
-export function obtenerlistadragones(idusuario = null) {
+function nivelMaxJugador(progreso, idusuario) {
+  if (idusuario === null || idusuario === undefined) return 1;
+  const propios = progreso.filter((p) => p.user === idusuario);
+  if (propios.length === 0) return 1;
+  return propios.reduce((max, p) => Math.max(max, p.nivel ?? 1), 1);
+}
+
+function escalarRival(d, nivelJugador) {
+  const offset = Math.floor(Math.random() * 5) - 2; // -2..+2
+  const nivel = Math.max(1, nivelJugador + offset);
+  const factorVida = 1 + 0.15 * (nivel - 1);
+  const factorFuerza = 1 + 0.1 * (nivel - 1);
+  const vidaEscalada = Math.round((d.vida ?? 50) * factorVida);
+  const fuerzaEscalada = Math.round((d.fuerza ?? 10) * factorFuerza);
+
+  const ataquesDisponibles = (d.ataques || []).filter((a) => a.nivel <= nivel);
+  return {
+    ...d,
+    habilitado: false,
+    nivel,
+    vida: vidaEscalada,
+    vidaMax: vidaEscalada,
+    vidaInicial: vidaEscalada,
+    fuerza: fuerzaEscalada,
+    ataques: ataquesDisponibles.map((a) => ({
+      nombre: a.nombre,
+      nivel: a.nivel,
+      dano: a.dano,
+      desbloqueado: true,
+    })),
+  };
+}
+
+export function obtenerlistadragones(idusuario = null, escalarRivales = false) {
   const base = leerdragones();
   const progreso = leerprogreso();
 
@@ -70,17 +103,19 @@ export function obtenerlistadragones(idusuario = null) {
     return { exito: false, mensaje: "No se pudo leer la base de dragones" };
   }
 
+  const nivelJugador = nivelMaxJugador(progreso, idusuario);
+
   const dragoensactualizados = base.dragones.map((d) => {
     const prog =
       idusuario !== null && idusuario !== undefined
         ? progreso.find((p) => p.dragon === d.id && p.user === idusuario)
         : progreso.find((p) => p.dragon === d.id);
 
-    if (!prog)
-      return {
-        ...d,
-        habilitado: false,
-      };
+    if (!prog) {
+      return escalarRivales
+        ? escalarRival(d, nivelJugador)
+        : { ...d, habilitado: false };
+    }
 
     return {
       ...d,
@@ -95,7 +130,9 @@ export function obtenerlistadragones(idusuario = null) {
           nombre: atBase.nombre,
           nivel: atBase.nivel,
           dano: atBase.dano,
-          desbloqueado: prog.desbloqueados?.includes(atBase.nombre) ?? false,
+          desbloqueado:
+            atBase.nivel <= 1 ||
+            (prog.desbloqueados?.includes(atBase.nombre) ?? false),
         };
       }),
     };

@@ -164,3 +164,49 @@ body{
 .adoptarBloqueado {
     background-image: url("../imagenes/boton adoptar bloqueado.png");
 }
+
+.tipoNivel {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    align-items: center;
+}
+.tipoTag,
+.nivelTag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+}
+.nivelTag {
+    background: #333;
+}
+.tipoTag {
+    background: #888;
+}
+.tipoTag[data-tipo="fuego"]     { background: #e25822; }
+.tipoTag[data-tipo="agua"]      { background: #2389da; }
+.tipoTag[data-tipo="tierra"]    { background: #8b5a2b; }
+.tipoTag[data-tipo="electrico"] { background: #f0c419; color: #222; text-shadow: none; }
+.tipoTag[data-tipo="hielo"]     { background: #5fc7d6; }
+.tipoTag[data-tipo="normal"]    { background: #999; }
+
+.mod {
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 8px;
+    font-size: 0.7em;
+    font-weight: bold;
+}
+.modBueno  { background: #2ecc71; color: white; }
+.modMalo   { background: #e74c3c; color: white; }
+.modNeutro { background: rgba(255, 255, 255, 0.15); color: #ddd; }
+
+.btn.ataque[data-desbloqueado="false"] {
+    filter: grayscale(0.8) brightness(0.6);
+    cursor: not-allowed;
+}
