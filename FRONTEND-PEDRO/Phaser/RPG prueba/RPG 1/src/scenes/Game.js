@@ -44,6 +44,7 @@ export class Game extends Phaser.Scene {
     this.load.image("camino_normal", "assets/camino_normal.png");
     this.load.image("arbol_manzanas", "assets/arbol_manzanas.png");
     this.load.image("arbol", "assets/arbol.png");
+    this.load.image("huevoDragon", "assets/huevoDragon.png");
     this.load.tilemapTiledJSON("map", "assets/mapa1.json");
 
     //asignacion del sprite al personaje
@@ -305,6 +306,20 @@ export class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.setRoundPixels(true);
+
+    // BOTON INVENTARIO DRAGONES
+
+    this.botonInventario = this.add.image(cam.width - 45, 30, "huevoDragon");
+
+    this.botonInventario
+      .setScrollFactor(0)
+      .setDepth(2000)
+      .setScale(0.08)
+      .setInteractive({ useHandCursor: true });
+
+    this.botonInventario.on("pointerdown", () => {
+      window.location.href = "../../../../inventario/inventario.html";
+    });
 
     // trigger para pasar al Mapa2
     const trigger = map.findObject("puertas", (obj) => obj.name === "door");
