@@ -321,15 +321,33 @@ export class Game extends Phaser.Scene {
       window.location.href = "../../../../inventario/inventario.html";
     });
 
-    // trigger para pasar al Mapa2
-    const trigger = map.findObject("puertas", (obj) => obj.name === "door");
-    this.door = this.physics.add.sprite(trigger.x, trigger.y, null);
-    this.door.setSize(trigger.width, trigger.height);
+    // trigger para pasar a la casa
+    const triggerCasa = map.findObject("puertas", (obj) => obj.name === "door");
+    this.door = this.physics.add.sprite(triggerCasa.x, triggerCasa.y, null);
+    this.door.setSize(triggerCasa.width, triggerCasa.height);
     this.door.setVisible(false);
 
     //puerta de acceso a la casa (cambio de escena)
     this.physics.add.overlap(this.player, this.door, () => {
-      this.scene.start("Casa", { x: 368, y: 448 }); // posición inicial en Mapa2
+      this.scene.start("Casa", { x: 368, y: 448 }); // posición inicial en casa
+    });
+
+    //trigger para pasar a la zonaBoss
+    const triggerZonaBoss = map.findObject(
+      "zonaBoss",
+      (obj) => obj.name === "zonaBoss",
+    );
+    this.zonaBoss = this.physics.add.sprite(
+      triggerZonaBoss.x,
+      triggerZonaBoss.y,
+      null,
+    );
+    this.zonaBoss.setSize(triggerZonaBoss.width, triggerZonaBoss.height);
+    this.zonaBoss.setVisible(false);
+
+    //puerta de acceso a la zonaBoss (cambio de escena)
+    this.physics.add.overlap(this.player, this.zonaBoss, () => {
+      this.scene.start("zonaBoss", { x: 0, y: 544 }); // posición inicial en zonaBoss
     });
 
     //paso de informacion del dragonEnemigo y cambio de escena
