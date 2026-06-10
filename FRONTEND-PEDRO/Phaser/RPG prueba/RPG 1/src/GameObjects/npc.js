@@ -77,8 +77,15 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     // Movimiento
     this.setVelocity(
       this.direction.x * this.speed,
-      this.direction.y * this.speed
+      this.direction.y * this.speed,
     );
+
+    // Girar sprite
+    if (this.direction.x < 0) {
+      this.setFlipX(true);
+    } else if (this.direction.x > 0) {
+      this.setFlipX(false);
+    }
 
     if (this.direction.length() > 0) {
       this.play(this.dragonKey + "_walk", true);
@@ -101,12 +108,12 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
   handleDragonCollision(otherDragon) {
     const normal = new Phaser.Math.Vector2(
       this.x - otherDragon.x,
-      this.y - otherDragon.y
+      this.y - otherDragon.y,
     ).normalize();
 
     const velocity = new Phaser.Math.Vector2(
       this.body.velocity.x,
-      this.body.velocity.y
+      this.body.velocity.y,
     );
 
     velocity.reflect(normal);
