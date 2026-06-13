@@ -1,3 +1,5 @@
+import { obtenerUltimoEstado, MAPA_SCENES } from "../utils/persistencia.js";
+
 export class Preloader extends Phaser.Scene {
   constructor() {
     super("Preloader");
@@ -26,10 +28,14 @@ export class Preloader extends Phaser.Scene {
   }
 
   create() {
-    //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-    //  For example, you can define global animations here, so we can use them in other scenes.
+    obtenerUltimoEstado((estado) => {
+      const mapa = estado?.mapa ?? 1;
+      const sceneKey = MAPA_SCENES[mapa] ?? "Game";
 
-    //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-    this.scene.start("Game");
+      this.scene.start(sceneKey, {
+        x: estado?.x,
+        y: estado?.y,
+      });
+    });
   }
 }

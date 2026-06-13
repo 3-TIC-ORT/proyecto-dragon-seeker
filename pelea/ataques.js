@@ -72,7 +72,8 @@ nombredragonmalo.innerText = dragonEnemigo.nombre;
 
 if (tipoUsuario) tipoUsuario.innerText = (dragon.tipo ?? "?").toUpperCase();
 if (nivelUsuario) nivelUsuario.innerText = `Nv ${dragon.nivel ?? 1}`;
-if (tipoEnemigo) tipoEnemigo.innerText = (dragonEnemigo.tipo ?? "?").toUpperCase();
+if (tipoEnemigo)
+  tipoEnemigo.innerText = (dragonEnemigo.tipo ?? "?").toUpperCase();
 if (nivelEnemigo) nivelEnemigo.innerText = `Nv ${dragonEnemigo.nivel ?? 1}`;
 if (tipoUsuario) tipoUsuario.dataset.tipo = dragon.tipo ?? "normal";
 if (tipoEnemigo) tipoEnemigo.dataset.tipo = dragonEnemigo.tipo ?? "normal";
@@ -188,7 +189,7 @@ function checkFinDeBatalla() {
       gifAmarillo.style.display = "none";
       imagenamarillo.style.display = "block";
 
-      localStorage.setItem("dragon_eliminado", dragonEnemigo.id);
+      localStorage.setItem("dragon_eliminado", dragonEnemigo.instanceId);
 
       alert("¡Ganaste brooo!");
 
@@ -339,7 +340,7 @@ function terminarTurno2() {
     desbloquearBoton();
     BotonAdopcion.onclick = null;
     BotonAdopcion.onclick = () => {
-      localStorage.setItem("dragon_eliminado", dragonEnemigo.id);
+      localStorage.setItem("dragon_eliminado", dragonEnemigo.instanceId);
       localStorage.setItem("vidaFinalRival", dragonEnemigo.vida);
     };
   } else {

@@ -2,6 +2,7 @@ import { Player } from "../GameObjects/player.js";
 import { NPC } from "../GameObjects/npc.js";
 import { Minero } from "../GameObjects/minero.js";
 import { gameData } from "./Objetos.js";
+import { guardarEstado } from "../utils/persistencia.js";
 
 connect2Server();
 
@@ -53,7 +54,7 @@ export class Game extends Phaser.Scene {
       frameHeight: 32,
     });
 
-    // spritesheets de los 6 dragones del mapa 1
+    // spritesheets de los 6 dragones del mapa 1 y chimuelo
     this.load.spritesheet(
       "terragon",
       "../../../../../../BACKEND/img/terragon.png",
@@ -89,6 +90,14 @@ export class Game extends Phaser.Scene {
     this.load.spritesheet(
       "amarillo",
       "../../../../../../BACKEND/img/amarillo.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "llamafuria",
+      "../../../../../../BACKEND/img/llamafuria.png",
       {
         frameWidth: 32,
         frameHeight: 32,
@@ -197,6 +206,7 @@ export class Game extends Phaser.Scene {
       "img/burbu.png": "burbu",
       "img/chimuelo.png": "chimuelo",
       "img/amarillo.png": "amarillo",
+      "img/llamafuria.png": "llamafuria",
     };
 
     this.spawnDragons = (cantidad) => {
@@ -241,6 +251,7 @@ export class Game extends Phaser.Scene {
       (res) => {
         this.estadoGuardado = res.estado;
         this.estadoJuegoRecibido = true;
+        console.log("Estado recibido del backend:", JSON.stringify(res.estado));
 
         // si los dragones ya llegaron antes, procesá ahora
         if (this.dragonesListos) {
@@ -329,7 +340,33 @@ export class Game extends Phaser.Scene {
 
     //puerta de acceso a la casa (cambio de escena)
     this.physics.add.overlap(this.player, this.door, () => {
-      this.scene.start("Casa", { x: 368, y: 448 }); // posición inicial en casa
+      if (this.cambiandoEscena) return; // evita que se llame múltiples veces
+      this.cambiandoEscena = true;
+
+      const dragonesSpawneados = this.dragons.getChildren().map((d) => ({
+        instanceId: d.instanceId,
+        id: d.info.id,
+        x: Math.round(d.x),
+        y: Math.round(d.y),
+      }));
+
+      const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
+      postEvent(
+        "guardarEstadoJuego",
+        {
+          idusuario: usuarioActual.id,
+          estado: {
+            mapa: 1,
+            x: Math.round(this.player.x),
+            y: Math.round(this.player.y),
+            dragonesSpawneados,
+          },
+        },
+        () => {
+          // ✅ recién cuando el backend confirmó, cambiamos de escena
+          this.scene.start("Casa", { x: 368, y: 448 });
+        },
+      );
     });
 
     //trigger para pasar a la zonaBoss
@@ -347,7 +384,32 @@ export class Game extends Phaser.Scene {
 
     //puerta de acceso a la zonaBoss (cambio de escena)
     this.physics.add.overlap(this.player, this.zonaBoss, () => {
-      this.scene.start("zonaBoss", { x: 0, y: 544 }); // posición inicial en zonaBoss
+      if (this.cambiandoEscena) return;
+      this.cambiandoEscena = true;
+
+      const dragonesSpawneados = this.dragons.getChildren().map((d) => ({
+        instanceId: d.instanceId,
+        id: d.info.id,
+        x: Math.round(d.x),
+        y: Math.round(d.y),
+      }));
+
+      const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
+      postEvent(
+        "guardarEstadoJuego",
+        {
+          idusuario: usuarioActual.id,
+          estado: {
+            mapa: 1,
+            x: Math.round(this.player.x),
+            y: Math.round(this.player.y),
+            dragonesSpawneados,
+          },
+        },
+        () => {
+          this.scene.start("zonaBoss", { x: 0, y: 544 });
+        },
+      );
     });
 
     //paso de informacion del dragonEnemigo y cambio de escena
@@ -376,6 +438,10 @@ export class Game extends Phaser.Scene {
 
   procesarEstadoInicial() {
     if (this.initialSpawnDone) return;
+    console.log(
+      "Dragones guardados a restaurar:",
+      JSON.stringify(this.estadoGuardado?.dragonesSpawneados),
+    );
 
     const dragonEliminadoId = localStorage.getItem("dragon_eliminado") ?? "";
     localStorage.removeItem("dragon_eliminado");
@@ -414,50 +480,36 @@ export class Game extends Phaser.Scene {
 
   // ✅ NUEVO método para guardar
   guardarEstado() {
-    const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
-    postEvent(
-      "guardarEstadoJuego",
-      {
-        idusuario: usuarioActual.id,
-        estado: {
-          mapa: 1,
-          x: Math.round(this.player.x),
-          y: Math.round(this.player.y),
-          dragonesSpawneados: this.dragons.getChildren().map((d) => ({
-            instanceId: d.instanceId,
-            id: d.info.id,
-            x: Math.round(d.x),
-            y: Math.round(d.y),
-          })),
-        },
-      },
-      () => {},
-    );
+    const dragonesSpawneados = this.dragons.getChildren().map((d) => ({
+      instanceId: d.instanceId,
+      id: d.info.id,
+      x: Math.round(d.x),
+      y: Math.round(d.y),
+    }));
+
+    guardarEstado(1, this.player, dragonesSpawneados);
   }
 
   dragonEnemigo(player, dragon) {
     if (this.battleCooldown) return;
-    this.battleCooldown = true; // ✅ evita que se llame dos veces seguidas
+    this.battleCooldown = true;
 
-    // ✅ eliminás el dragón del grupo antes de salir
+    // oculta y desactiva al dragón para que no siga colisionando/renderizando,
+    // pero SIN sacarlo de this.dragons -> sigue siendo guardado por guardarEstado()
     dragon.disableBody(true, true);
-    this.dragons.remove(dragon, true, true);
 
-    // ✅ guardar estado antes de la batalla (sin el dragón con el que chocaste)
-    const dragonesActuales = this.dragons
-      .getChildren()
-      .filter((d) => d !== dragon)
-      .map((d) => ({
-        instanceId: d.instanceId,
-        id: d.info.id,
-        x: Math.round(d.x),
-        y: Math.round(d.y),
-      }));
+    // pasamos info + instanceId a la pantalla de batalla
+    localStorage.setItem(
+      "dragon_enemigo",
+      JSON.stringify({ ...dragon.info, instanceId: dragon.instanceId }),
+    );
 
-    localStorage.setItem("dragon_eliminado", dragon.instanceId); // ✅ instanceId, no id numérico
-    localStorage.setItem("dragon_enemigo", JSON.stringify(dragon.info));
+    // limpiamos cualquier valor previo: solo se setea si ganás o capturás
+    localStorage.removeItem("dragon_eliminado");
 
+    // guarda el estado actual, INCLUYENDO este dragón con su posición
     this.guardarEstado();
+
     window.location.href = "../../../../inventario/inventario.html";
   }
 
@@ -524,7 +576,7 @@ export class Game extends Phaser.Scene {
     //si quedan menos de 4 dragones spawnean 2
     if (
       this.initialSpawnDone &&
-      this.dragons.countActive(true) < 4 &&
+      this.dragons.getChildren().length < 4 &&
       this.dragonesSeleccionados
     ) {
       this.spawnDragons(2);

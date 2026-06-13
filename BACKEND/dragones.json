@@ -98,7 +98,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 2,
-      "imagen": "img/5.png",
+      "imagen": "img/llamafuria.png",
       "ataques": [
         { "nombre": "Llamarada", "dano": 11, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 17, "nivel": 5 },

@@ -1,4 +1,5 @@
 import { Player } from "../GameObjects/player.js";
+import { guardarEstado } from "../utils/persistencia.js";
 
 connect2Server();
 
@@ -14,9 +15,9 @@ export class Casa extends Phaser.Scene {
     this.load.tilemapTiledJSON("casa", "assets/casa_adentro.json");
 
     //asignacion del sprite al personaje
-    this.load.spritesheet("dude", "assets/dude.png", {
+    this.load.spritesheet("player", "assets/player.png", {
       frameWidth: 32,
-      frameHeight: 48,
+      frameHeight: 32,
     });
   }
 
@@ -48,6 +49,10 @@ export class Casa extends Phaser.Scene {
 
     //creando las teclas para movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    // ✅ posición default por si entra sin data
+    const startX = data?.x ?? 368;
+    const startY = data?.y ?? 448;
 
     // Spawn del jugador en la posición recibida desde Mapa1
     this.player = new Player(this, data.x, data.y, this.cursors);
@@ -106,6 +111,11 @@ export class Casa extends Phaser.Scene {
       null,
       this,
     );
+
+    // ✅ guardar estado al cerrar/recargar
+    window.addEventListener("beforeunload", () => {
+      guardarEstado(2, this.player);
+    });
   }
 
   showMessage(text) {

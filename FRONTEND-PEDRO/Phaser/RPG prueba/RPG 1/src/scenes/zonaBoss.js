@@ -1,5 +1,6 @@
 import { Player } from "../GameObjects/player.js";
 import { NPC } from "../GameObjects/npc.js";
+import { guardarEstado } from "../utils/persistencia.js";
 
 connect2Server();
 
@@ -53,6 +54,10 @@ export class zonaBoss extends Phaser.Scene {
     //creando las teclas para movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
 
+    // ✅ posición default por si entra sin data
+    const startX = data?.x ?? 0;
+    const startY = data?.y ?? 544;
+
     // Spawn del jugador en la posición recibida desde Mapa1
     this.player = new Player(this, 0, 544, this.cursors);
 
@@ -73,6 +78,11 @@ export class zonaBoss extends Phaser.Scene {
       zonaBoss.heightInPixels,
     );
     this.cameras.main.setRoundPixels(true);
+
+    // ✅ guardar estado al cerrar/recargar
+    window.addEventListener("beforeunload", () => {
+      guardarEstado(3, this.player);
+    });
   }
 
   update() {}
