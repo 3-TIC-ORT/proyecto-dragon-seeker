@@ -97,7 +97,7 @@
       "fuerza": 13,
       "especial": false,
       "esBoss": false,
-      "mapa": 2,
+      "mapa": 1,
       "imagen": "img/llamafuria.png",
       "ataques": [
         { "nombre": "Llamarada", "dano": 11, "nivel": 1 },

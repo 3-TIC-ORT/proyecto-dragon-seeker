@@ -18,7 +18,9 @@ export class Game extends Phaser.Scene {
       const dragones = data.dragones;
 
       // filtra los dragones que están en mapa 1
-      this.dragonesSeleccionados = dragones.filter((d) => d.mapa === 1);
+      this.dragonesSeleccionados = dragones.filter(
+        (d) => d.mapa === 1 && !d.especial,
+      );
 
       // solo marca que los dragones están listos, no spawnea
       this.dragonesListos = true;

@@ -10,9 +10,8 @@ export class Casa extends Phaser.Scene {
 
   preload() {
     //carga el mapa
-    this.load.image("tiles", "assets/town_forest_tiles.png");
-    this.load.image("healerPokemon", "assets/healerPokemon.png");
-    this.load.tilemapTiledJSON("casa", "assets/casa_adentro.json");
+    this.load.image("tiles", "assets/casa_interna.png");
+    this.load.tilemapTiledJSON("casa", "assets/curadero.json");
 
     //asignacion del sprite al personaje
     this.load.spritesheet("player", "assets/player.png", {
@@ -40,11 +39,12 @@ export class Casa extends Phaser.Scene {
       .setVisible(false);
 
     const casa = this.make.tilemap({ key: "casa" });
-    const tileset = casa.addTilesetImage("mapa 2", "tiles");
-    const healer = casa.addTilesetImage("healerPokemon", "healerPokemon");
+    const tileset = casa.addTilesetImage("Decoracion casa interna", "tiles");
+
     //capas
-    const suelo_casa = casa.createLayer("suelo casa", tileset, 0, 0);
-    const cofres = casa.createLayer("objetos", [tileset, healer], 0, 0);
+    const piso = casa.createLayer("Piso", tileset, 0, 0);
+    const alfombras = casa.createLayer("Alfombras", 0, 0);
+    const paredes;
     const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
 
     //creando las teclas para movimiento
