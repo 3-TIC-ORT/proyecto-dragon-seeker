@@ -170,8 +170,8 @@ subscribeGETEvent("obtenerobjeto", (query) => {
 });
 
 subscribePOSTEvent("adoptarDragon", (data) => {
-  const { user, dragon } = data;
-  return habilitardragon(user, dragon);
+  const { user, dragon, estado } = data;
+  return habilitardragon(user, dragon, estado);
 });
 
 subscribePOSTEvent("actualizarVida", (data) => {

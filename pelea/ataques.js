@@ -56,14 +56,22 @@ if (!dragonEnemigo.vidaInicial) {
   localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
 }
 imagenamarillo.src = `../BACKEND/${dragonEnemigo.imagen}`;
-if (dragonEnemigo.vida <= 30) {
+// Un dragon ya adoptado (habilitado) no se puede volver a adoptar: si te lo
+// volves a cruzar en el mapa, podes pelear pero el unico premio es experiencia.
+let yaAdoptado = dragonEnemigo.habilitado === true;
+
+if (!yaAdoptado && dragonEnemigo.vida <= 30) {
   desbloquearBoton();
   BotonAdopcion.onclick = null;
 } else {
   bloquearboton();
   BotonAdopcion.onclick = (e) => {
     e.preventDefault();
-    console.log("Todavía no lo podés adoptar");
+    console.log(
+      yaAdoptado
+        ? "Este dragón ya es tuyo, no se puede adoptar de nuevo"
+        : "Todavía no lo podés adoptar",
+    );
   };
 }
 
@@ -336,7 +344,7 @@ function terminarTurno2() {
     }
   }, 1500);
 
-  if (dragonEnemigo.vida <= 30) {
+  if (!yaAdoptado && dragonEnemigo.vida <= 30) {
     desbloquearBoton();
     BotonAdopcion.onclick = null;
     BotonAdopcion.onclick = () => {
@@ -347,7 +355,11 @@ function terminarTurno2() {
     bloquearboton();
     BotonAdopcion.onclick = (e) => {
       e.preventDefault();
-      console.log("Todavía no lo podés adoptar");
+      console.log(
+        yaAdoptado
+          ? "Este dragón ya es tuyo, no se puede adoptar de nuevo"
+          : "Todavía no lo podés adoptar",
+      );
     };
   }
 }

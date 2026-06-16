@@ -133,11 +133,40 @@ export function aumentarestadisticas(
   };
 }
 
-export function habilitardragon(user, dragon) {
+function numeroValido(valor, minimo, maximo, porDefecto) {
+  const n = Number(valor);
+  if (!Number.isFinite(n)) return porDefecto;
+  return Math.min(maximo, Math.max(minimo, Math.round(n)));
+}
+
+export function habilitardragon(user, dragon, estado = null) {
   const lista = leer();
   const reg = asegurar(lista, user, dragon);
 
   reg.habilitado = true;
+
+  // Si viene el estado del rival (al adoptarlo tras la pelea), se guarda al
+  // dragon en su version actual: nivel, vida restante y stats escaladas.
+  // Todo lo que llega del cliente se valida y se clampea antes de persistir.
+  if (estado && typeof estado === "object") {
+    reg.nivel = numeroValido(estado.nivel, 1, 100, reg.nivel);
+    reg.fuerza = numeroValido(estado.fuerza, 1, 9999, reg.fuerza);
+    reg.exp = numeroValido(estado.exp, 0, 999999, 0);
+
+    const vidaMax = numeroValido(estado.vidaMax, 1, 99999, reg.vidaMax);
+    reg.vidaMax = vidaMax;
+    // la vida restante nunca puede superar la vida maxima ni ser negativa
+    reg.vida = numeroValido(estado.vida, 0, vidaMax, vidaMax);
+
+    if (typeof estado.tipo === "string" && estado.tipo.length <= 20) {
+      reg.tipo = estado.tipo;
+    }
+
+    // recalculo los ataques desbloqueados segun el nivel con el que se adopta
+    reg.desbloqueados = reg.ataques
+      .filter((a) => a.nivel <= reg.nivel)
+      .map((a) => a.nombre);
+  }
 
   guardar(lista);
   return {

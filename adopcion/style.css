@@ -58,6 +58,21 @@ body{
 .btn.iluminar {
     background-color: yellow !important;
 }
+/* Mientras se muestra la secuencia no se puede clickear: se nota que estan
+   inactivos (cursor bloqueado + atenuados) y se anula el hover que invita al click. */
+.menudeataques.bloqueado .btn {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+.menudeataques.bloqueado .btn:hover {
+    transform: none;
+    filter: none;
+    cursor: not-allowed;
+}
+/* El boton que se ilumina en la secuencia se mantiene bien visible aunque este bloqueado */
+.menudeataques.bloqueado .btn.iluminar {
+    opacity: 1;
+}
 .menudeataques {
     position: absolute;
     /*background-color: #2350ca;
