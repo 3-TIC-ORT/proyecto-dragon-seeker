@@ -86,7 +86,7 @@ if (nivelEnemigo) nivelEnemigo.innerText = `Nv ${dragonEnemigo.nivel ?? 1}`;
 if (tipoUsuario) tipoUsuario.dataset.tipo = dragon.tipo ?? "normal";
 if (tipoEnemigo) tipoEnemigo.dataset.tipo = dragonEnemigo.tipo ?? "normal";
 
-let idusuario = usuario.id;
+let idpartida = Number(localStorage.getItem("partida"));
 let iddragon = dragon.id;
 
 let batallaTerminada = false;
@@ -163,12 +163,10 @@ function checkFinDeBatalla() {
       gifAmarillo.style.display = "none";
       imagenamarillo.style.display = "block";
 
-      alert("Game over fraca, perdiste");
-
       postEvent(
         "actualizarVida",
         {
-          idusuario: idusuario,
+          idpartida: idpartida,
           iddragon: iddragon,
           vida: dragon.vida,
         },
@@ -176,8 +174,13 @@ function checkFinDeBatalla() {
           if (data.exito) {
             localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
           }
-          window.location.href =
-            "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
+          // Fracaso -> overlay in-place (no pantalla aparte).
+          window.mostrarOverlayFracaso({
+            titulo: "Perdiste",
+            detalle: `${dragonEnemigo.nombre} te derrotó.`,
+            destino:
+              "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html",
+          });
         },
       );
     }, 800);
@@ -199,14 +202,12 @@ function checkFinDeBatalla() {
 
       localStorage.setItem("dragon_eliminado", dragonEnemigo.instanceId);
 
-      alert("¡Ganaste brooo!");
-
       let expGanada = 50;
 
       postEvent(
         "actualizarVida",
         {
-          idusuario: idusuario,
+          idpartida: idpartida,
           iddragon: iddragon,
           vida: dragon.vida,
         },
@@ -222,14 +223,27 @@ function checkFinDeBatalla() {
         {
           iddragon: iddragon,
           cantidad: expGanada,
-          idusuario: idusuario,
+          idpartida: idpartida,
         },
         (data) => {
-          console.log(data.mensaje);
-          console.log("Nuevo nivel:", data.progreso.nivel);
           localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
-          window.location.href =
-            "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
+          let detalle = `Derrotaste a ${dragonEnemigo.nombre}.\n+${expGanada} XP`;
+          if (
+            typeof data.mensaje === "string" &&
+            data.mensaje.toLowerCase().includes("subiste")
+          ) {
+            detalle += `\n¡Subiste al nivel ${data.progreso.nivel}!`;
+          }
+          localStorage.setItem(
+            "resultado",
+            JSON.stringify({
+              tipo: "exito",
+              titulo: "¡Ganaste!",
+              detalle,
+              sprite: dragon?.imagen ? `../BACKEND/${dragon.imagen}` : undefined,
+            }),
+          );
+          window.location.href = "../logros/resultado.html";
         },
       );
     }, 800);

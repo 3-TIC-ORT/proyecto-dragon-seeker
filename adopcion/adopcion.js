@@ -25,6 +25,12 @@ if (!dragonEnemigo) {
   window.location.href = "../FRONTEND-PEDRO/Phaser/RPG prueba/RPG 1/index.html";
 }
 
+// Mostrar el dragon que se esta por adoptar (nombre + sprite real)
+const nombreDragonEl = document.getElementById("nombreDragon");
+const spriteEl = document.querySelector(".dragon .sprite");
+if (dragonEnemigo && nombreDragonEl) nombreDragonEl.innerText = dragonEnemigo.nombre;
+if (dragonEnemigo && spriteEl) spriteEl.src = `../BACKEND/${dragonEnemigo.imagen}`;
+
 function obtenerLongitudPorVida() {
   let vida = Number(localStorage.getItem("vidaFinalRival"));
 
@@ -92,19 +98,27 @@ function adoptarDragon() {
     exp: dragonEnemigo.exp ?? 0,
   };
 
+  const idpartida = Number(localStorage.getItem("partida"));
   postEvent(
     "adoptarDragon",
-    { user: usuario.id, dragon: dragonEnemigo.id, estado },
+    { partida: idpartida, dragon: dragonEnemigo.id, estado },
     (respuesta) => {
       if (!respuesta || respuesta.exito === false) {
         alert(respuesta?.mensaje || "No se pudo adoptar el dragón.");
         return;
       }
 
-      alert("¡Adoptaste al dragón correctamente!");
       localStorage.setItem("dragonardo", JSON.stringify(dragonEnemigo));
-      window.location.href =
-        "../FRONTEND-PEDRO/Phaser/RPG prueba/RPG 1/index.html";
+      localStorage.setItem(
+        "resultado",
+        JSON.stringify({
+          tipo: "exito",
+          titulo: `¡Adoptaste a ${dragonEnemigo.nombre}!`,
+          detalle: "Ahora forma parte de tu equipo.",
+          sprite: `../BACKEND/${dragonEnemigo.imagen}`,
+        }),
+      );
+      window.location.href = "../logros/resultado.html";
     },
   );
 }
@@ -128,8 +142,13 @@ function verificar() {
     alert("Fallaste, te queda un intento.");
     setTimeout(mostrarSecuencia, 500);
   } else {
-    alert("Fallaste otra vez. Volvés al mapa.");
-    window.location.href = "mapa.html"; // CAMBIÁ ESTO
+    // Fracaso -> overlay in-place (no pantalla aparte).
+    window.mostrarOverlayFracaso({
+      titulo: "No lo lograste",
+      detalle: `${dragonEnemigo.nombre} se escapó. ¡La próxima será!`,
+      destino:
+        "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html",
+    });
   }
 }
 

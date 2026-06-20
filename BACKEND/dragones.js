@@ -62,9 +62,9 @@ export function iniciarbatalledragon(idusuario, iddragon, ubicacion) {
   return { exito: true, mensaje: "Batalla bien iniciada", batalla };
 }
 
-function nivelMaxJugador(progreso, idusuario) {
-  if (idusuario === null || idusuario === undefined) return 1;
-  const propios = progreso.filter((p) => p.user === idusuario);
+function nivelMaxJugador(progreso, idpartida) {
+  if (idpartida === null || idpartida === undefined) return 1;
+  const propios = progreso.filter((p) => p.partida === idpartida);
   if (propios.length === 0) return 1;
   return propios.reduce((max, p) => Math.max(max, p.nivel ?? 1), 1);
 }
@@ -95,7 +95,7 @@ function escalarRival(d, nivelJugador) {
   };
 }
 
-export function obtenerlistadragones(idusuario = null, escalarRivales = false) {
+export function obtenerlistadragones(idpartida = null, escalarRivales = false) {
   const base = leerdragones();
   const progreso = leerprogreso();
 
@@ -103,12 +103,12 @@ export function obtenerlistadragones(idusuario = null, escalarRivales = false) {
     return { exito: false, mensaje: "No se pudo leer la base de dragones" };
   }
 
-  const nivelJugador = nivelMaxJugador(progreso, idusuario);
+  const nivelJugador = nivelMaxJugador(progreso, idpartida);
 
   const dragoensactualizados = base.dragones.map((d) => {
     const prog =
-      idusuario !== null && idusuario !== undefined
-        ? progreso.find((p) => p.dragon === d.id && p.user === idusuario)
+      idpartida !== null && idpartida !== undefined
+        ? progreso.find((p) => p.dragon === d.id && p.partida === idpartida)
         : progreso.find((p) => p.dragon === d.id);
 
     if (!prog) {

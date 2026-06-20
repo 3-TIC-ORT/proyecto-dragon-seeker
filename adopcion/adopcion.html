@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Adopción</title>
+    <link rel="stylesheet" href="../estilos/comun.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
@@ -14,11 +15,18 @@
 </head>
 <body>
 <section class="dragon">
-    <h2 class="nombre" id="nombreDragon">Dragon</h2>
+    <div class="hud">
+        <h2 class="nombre" id="nombreDragon">Dragon</h2>
+        <div class="vidaBarra">
+            <span class="vidaTexto">HP</span>
+            <div class="vidaRelleno"></div>
+        </div>
+    </div>
     <img class="sprite" src="https://www.pngplay.com/wp-content/uploads/10/Charmander-Pokemon-PNG-Free-File-Download.png" alt="">
 </section>
-<div>adoptar</div>
-<footer  class="footer">
+
+<footer class="footer">
+    <p class="instruccionAdopcion">Repetí la secuencia para adoptar al dragón</p>
     <section class="menudeataques" id="menudeataques">
         <div class="btn">1</div>
         <div class="btn">2</div>
@@ -30,6 +38,8 @@
         <div class="btn">8</div>
     </section>
 </footer>
+<!-- Overlay de fracaso: define window.mostrarOverlayFracaso antes de adopcion.js -->
+<script src="../logros/overlay.js"></script>
 <script src="adopcion.js"></script>
 </body>
 </html>

@@ -1,59 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../estilos/comun.css">
     <link rel="stylesheet" href="pelea.css">
     <script type="module" src="pelea.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/JZylber/SoqueTIC-Client@v1.4.2/soquetic-client.js"></script>
-    <title>Document</title>
+    <!-- Overlay de fracaso (script clasico: define window.mostrarOverlayFracaso antes de los modulos) -->
+    <script src="../logros/overlay.js"></script>
+    <title>Pelea</title>
 </head>
 
 <body>
 <section class="dragon malo">
-    <h2 class="nombre" id="nombreDragonMalo">Dragon</h2>
-    <div class="tipoNivel">
-        <span class="tipoTag" id="tipo_enemigo"></span>
-        <span class="nivelTag" id="nivel_enemigo"></span>
-    </div>
-    <div class="vidaBarra">
-        <span class="vidaTexto" id="vidaTexto_amarillo"></span>
-        <div class="vidaRelleno" id="vida_amarillo"></div>
+    <div class="hud">
+        <h2 class="nombre" id="nombreDragonMalo">Dragon</h2>
+        <div class="tipoNivel">
+            <span class="tipoTag" id="tipo_enemigo"></span>
+            <span class="nivelTag" id="nivel_enemigo"></span>
+        </div>
+        <div class="vidaBarra">
+            <span class="vidaTexto" id="vidaTexto_amarillo"></span>
+            <div class="vidaRelleno" id="vida_amarillo"></div>
+        </div>
     </div>
     <img id="amarillo" class="sprite" src="https://www.pngplay.com/wp-content/uploads/10/Charmander-Pokemon-PNG-Free-File-Download.png" alt="">
     <img class="ataquechimuelo" id="AtaqueAmarillo"  src="https://www.pkparaiso.com/imagenes/xy/sprites/animados/pikachu-5.gif" alt="">
 </section>
 <section class="dragon usuario">
-    <h2 class="nombre" id="nombreDragon">Dragon</h2>
-    <div class="tipoNivel">
-        <span class="tipoTag" id="tipo_usuario"></span>
-        <span class="nivelTag" id="nivel_usuario"></span>
-    </div>
-    <div class="vidaBarra">
-        <span class="vidaTexto" id="vidaTexto_chimuelo"></span>
-        <div class="vidaRelleno" id="vida_chimuelo"></div>
+    <div class="hud">
+        <h2 class="nombre" id="nombreDragon">Dragon</h2>
+        <div class="tipoNivel">
+            <span class="tipoTag" id="tipo_usuario"></span>
+            <span class="nivelTag" id="nivel_usuario"></span>
+        </div>
+        <div class="vidaBarra">
+            <span class="vidaTexto" id="vidaTexto_chimuelo"></span>
+            <div class="vidaRelleno" id="vida_chimuelo"></div>
+        </div>
     </div>
     <img class="sprite" id="chimuelo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUuVdXkOJlsIK8hj7qexJNePpl0Ng1uPq-rA&s" alt="">
     <img class="ataquechimuelo" id="AtaqueChimuelo" src="https://giffiles.alphacoders.com/248/24822.gif" alt="">
 </section>
-<footer  class="footer">
+
+<footer class="footer">
+    <!-- Cuadro de dialogo "¿Que hara X?" -->
+    <div class="cuadroDialogo">
+        <p class="preguntaAccion">¿Qué hará "<span id="nombreAccion">Dragón</span>"?</p>
+    </div>
+
+    <!-- Menu principal: 4 opciones -->
+    <div class="menuPrincipal" id="menuPrincipal">
+        <div class="btn opcion luchar" id="pelear">LUCHAR</div>
+        <div class="btn opcion opcionDragon" id="botonDragon">DRAGÓN</div>
+        <a href="../adopcion/adopcion.html" class="btn opcion adoptar adoptarBloqueado" id="adoptar">ADOPTAR</a>
+        <div class="btn opcion huir" id="botonHuir">HUÍR</div>
+    </div>
+
+    <!-- Submenu de ataques (oculto hasta LUCHAR) -->
     <section class="menudeataques" id="menudeataques">
-        <div class="btn ataque tamañoAtaques" id="ataque1">golpe 1</div>
-        <div class="btn ataque tamañoAtaques" id="ataque2">golpe 2</div>
-        <div class="btn ataque tamañoAtaques" id="ataque3">golpe 3</div>
-        <div class="btn ataque tamañoAtaques" id="ataque4">golpe 4</div>
-    </section>
-    <section class="adopcionPelea">
-        <div class="btn luchar tamañoPeleaAdopcion" id="pelear">pelear</div>
-    <a href="../adopcion/adopcion.html" class="btn tamañoPeleaAdopcion" id="adoptar">
-    adoptar
-    </a>
+        <div class="ataquesGrid">
+            <div class="btn ataque tamañoAtaques" id="ataque1">golpe 1</div>
+            <div class="btn ataque tamañoAtaques" id="ataque2">golpe 2</div>
+            <div class="btn ataque tamañoAtaques" id="ataque3">golpe 3</div>
+            <div class="btn ataque tamañoAtaques" id="ataque4">golpe 4</div>
+        </div>
+        <button class="volverAtaques" id="volverAtaques" type="button">‹ Volver</button>
     </section>
 </footer>
+
+<!-- Modal de confirmacion de huida -->
+<div class="modalOverlay" id="modalHuir" hidden>
+    <div class="modalCaja">
+        <p class="modalTexto">¿Estás seguro que querés huir?</p>
+        <div class="modalBotones">
+            <button class="modalBtn modalVolver" id="modalVolver" type="button">Volver</button>
+            <button class="modalBtn modalConfirmar" id="modalConfirmar" type="button">Huir</button>
+        </div>
+    </div>
+</div>
+
     <script type="module" src="ataques.js" defer></script>
 </body>
 

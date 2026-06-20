@@ -1,100 +1,167 @@
-* {
-    box-sizing: border-box;
-    font-family: "Pixelify Sans", sans-serif;
+/* ===== Pantalla de Adopción (Simon-says) =====
+   Diseño basado en los nodos Figma 386:1586 / 385:1120 / 386:1349.
+   Tokens en ../estilos/comun.css.
+   Hooks de la logica (no se renombran): #menudeataques, .btn, .btn.iluminar,
+   .menudeataques.bloqueado. */
+
+body {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    rgb(0, 111, 255) 0%,
+    rgb(0, 255, 77) 30%,
+    rgb(0, 255, 77) 43%,
+    rgb(41, 204, 0) 65%,
+    rgb(51, 255, 0) 100%
+  );
+  background-attachment: fixed;
 }
-body{
-    background-image: url(../imagenes/Frame\ 340.png)
-}
+
+/* ---- Dragon a adoptar (arriba a la derecha) ---- */
 .dragon {
-    position: absolute;
-    display: flex;
-    display: block;
-    width: 300px;
-    height: 300px;
-    bottom: 320px;
-    right: 160px;
+  position: absolute;
+  top: 6%;
+  right: 8%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.2rem, 0.8vh, 0.5rem);
+  z-index: 1;
 }
+
+.dragon::after {
+  content: "";
+  position: absolute;
+  bottom: -6%;
+  width: 115%;
+  height: 16%;
+  background: radial-gradient(ellipse at center, #e8902f 0%, rgba(232, 144, 47, 0) 70%);
+  z-index: -1;
+}
+
+.hud {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
 .dragon .nombre {
-    font-size: 40px;
-    color: white;
-    margin-top: 25px;
+  margin: 0;
+  font-size: var(--fs-md);
+  color: #ffffff;
+  text-shadow: var(--sombra-texto);
 }
+
 .dragon .sprite {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
+  width: clamp(150px, 18vw, 240px);
+  image-rendering: pixelated;
 }
-.btn {
-    width: 150px;
-    height: 60px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
 
-    border: 3px solid white;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: transparent;
+/* Barra de vida (estatica, decorativa, como en el diseño) */
+.vidaBarra {
+  position: relative;
+  width: clamp(200px, 24vw, 320px);
+  height: clamp(20px, 2.4vw, 30px);
+  background: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.vidaRelleno {
+  height: 100%;
+  width: 100%;
+  background: #5cff33;
+}
 
-    color: white;
-    font-size: clamp(16px, 2.5vw, 32px);
-    white-space: nowrap;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.2s;
+.vidaTexto {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--fs-xs);
+  color: #2c7a0b;
+  z-index: 2;
+  font-weight: 700;
 }
-.btn:hover {
-    transform: scale(1.1);
-    filter: brightness(1.3);
-    cursor: pointer;
+
+/* ---- Footer: instruccion + grilla de botones ---- */
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.37);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.6rem, 2vh, 1.2rem);
+  padding: clamp(1rem, 3vh, 2rem) clamp(1rem, 3vw, 2rem);
+  z-index: 2;
 }
-.btn.iluminar {
-    background-color: yellow !important;
+
+.instruccionAdopcion {
+  margin: 0;
+  color: #ffffff;
+  font-size: var(--fs-sm);
+  text-shadow: var(--sombra-texto);
+  text-align: center;
 }
-/* Mientras se muestra la secuencia no se puede clickear: se nota que estan
-   inactivos (cursor bloqueado + atenuados) y se anula el hover que invita al click. */
-.menudeataques.bloqueado .btn {
-    cursor: not-allowed;
-    opacity: 0.45;
-}
-.menudeataques.bloqueado .btn:hover {
-    transform: none;
-    filter: none;
-    cursor: not-allowed;
-}
-/* El boton que se ilumina en la secuencia se mantiene bien visible aunque este bloqueado */
-.menudeataques.bloqueado .btn.iluminar {
-    opacity: 1;
-}
+
+/* Grilla 4x2 de botones numerados */
 .menudeataques {
-    position: absolute;
-    /*background-color: #2350ca;
-    width: 100px;*/
-    border-radius: 0px;
-    z-index: 10;
-    top: 15px;
-    left: 150px;
-    display: grid;
-    grid-template-columns: repeat(4, 160px);
-    column-gap: 100px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.5rem, 1.5vw, 1.2rem);
+  width: min(82vw, 720px);
 }
-.menudeataques .btn:nth-child(n+5) {
-    margin-top: 50px;
+
+.btn {
+  aspect-ratio: 150 / 60;
+  background-color: transparent;
+  border: 3px solid #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  white-space: nowrap;
+  text-align: center;
+  transition: transform 0.2s ease, filter 0.2s ease, background-color 0.2s ease;
 }
-.footer{
-    position: absolute;
-    bottom: 0%;
-    left: 0%;
-    width: 100%;
-    height: 200px;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: space-between;
+
+.btn:hover {
+  transform: scale(1.08);
+  filter: brightness(1.3);
+}
+
+/* Paso de la secuencia iluminado (amarillo). !important para ganarle al estado bloqueado. */
+.btn.iluminar {
+  background-color: #fdff00 !important;
+  color: #000000;
+}
+
+/* Mientras se muestra la secuencia no se puede clickear */
+.menudeataques.bloqueado .btn {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.menudeataques.bloqueado .btn:hover {
+  transform: none;
+  filter: none;
+  cursor: not-allowed;
+}
+
+.menudeataques.bloqueado .btn.iluminar {
+  opacity: 1;
 }

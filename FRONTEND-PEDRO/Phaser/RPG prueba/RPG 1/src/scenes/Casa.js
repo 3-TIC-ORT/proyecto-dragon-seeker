@@ -44,7 +44,8 @@ export class Casa extends Phaser.Scene {
     //capas
     const piso = casa.createLayer("Piso", tileset, 0, 0);
     const alfombras = casa.createLayer("Alfombras", 0, 0);
-    const paredes;
+    // TODO: capa "paredes" del mapa del curadero (quedo sin terminar en fce8b40).
+    // Declaracion incompleta `const paredes;` comentada porque rompia el parseo del modulo.
     const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
 
     //creando las teclas para movimiento
@@ -144,9 +145,9 @@ export class Casa extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      let usuario = JSON.parse(localStorage.getItem("usuario"));
+      const idpartida = Number(localStorage.getItem("partida"));
 
-      postEvent("curarDragones", { idusuario: usuario.id }, (respuesta) => {
+      postEvent("curarDragones", { idpartida }, (respuesta) => {
         console.log("Respuesta:", respuesta);
         if (respuesta.exito) {
           this.showMessage("¡Tus dragones fueron curados!");

@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "usuario": 1,
+    "nombre": "Partida 1",
+    "creada": 1781819422419,
+    "actualizada": 1781819422419
+  },
+  {
+    "id": 2,
+    "usuario": 2,
+    "nombre": "Partida 1",
+    "creada": 1781819422419,
+    "actualizada": 1781819422419
+  },
+  {
+    "id": 3,
+    "usuario": 3,
+    "nombre": "Partida 1",
+    "creada": 1781819422419,
+    "actualizada": 1781819422419
+  },
+  {
+    "id": 4,
+    "usuario": 4,
+    "nombre": "Partida 1",
+    "creada": 1781819422419,
+    "actualizada": 1781819422419
+  },
+  {
+    "id": 5,
+    "usuario": 2,
+    "nombre": "mision de prueba",
+    "creada": 1781835355222,
+    "actualizada": 1781835355222
+  }
+]

@@ -10,8 +10,11 @@ if (!usuario) {
 }
 
 const containerDragon = document.getElementById("dragonContainer");
+const botonElegir = document.getElementById("botonElegir");
+let tarjetaSeleccionada = null;
 
-postEvent("obtenerdragonesUsuario", { idusuario: usuario.id }, (data) => {
+const idpartida = Number(localStorage.getItem("partida"));
+postEvent("obtenerdragonesUsuario", { idpartida }, (data) => {
   dragones = data.dragones;
   mostrarDragones();
 });
@@ -37,31 +40,74 @@ function mostrarDragones() {
       tarjeta.classList.add("dragonBloqueado");
     }
 
+    // Stats y progreso de XP (solo para dragones adoptados).
+    // experiencianecesaria(nivel) = 100 * nivel (igual que el backend).
+    let statsHTML = "";
+    if (habilitado) {
+      const necesaria = 100 * dragon.nivel;
+      const exp = dragon.exp ?? 0;
+      const pct = Math.min(100, Math.round((exp / necesaria) * 100));
+      statsHTML = `
+        <div class="stats">
+          <span class="stat">VIDA ${dragon.vida}</span>
+          <span class="stat">FUERZA ${dragon.fuerza}</span>
+        </div>
+        <div class="xpBarra">
+          <div class="xpRelleno" style="width:${pct}%"></div>
+          <span class="xpTexto">XP ${exp}/${necesaria}</span>
+        </div>
+      `;
+    }
+
     tarjeta.innerHTML = `
-      <h4>${dragon.nombre}</h4>
-      <p class="tipo">Tipo: ${habilitado ? dragon.tipo : "No adoptado"}</p>
-      <p>Xp: ${dragon.exp}</p>
-      <p>Nivel: ${dragon.nivel}</p>
-      <p>Vida: ${dragon.vida}</p>
-      <p>Fuerza: ${dragon.fuerza}</p>
-      <p>Mapa: ${dragon.mapa}</p>
-      <img src="../BACKEND/${dragon.imagen}" alt="${dragon.nombre}" class="imgDragon">
+      <div class="retrato">
+        <img src="../BACKEND/${dragon.imagen}" alt="${dragon.nombre}" class="imgDragon">
+      </div>
+      <div class="info">
+        <h4 class="nombre">${dragon.nombre}</h4>
+        <p class="nivel">Lv ${dragon.nivel}</p>
+        <p class="tipo">${habilitado ? dragon.tipo : "No adoptado"}</p>
+        ${statsHTML}
+      </div>
     `;
 
     containerDragon.appendChild(tarjeta);
   }
 }
 
-function guardarEnLocalStorage(e) {
+// Seleccionar una tarjeta (no navega todavia; el boton "Elegir dragon" confirma)
+function seleccionarDragon(e) {
   let tarjeta = e.target.closest(".tarjeta");
-  if (tarjeta && !tarjeta.classList.contains("dragonBloqueado")) {
-    let indice = tarjeta.dataset.index;
-    let dragon = dragones[indice];
-    localStorage.setItem("dragonardo", JSON.stringify(dragon));
-    console.log(dragon);
-    //direccionamiento a la pelea
+  if (!tarjeta || tarjeta.classList.contains("dragonBloqueado")) {
+    return;
+  }
+  if (tarjetaSeleccionada) {
+    tarjetaSeleccionada.classList.remove("seleccionada");
+  }
+  tarjeta.classList.add("seleccionada");
+  tarjetaSeleccionada = tarjeta;
+  botonElegir.classList.add("visible");
+}
+
+// Confirmar la eleccion: guarda el dragon activo y vuelve al origen.
+// Desde el mapa -> vuelve al mapa. Desde una pelea -> vuelve a la pelea.
+function elegirDragon() {
+  if (!tarjetaSeleccionada) {
+    return;
+  }
+  let indice = tarjetaSeleccionada.dataset.index;
+  let dragon = dragones[indice];
+  localStorage.setItem("dragonardo", JSON.stringify(dragon));
+
+  const origen = localStorage.getItem("origenInventario");
+  localStorage.removeItem("origenInventario");
+  if (origen === "pelea") {
     window.location.href = "../pelea/peleadesplegada.html";
+  } else {
+    window.location.href =
+      "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
   }
 }
 
-containerDragon.addEventListener("click", guardarEnLocalStorage);
+containerDragon.addEventListener("click", seleccionarDragon);
+botonElegir.addEventListener("click", elegirDragon);

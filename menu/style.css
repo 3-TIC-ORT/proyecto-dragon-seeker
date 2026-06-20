@@ -1,0 +1,195 @@
+/* ===== Pantallas de menu (splash / principal / jugar / partida) =====
+   Frames de Figma 154:270, 154:279, 159:438, 159:497.
+   Tokens de escala/paleta en ../estilos/comun.css (linkear ANTES que este).
+   Botones de madera reutilizan el SVG del login: /imagenes/svg/boton-login.svg
+   (apretado: boton-login-apretado.svg), mismo ratio 83/20 que en Figma (754/182). */
+
+.pantalla {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+/* Overlay oscuro (en Figma es un gradiente negro 0.2 a 0.2 sobre el fondo) */
+.pantalla::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Fondos raster bajados de Figma */
+.fondo-splash { background-image: url(../imagenes/fondo-splash.png); }
+.fondo-menu   { background-image: url(../imagenes/fondo-login.jpg); }
+.fondo-mundo  { background-image: url(../imagenes/fondo-mundo.png); }
+
+/* Contenedor de botones del menu */
+.menu-opciones {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 3.2vh, 2.2rem);
+  width: min(90vw, 600px);
+}
+
+/* Boton de madera: SVG de fondo, texto centrado encima */
+.boton-madera {
+  width: 100%;
+  aspect-ratio: 83 / 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url(../imagenes/svg/boton-login.svg) center / 100% 100% no-repeat;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--texto-claro);
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-xl);
+  letter-spacing: 0.04em;
+  text-shadow: var(--sombra-texto);
+  transition: transform 0.08s ease;
+}
+
+.boton-madera:hover {
+  background-image: url(../imagenes/svg/boton-login-apretado.svg);
+  color: var(--texto-oscuro);
+  text-shadow: none;
+}
+
+.boton-madera:active {
+  transform: translateY(2px);
+}
+
+/* Form de crear partida: columna; se oculta/muestra con el atributo [hidden] */
+.crear-partida {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 2.4vh, 1.6rem);
+}
+
+/* Lista desplegable de partidas guardadas (scrollable si hay muchas) */
+.desplegable {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1.2vh, 0.7rem);
+  width: 100%;
+  max-height: 34vh;
+  overflow-y: auto;
+}
+
+/* El atributo hidden tiene que ganarle al display:flex de arriba */
+.crear-partida[hidden],
+.desplegable[hidden] {
+  display: none;
+}
+
+/* Cada partida en la lista: fila compacta (mas chica que el boton de madera) */
+.item-partida {
+  width: 100%;
+  padding: clamp(0.5rem, 1.6vh, 0.9rem) 1rem;
+  background: rgba(0, 0, 0, 0.45);
+  border: 2px solid var(--acento);
+  border-radius: 10px;
+  color: var(--texto-claro);
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.item-partida:hover {
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--acento);
+}
+
+.item-partida.vacio {
+  cursor: default;
+  border-style: dashed;
+  color: var(--placeholder);
+}
+
+.item-partida.vacio:hover {
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--placeholder);
+}
+
+/* Input para el nombre de la partida nueva (reusa el marco SVG del login) */
+.input-partida {
+  width: 100%;
+  aspect-ratio: 102 / 20;
+  padding: 0 7%;
+  background: url(../imagenes/svg/marco-input.svg) center / 100% 100% no-repeat;
+  border: none;
+  outline: none;
+  text-align: center;
+  color: var(--texto-oscuro);
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  line-height: 1;
+}
+
+.input-partida::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+/* ===== Splash: titulo DRAGON SEEKERS + "pulsa cualquier boton" ===== */
+.titulo-juego {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+.titulo-juego .linea {
+  margin: 0;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: clamp(3.2rem, 17vw, 13rem);
+  line-height: 0.88;
+  letter-spacing: 0.04em;
+  /* Relleno con gradiente vertical (amarillo -> naranja), igual que en Figma */
+  background: linear-gradient(180deg, #fbfd30 0%, #fbba19 50%, #fb980d 75%, #fb7601 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-text-stroke: clamp(1px, 0.4vw, 3px) rgba(0, 0, 0, 0.4);
+}
+
+.subtitulo {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(1.4rem, 5vh, 3.5rem);
+  color: var(--texto-claro);
+  font-size: var(--fs-lg);
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-shadow: var(--sombra-texto);
+  animation: parpadeo 1.2s steps(2, start) infinite;
+}
+
+@keyframes parpadeo {
+  50% { opacity: 0.25; }
+}

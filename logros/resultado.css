@@ -1,0 +1,123 @@
+/* ===== Pantalla de resultado (reutilizable) =====
+   Sirve para logros (tipo "exito") y para malas noticias (tipo "fracaso").
+   El contenido lo arma resultado.js desde localStorage.resultado.
+   Tokens de escala/paleta en ../estilos/comun.css. */
+
+#pantalla {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  overflow: hidden;
+  background-color: #1a1a1a;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#pantalla::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Exito: fondo del mundo, tono celebratorio */
+#pantalla.exito {
+  background-image: url(../imagenes/fondo-mundo.png);
+}
+
+/* Fracaso: mas sobrio, oscuro rojizo */
+#pantalla.fracaso {
+  background-image: linear-gradient(180deg, #3a1414 0%, #1a1a1a 100%);
+}
+
+#pantalla.fracaso::before {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.resultado {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.8rem, 2.5vh, 1.6rem);
+  max-width: min(92vw, 640px);
+}
+
+.titulo {
+  margin: 0;
+  font-family: var(--fuente);
+  font-weight: 700;
+  line-height: 0.95;
+}
+
+/* Exito: titulo grande con relleno dorado (como el splash) */
+#pantalla.exito .titulo {
+  font-size: clamp(2.4rem, 8vw, 4.5rem);
+  background: linear-gradient(180deg, #fbfd30 0%, #fbba19 50%, #fb980d 75%, #fb7601 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-text-stroke: clamp(1px, 0.35vw, 2px) rgba(0, 0, 0, 0.4);
+}
+
+/* Fracaso: titulo mas chico y sobrio (menos impactante) */
+#pantalla.fracaso .titulo {
+  font-size: clamp(1.8rem, 6vw, 3.2rem);
+  color: #ff6b6b;
+  text-shadow: var(--sombra-texto);
+}
+
+.sprite {
+  width: clamp(120px, 22vw, 220px);
+  image-rendering: pixelated;
+}
+
+#pantalla.fracaso .sprite {
+  filter: grayscale(0.8) brightness(0.7);
+}
+
+.detalle {
+  margin: 0;
+  color: var(--texto-claro);
+  font-size: var(--fs-lg);
+  white-space: pre-line; /* respeta los \n del detalle */
+  text-shadow: var(--sombra-texto);
+}
+
+/* Boton CONTINUAR: madera, igual que el resto del juego */
+.boton-continuar {
+  margin-top: clamp(0.5rem, 2vh, 1.2rem);
+  width: min(80vw, 360px);
+  aspect-ratio: 102 / 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url(../imagenes/svg/boton-login.svg) center / 100% 100% no-repeat;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--texto-claro);
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  letter-spacing: 0.04em;
+}
+
+.boton-continuar:hover {
+  background-image: url(../imagenes/svg/boton-login-apretado.svg);
+  color: var(--texto-oscuro);
+}
+
+.boton-continuar:active {
+  transform: translateY(2px);
+}
