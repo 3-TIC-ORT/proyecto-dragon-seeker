@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="24" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="24" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="3">
  <editorsettings>
-  <export target="../ZonaBoss/curadero.tmj" format="json"/>
+  <export target="Casa interna.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="Decoracion casa interna" tilewidth="32" tileheight="32" tilecount="36" columns="6">
-  <image source="casa_interna.png" width="200" height="200"/>
+  <image source="Decoracion Casa Interna.png" width="200" height="200"/>
  </tileset>
- <tileset firstgid="37" source="../Mapa/cartel curadero.tsx"/>
  <layer id="1" name="Piso" width="24" height="15">
   <data encoding="csv">
 5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
@@ -83,4 +82,26 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <layer id="7" name="bloques invisibles" width="24" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+7,7,0,0,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7
+</data>
+ </layer>
+ <objectgroup id="8" name="puertas">
+  <object id="1" name="door" x="65.2678" y="450.123" width="60.7666" height="29.258"/>
+ </objectgroup>
 </map>

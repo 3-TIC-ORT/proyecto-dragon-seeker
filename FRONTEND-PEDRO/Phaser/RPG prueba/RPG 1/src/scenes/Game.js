@@ -48,6 +48,7 @@ export class Game extends Phaser.Scene {
     this.load.image("arbol_manzanas", "assets/arbol_manzanas.png");
     this.load.image("arbol", "assets/arbol.png");
     this.load.image("huevoDragon", "assets/huevoDragon.png");
+    this.load.image("cartel_curadero", "assets/cartel curadero.png");
     this.load.tilemapTiledJSON("map", "assets/mapa1.json");
 
     //asignacion del sprite al personaje
@@ -113,6 +114,8 @@ export class Game extends Phaser.Scene {
     this.load.image("coke", "assets/coke.png");
   }
   create(data) {
+    this.cambiandoEscena = false;
+
     const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
     this.userId = usuarioActual?.id;
 
@@ -156,17 +159,28 @@ export class Game extends Phaser.Scene {
     );
     const ts6 = map.addTilesetImage("Camino normal +", "camino_normal");
     const ts7 = map.addTilesetImage("CP Camino Ciudad", "cp_camino_ciudad");
+    const ts8 = map.addTilesetImage("cartel curadero", "cartel_curadero");
 
-    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7];
+    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8];
 
     const suelo = map.createLayer("suelo", allTilesets, 0, 0);
     const caminoCiud = map.createLayer("camino ciudad", allTilesets, 0, 0);
     const caminoNorm = map.createLayer("Camino normal", allTilesets, 0, 0);
     const decoracion = map.createLayer("decoracion", allTilesets, 0, 0);
     const pasto = map.createLayer("Pasto", allTilesets, 0, 0);
+    const cartel_curadero = map.createLayer(
+      "cartel curadero",
+      allTilesets,
+      0,
+      0,
+    );
+
+    cartel_curadero.setDepth(2);
+
     const casasCiudad = map.createLayer("casas ciudad", allTilesets, 0, 0);
+    casasCiudad.setDepth(3);
     const hojasArboles = map.createLayer("hojas arboles", allTilesets, 0, 0);
-    hojasArboles.setDepth(2);
+    hojasArboles.setDepth(2.5);
     const corralDragones = map.createLayer(
       "corral dragones",
       allTilesets,
@@ -253,7 +267,6 @@ export class Game extends Phaser.Scene {
       (res) => {
         this.estadoGuardado = res.estado;
         this.estadoJuegoRecibido = true;
-        console.log("Estado recibido del backend:", JSON.stringify(res.estado));
 
         // si los dragones ya llegaron antes, procesá ahora
         if (this.dragonesListos) {
@@ -299,12 +312,11 @@ export class Game extends Phaser.Scene {
 
     //colliders con el player
     this.physics.add.collider(this.player, decoracion);
-    this.physics.add.collider(this.player, casasCiudad);
     this.physics.add.collider(this.player, colisionesGroup);
 
     //colliders con el dragon
     this.physics.add.collider(this.dragons, decoracion);
-    this.physics.add.collider(this.dragons, casasCiudad);
+    this.physics.add.collider(this.dragons, colisionesGroup);
     this.physics.add.collider(this.dragons, corralDragones);
 
     this.physics.add.collider(this.dragons, this.dragons, (d1, d2) => {
@@ -366,7 +378,7 @@ export class Game extends Phaser.Scene {
         },
         () => {
           // ✅ recién cuando el backend confirmó, cambiamos de escena
-          this.scene.start("Casa", { x: 368, y: 448 });
+          this.scene.start("Casa", { x: 80, y: 416 });
         },
       );
     });
@@ -440,10 +452,6 @@ export class Game extends Phaser.Scene {
 
   procesarEstadoInicial() {
     if (this.initialSpawnDone) return;
-    console.log(
-      "Dragones guardados a restaurar:",
-      JSON.stringify(this.estadoGuardado?.dragonesSpawneados),
-    );
 
     const dragonEliminadoId = localStorage.getItem("dragon_eliminado") ?? "";
     localStorage.removeItem("dragon_eliminado");

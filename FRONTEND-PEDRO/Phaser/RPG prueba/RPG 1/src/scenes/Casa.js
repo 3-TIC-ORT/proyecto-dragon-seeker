@@ -43,9 +43,11 @@ export class Casa extends Phaser.Scene {
 
     //capas
     const piso = casa.createLayer("Piso", tileset, 0, 0);
-    const alfombras = casa.createLayer("Alfombras", 0, 0);
-    const paredes;
+    const alfombras = casa.createLayer("Alfombras", tileset, 0, 0);
+    const paredes = casa.createLayer("Paredes ventana", tileset, 0, 0);
+    const decoracion = casa.createLayer("Decoracion", tileset, 0, 0);
     const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
+    limit.setVisible(false);
 
     //creando las teclas para movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -55,11 +57,13 @@ export class Casa extends Phaser.Scene {
     const startY = data?.y ?? 448;
 
     // Spawn del jugador en la posición recibida desde Mapa1
-    this.player = new Player(this, data.x, data.y, this.cursors);
+    this.player = new Player(this, startX, startY, this.cursors);
 
     //colliders
-    cofres.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, cofres);
+    decoracion.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, decoracion);
+    paredes.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, paredes);
     limit.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, limit);
 
@@ -76,14 +80,15 @@ export class Casa extends Phaser.Scene {
       "puertas",
       (obj) => obj.name === "door",
     );
+
     this.door = this.physics.add.sprite(doorTrigger.x, doorTrigger.y, null);
     this.door.setSize(doorTrigger.width, doorTrigger.height);
-    this.door.setVisible(true);
+    this.door.setVisible(false);
 
     this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
     //healer
-    const healerObjects = casa.getObjectLayer("Healers").objects;
+    /*const healerObjects = casa.getObjectLayer("Healers").objects;
 
     const healerTrigger = casa.findObject(
       "Healers",
@@ -97,10 +102,6 @@ export class Casa extends Phaser.Scene {
     this.healer.setSize(healerTrigger.width, healerTrigger.height);
     this.healer.setVisible(true);
 
-    this.physics.add.overlap(this.player, this.door, () => {
-      this.scene.start("Game", { x: 992, y: 320 }); // posición cuando sale del mapa 2
-    });
-
     this.nearHealer = false;
     this.showingInteractMessage = false;
 
@@ -110,7 +111,11 @@ export class Casa extends Phaser.Scene {
       this.handleHealer,
       null,
       this,
-    );
+    );*/
+
+    this.physics.add.overlap(this.player, this.door, () => {
+      this.scene.start("Game", { x: 256, y: 320 }); // posición cuando sale del mapa 2
+    });
 
     // ✅ guardar estado al cerrar/recargar
     window.addEventListener("beforeunload", () => {
@@ -147,7 +152,6 @@ export class Casa extends Phaser.Scene {
       let usuario = JSON.parse(localStorage.getItem("usuario"));
 
       postEvent("curarDragones", { idusuario: usuario.id }, (respuesta) => {
-        console.log("Respuesta:", respuesta);
         if (respuesta.exito) {
           this.showMessage("¡Tus dragones fueron curados!");
         }
