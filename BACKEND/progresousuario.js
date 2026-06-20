@@ -24,18 +24,18 @@ function guardar(datos) {
   fs.writeFileSync(ruta, JSON.stringify(datos, null, 2));
 }
 
-export function buscar(lista, user, dragon) {
-  return lista.find((x) => x.user === user && x.dragon === dragon);
+export function buscar(lista, partida, dragon) {
+  return lista.find((x) => x.partida === partida && x.dragon === dragon);
 }
 
-function asegurar(lista, user, dragon) {
-  let reg = buscar(lista, user, dragon);
+function asegurar(lista, partida, dragon) {
+  let reg = buscar(lista, partida, dragon);
 
   if (!reg) {
     const base = leerCatalogo().find((d) => d.id === dragon);
     const ataquesBase = base?.ataques ?? [];
     reg = {
-      user,
+      partida,
       dragon,
       habilitado: false,
       nivel: 1,
@@ -62,17 +62,17 @@ function experiencianecesaria(nivel) {
   return 100 * nivel;
 }
 
-export function sumarexperiencia(iddragon, cantidad, idusuario) {
+export function sumarexperiencia(iddragon, cantidad, idpartida) {
   const lista = leer();
-  const reg = asegurar(lista, idusuario, iddragon);
+  const reg = asegurar(lista, idpartida, iddragon);
   reg.exp += cantidad;
   let subidas = 0;
   while (reg.exp >= experiencianecesaria(reg.nivel)) {
     reg.exp -= experiencianecesaria(reg.nivel);
     reg.nivel++;
     subidas++;
-    aumentarestadisticas(iddragon, { vida: 10, fuerza: 5 }, idusuario, lista);
-    desbloquearataques(iddragon, reg.nivel, idusuario, lista);
+    aumentarestadisticas(iddragon, { vida: 10, fuerza: 5 }, idpartida, lista);
+    desbloquearataques(iddragon, reg.nivel, idpartida, lista);
   }
 
   guardar(lista);
@@ -86,9 +86,9 @@ export function sumarexperiencia(iddragon, cantidad, idusuario) {
   };
 }
 
-export function verificarsubidanivel(iddragon, idusuario) {
+export function verificarsubidanivel(iddragon, idpartida) {
   const lista = leer();
-  const reg = asegurar(lista, idusuario, iddragon);
+  const reg = asegurar(lista, idpartida, iddragon);
   const falta = experiencianecesaria(reg.nivel) - reg.exp;
   return {
     exito: true,
@@ -98,9 +98,9 @@ export function verificarsubidanivel(iddragon, idusuario) {
   };
 }
 
-export function desbloquearataques(iddragon, nivel, idusuario, lista0 = null) {
+export function desbloquearataques(iddragon, nivel, idpartida, lista0 = null) {
   const lista = lista0 || leer();
-  const reg = asegurar(lista, idusuario, iddragon);
+  const reg = asegurar(lista, idpartida, iddragon);
   const nuevos = reg.ataques
     .filter((a) => a.nivel <= nivel)
     .map((a) => a.nombre)
@@ -118,11 +118,11 @@ export function desbloquearataques(iddragon, nivel, idusuario, lista0 = null) {
 export function aumentarestadisticas(
   iddragon,
   incremento,
-  idusuario,
+  idpartida,
   lista0 = null,
 ) {
   const lista = lista0 || leer();
-  const reg = asegurar(lista, idusuario, iddragon);
+  const reg = asegurar(lista, idpartida, iddragon);
   reg.vida += incremento.vida || 0;
   reg.fuerza += incremento.fuerza || 0;
 
@@ -133,11 +133,40 @@ export function aumentarestadisticas(
   };
 }
 
-export function habilitardragon(user, dragon) {
+function numeroValido(valor, minimo, maximo, porDefecto) {
+  const n = Number(valor);
+  if (!Number.isFinite(n)) return porDefecto;
+  return Math.min(maximo, Math.max(minimo, Math.round(n)));
+}
+
+export function habilitardragon(partida, dragon, estado = null) {
   const lista = leer();
-  const reg = asegurar(lista, user, dragon);
+  const reg = asegurar(lista, partida, dragon);
 
   reg.habilitado = true;
+
+  // Si viene el estado del rival (al adoptarlo tras la pelea), se guarda al
+  // dragon en su version actual: nivel, vida restante y stats escaladas.
+  // Todo lo que llega del cliente se valida y se clampea antes de persistir.
+  if (estado && typeof estado === "object") {
+    reg.nivel = numeroValido(estado.nivel, 1, 100, reg.nivel);
+    reg.fuerza = numeroValido(estado.fuerza, 1, 9999, reg.fuerza);
+    reg.exp = numeroValido(estado.exp, 0, 999999, 0);
+
+    const vidaMax = numeroValido(estado.vidaMax, 1, 99999, reg.vidaMax);
+    reg.vidaMax = vidaMax;
+    // la vida restante nunca puede superar la vida maxima ni ser negativa
+    reg.vida = numeroValido(estado.vida, 0, vidaMax, vidaMax);
+
+    if (typeof estado.tipo === "string" && estado.tipo.length <= 20) {
+      reg.tipo = estado.tipo;
+    }
+
+    // recalculo los ataques desbloqueados segun el nivel con el que se adopta
+    reg.desbloqueados = reg.ataques
+      .filter((a) => a.nivel <= reg.nivel)
+      .map((a) => a.nombre);
+  }
 
   guardar(lista);
   return {
@@ -147,16 +176,16 @@ export function habilitardragon(user, dragon) {
   };
 }
 
-export function actualizarVida(idusuario, iddragon, vidaNueva) {
+export function actualizarVida(idpartida, iddragon, vidaNueva) {
   const lista = leer();
-  // Buscar si el dragón ya existe en el progreso del usuario
-  let reg = buscar(lista, idusuario, iddragon);
+  // Buscar si el dragón ya existe en el progreso de la partida
+  let reg = buscar(lista, idpartida, iddragon);
 
-  // Solo actualizar si el dragón ya existe en progreso del usuario (es su dragón)
+  // Solo actualizar si el dragón ya existe en el progreso de la partida
   if (!reg) {
     return {
       exito: false,
-      mensaje: "Este dragón no pertenece al usuario",
+      mensaje: "Este dragón no pertenece a la partida",
     };
   }
 
@@ -169,22 +198,19 @@ export function actualizarVida(idusuario, iddragon, vidaNueva) {
   };
 }
 
-export function curarDragones(idusuario) {
+export function curarDragones(idpartida) {
   const lista = leer();
-  console.log("Lista completa:", lista);
-  console.log("Buscando usuario:", idusuario, "tipo:", typeof idusuario);
 
-  const dragonesDelUsuario = lista.filter(
-    (p) => p.user === idusuario && p.habilitado === true,
+  const dragonesDeLaPartida = lista.filter(
+    (p) => p.partida === idpartida && p.habilitado === true,
   );
-  console.log("Dragones encontrados:", dragonesDelUsuario);
 
   const rutaDragones = path.join(__dirname, "dragones.json");
   const dragonesBase = JSON.parse(
     fs.readFileSync(rutaDragones, "utf-8"),
   ).dragones;
 
-  dragonesDelUsuario.forEach((reg) => {
+  dragonesDeLaPartida.forEach((reg) => {
     const dragonBase = dragonesBase.find((d) => d.id === reg.dragon);
     console.log("DragonBase encontrado:", dragonBase);
     if (dragonBase) {

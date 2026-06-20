@@ -1,114 +1,131 @@
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 1000px;
-}
+/* ===== Pantalla de inicio de sesion (login) =====
+   Diseño basado en el nodo Figma 175:476.
+   Tokens de escala/paleta en ../estilos/comun.css.
+   Componentes pixel-art (SVG) en /imagenes/svg:
+   - marco de input: marco-input.svg
+   - boton:          boton-login.svg  (apretado: boton-login-apretado.svg) */
+
 body {
-  background-image: url(../imagenes/ee6001b16865c45d999273214f07bbd7eedf9936.jpg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(../imagenes/fondo-login.jpg);
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   background-attachment: fixed;
-  font-family: "Pixelify Sans", sans-serif;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  overflow: hidden;
 }
 
-form {
+/* Overlay oscuro sobre el fondo para que los textos se lean bien */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 0;
+}
+
+main {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3rem;
-  width: 90%;
-  max-width: 700px;
+  width: var(--ancho-form);
 }
 
-.contenedor {
-  position: relative;
+#formLogin {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--gap);
   width: 100%;
 }
 
-.contenedor img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 10px;
-}
-
+/* Campo de texto: el SVG marco-input.svg es el fondo; aspect-ratio = ratio del
+   dibujo (102x20) para que no se distorsione. */
 .input {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: transparent;
-  width: 80%;
-  height: 60%;
+  width: 100%;
+  aspect-ratio: 102 / 20;
+  padding: 0 7%;
+  background: url(../imagenes/svg/marco-input.svg) center / 100% 100% no-repeat;
   border: none;
-  font-size: 3.6rem;
+  outline: none;
   text-align: left;
-  color: #333;
-  z-index: 1;
-  font-family: "Pixelify Sans", sans-serif;
-  font-weight: bold;
+  color: var(--texto-oscuro);
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  line-height: 1;
 }
 
 .input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--placeholder);
+  opacity: 1;
 }
 
-.input:focus {
-  outline: none;
-}
-
-/* Botón dentro de la imagen */
-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: transparent;
-  width: 80%;
-  height: 60%;
+/* Boton INGRESAR: SVG de madera como fondo, texto centrado encima.
+   Mismo aspect-ratio que .input (102/20) para que campos y boton midan igual. */
+#botonIngresar {
+  width: 100%;
+  aspect-ratio: 102 / 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url(../imagenes/svg/boton-login.svg) center / 100% 100% no-repeat;
   border: none;
-  font-size: 3.7rem;
-  font-weight: bold;
-  color: white;
+  outline: none;
   cursor: pointer;
-  z-index: 1;
-  font-family: "Pixelify Sans", sans-serif;
-  font-weight: bold;
+  color: var(--texto-claro);
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  letter-spacing: 0.04em;
 }
 
-button:hover {
-  opacity: 0.8;
+/* Estado apretado: cambia al SVG "apretado" (variante resaltada en blanco) */
+#botonIngresar:hover {
+  background-image: url(../imagenes/svg/boton-login-apretado.svg);
+  color: var(--texto-oscuro);
 }
 
+#botonIngresar:active {
+  background-image: url(../imagenes/svg/boton-login-apretado.svg);
+  color: var(--texto-oscuro);
+  transform: translateY(2px);
+}
+
+/* Mensaje de error/exito que inyecta login.js */
 #mensaje {
   text-align: center;
-  font-weight: bold;
-  color: #333;
-  margin-top: 10px;
+  color: #ffe0e0;
+  margin-top: 0.5rem;
+  font-size: var(--fs-sm);
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
 }
 
+#mensaje p {
+  margin: 0.2rem 0;
+}
+
+/* Texto inferior "¿No tenes cuenta? Registrate" */
 .mensaje {
   text-align: center;
-  font-size: 3rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  color: white;
+  color: var(--texto-claro);
+  font-size: var(--fs-sm);
+  margin: 0.7rem 0 0;
+  text-shadow: var(--sombra-texto);
 }
 
 .mensaje a {
-  color: #3e4044c2;
+  color: var(--placeholder);
   text-decoration: none;
 }
 
 .mensaje a:hover {
+  color: var(--acento);
   text-decoration: underline;
 }

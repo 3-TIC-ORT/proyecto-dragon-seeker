@@ -33,6 +33,7 @@ import {
   obtenerEstadoUsuario,
   obtenerUltimoEstadoUsuario,
 } from "./estadoJuego.js";
+import { crearPartida, listarPartidas } from "./partidas.js";
 
 subscribePOSTEvent("registrarusuario", (data) => {
   const { nombre, correo, contrasena } = data;
@@ -77,23 +78,33 @@ subscribeGETEvent("obtenernotificaciones", (query) => {
 });
 
 subscribePOSTEvent("sumarexperiencia", (data) => {
-  const { iddragon, cantidad, idusuario } = data;
-  return sumarexperiencia(iddragon, cantidad, idusuario);
+  const { iddragon, cantidad, idpartida } = data;
+  return sumarexperiencia(Number(iddragon), cantidad, Number(idpartida));
 });
 
 subscribeGETEvent("verificarsubidanivel", (query) => {
-  const { iddragon, idusuario } = query;
-  return verificarsubidanivel(iddragon, idusuario);
+  const { iddragon, idpartida } = query;
+  return verificarsubidanivel(Number(iddragon), Number(idpartida));
 });
 
 subscribePOSTEvent("desbloquearataques", (data) => {
-  const { iddragon, nivel, idusuario } = data;
-  return desbloquearataques(iddragon, nivel, idusuario);
+  const { iddragon, nivel, idpartida } = data;
+  return desbloquearataques(Number(iddragon), nivel, Number(idpartida));
 });
 
 subscribePOSTEvent("aumentarestadisticas", (data) => {
-  const { iddragon, incremento, idusuario } = data;
-  return aumentarestadisticas(iddragon, incremento, idusuario);
+  const { iddragon, incremento, idpartida } = data;
+  return aumentarestadisticas(Number(iddragon), incremento, Number(idpartida));
+});
+
+subscribePOSTEvent("crearPartida", (data) => {
+  const { idusuario, nombre } = data;
+  return crearPartida(idusuario, nombre);
+});
+
+subscribePOSTEvent("listarPartidas", (data) => {
+  const { idusuario } = data;
+  return listarPartidas(idusuario);
 });
 
 subscribeGETEvent("elegirataqueenemigonormal", (query) => {
@@ -150,13 +161,13 @@ subscribeGETEvent("obtenerdragones", () => {
 });
 
 subscribePOSTEvent("obtenerdragonesUsuario", (data) => {
-  const { idusuario } = data;
-  return obtenerlistadragones(Number(idusuario));
+  const { idpartida } = data;
+  return obtenerlistadragones(Number(idpartida));
 });
 
 subscribePOSTEvent("obtenerdragonesMapa", (data) => {
-  const { idusuario } = data;
-  return obtenerlistadragones(Number(idusuario), true);
+  const { idpartida } = data;
+  return obtenerlistadragones(Number(idpartida), true);
 });
 
 subscribePOSTEvent("crearobjeto", (data) => {
@@ -170,32 +181,32 @@ subscribeGETEvent("obtenerobjeto", (query) => {
 });
 
 subscribePOSTEvent("adoptarDragon", (data) => {
-  const { user, dragon } = data;
-  return habilitardragon(user, dragon);
+  const { partida, dragon, estado } = data;
+  return habilitardragon(Number(partida), Number(dragon), estado);
 });
 
 subscribePOSTEvent("actualizarVida", (data) => {
-  const { idusuario, iddragon, vida } = data;
-  return actualizarVida(idusuario, iddragon, vida);
+  const { idpartida, iddragon, vida } = data;
+  return actualizarVida(Number(idpartida), Number(iddragon), vida);
 });
 
 subscribePOSTEvent("curarDragones", (data) => {
-  const { idusuario } = data;
-  return curarDragones(idusuario);
+  const { idpartida } = data;
+  return curarDragones(Number(idpartida));
 });
 
 subscribePOSTEvent("guardarEstadoJuego", (data) => {
-  const { idusuario, estado } = data;
-  return guardarEstadoUsuario(idusuario, estado);
+  const { idpartida, estado } = data;
+  return guardarEstadoUsuario(Number(idpartida), estado);
 });
 
 subscribePOSTEvent("obtenerEstadoJuego", (data) => {
-  const { idusuario, mapa } = data;
+  const { idpartida, mapa } = data;
 
   const estado =
     mapa !== undefined
-      ? obtenerEstadoUsuario(Number(idusuario), Number(mapa))
-      : obtenerUltimoEstadoUsuario(Number(idusuario));
+      ? obtenerEstadoUsuario(Number(idpartida), Number(mapa))
+      : obtenerUltimoEstadoUsuario(Number(idpartida));
 
   return { exito: true, estado };
 });

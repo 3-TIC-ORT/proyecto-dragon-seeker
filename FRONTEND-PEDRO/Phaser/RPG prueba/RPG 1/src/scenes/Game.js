@@ -2,7 +2,7 @@ import { Player } from "../GameObjects/player.js";
 import { NPC } from "../GameObjects/npc.js";
 import { Minero } from "../GameObjects/minero.js";
 import { gameData } from "./Objetos.js";
-import { guardarEstado } from "../utils/persistencia.js";
+import { guardarEstado, getPartidaId } from "../utils/persistencia.js";
 
 connect2Server();
 
@@ -10,11 +10,10 @@ export class Game extends Phaser.Scene {
   constructor() {
     super("Game");
 
-    const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
-    const idusuario = usuarioActual?.id;
+    const idpartida = getPartidaId();
 
     // Trae rivales del mapa ya escalados al nivel del jugador
-    postEvent("obtenerdragonesMapa", { idusuario }, (data) => {
+    postEvent("obtenerdragonesMapa", { idpartida }, (data) => {
       const dragones = data.dragones;
 
       // filtra los dragones que están en mapa 1
@@ -118,6 +117,11 @@ export class Game extends Phaser.Scene {
 
     const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
     this.userId = usuarioActual?.id;
+
+    this.partidaId = getPartidaId();
+    // Al volver al mapa se borra cualquier intencion de pelea pendiente, asi una
+    // visita casual al inventario (boton huevo) nunca termina mandando a la pelea.
+    localStorage.removeItem("origenInventario");
 
     // posición default hasta que llegue el estado del backend
     const startX = data?.x ?? 720;
@@ -263,7 +267,7 @@ export class Game extends Phaser.Scene {
     // ÚNICO lugar donde se restauran o spawnean dragones
     postEvent(
       "obtenerEstadoJuego",
-      { idusuario: this.userId, mapa: 1 },
+      { idpartida: this.partidaId, mapa: 1 },
       (res) => {
         this.estadoGuardado = res.estado;
         this.estadoJuegoRecibido = true;
@@ -343,6 +347,8 @@ export class Game extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
 
     this.botonInventario.on("pointerdown", () => {
+      // Desde el mapa el inventario es para ver/elegir dragon activo: vuelve al mapa.
+      localStorage.setItem("origenInventario", "mapa");
       window.location.href = "../../../../inventario/inventario.html";
     });
 
@@ -364,11 +370,10 @@ export class Game extends Phaser.Scene {
         y: Math.round(d.y),
       }));
 
-      const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
       postEvent(
         "guardarEstadoJuego",
         {
-          idusuario: usuarioActual.id,
+          idpartida: getPartidaId(),
           estado: {
             mapa: 1,
             x: Math.round(this.player.x),
@@ -408,11 +413,10 @@ export class Game extends Phaser.Scene {
         y: Math.round(d.y),
       }));
 
-      const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
       postEvent(
         "guardarEstadoJuego",
         {
-          idusuario: usuarioActual.id,
+          idpartida: getPartidaId(),
           estado: {
             mapa: 1,
             x: Math.round(this.player.x),
@@ -520,6 +524,8 @@ export class Game extends Phaser.Scene {
     // guarda el estado actual, INCLUYENDO este dragón con su posición
     this.guardarEstado();
 
+    // venis a elegir con que dragon peleas: al elegir, el inventario va a la pelea
+    localStorage.setItem("origenInventario", "pelea");
     window.location.href = "../../../../inventario/inventario.html";
   }
 

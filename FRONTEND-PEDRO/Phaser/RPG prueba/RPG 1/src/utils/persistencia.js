@@ -4,14 +4,20 @@ export const MAPA_SCENES = {
   3: "zonaBoss",
 };
 
+// El progreso/estado se keyean por PARTIDA (la activa se elige en menu/partida.html).
+export function getPartidaId() {
+  const id = Number(localStorage.getItem("partida"));
+  return Number.isInteger(id) && id > 0 ? id : null;
+}
+
 export function guardarEstado(mapa, player, dragonesSpawneados = []) {
-  const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
-  if (!usuarioActual) return;
+  const idpartida = getPartidaId();
+  if (!idpartida) return;
 
   postEvent(
     "guardarEstadoJuego",
     {
-      idusuario: usuarioActual.id,
+      idpartida,
       estado: {
         mapa,
         x: Math.round(player.x),
@@ -24,10 +30,9 @@ export function guardarEstado(mapa, player, dragonesSpawneados = []) {
 }
 
 export function obtenerEstadoMapa(mapa, callback) {
-  const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
-  const idusuario = usuarioActual?.id;
+  const idpartida = getPartidaId();
 
-  postEvent("obtenerEstadoJuego", { idusuario, mapa }, (res) => {
+  postEvent("obtenerEstadoJuego", { idpartida, mapa }, (res) => {
     callback(res.estado);
   });
 }
@@ -35,10 +40,9 @@ export function obtenerEstadoMapa(mapa, callback) {
 // Pide el último estado guardado SIN filtrar por mapa,
 // para que el Preloader sepa a dónde mandar al jugador.
 export function obtenerUltimoEstado(callback) {
-  const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
-  const idusuario = usuarioActual?.id;
+  const idpartida = getPartidaId();
 
-  postEvent("obtenerEstadoJuego", { idusuario }, (res) => {
+  postEvent("obtenerEstadoJuego", { idpartida }, (res) => {
     callback(res.estado);
   });
 }

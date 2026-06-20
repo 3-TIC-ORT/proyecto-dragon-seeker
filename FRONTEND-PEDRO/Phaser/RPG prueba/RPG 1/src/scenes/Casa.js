@@ -43,9 +43,11 @@ export class Casa extends Phaser.Scene {
 
     //capas
     const piso = casa.createLayer("Piso", tileset, 0, 0);
+
     const alfombras = casa.createLayer("Alfombras", tileset, 0, 0);
     const paredes = casa.createLayer("Paredes ventana", tileset, 0, 0);
     const decoracion = casa.createLayer("Decoracion", tileset, 0, 0);
+
     const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
     limit.setVisible(false);
 
@@ -149,9 +151,10 @@ export class Casa extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      let usuario = JSON.parse(localStorage.getItem("usuario"));
+      const idpartida = Number(localStorage.getItem("partida"));
 
-      postEvent("curarDragones", { idusuario: usuario.id }, (respuesta) => {
+      postEvent("curarDragones", { idpartida }, (respuesta) => {
+        console.log("Respuesta:", respuesta);
         if (respuesta.exito) {
           this.showMessage("¡Tus dragones fueron curados!");
         }

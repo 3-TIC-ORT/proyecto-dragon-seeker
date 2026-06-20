@@ -19,14 +19,14 @@ function guardar(datos) {
   fs.writeFileSync(ruta, JSON.stringify(datos, null, 2));
 }
 
-export function guardarEstadoUsuario(idusuario, estado) {
+export function guardarEstadoUsuario(idpartida, estado) {
   const lista = leer();
   const idx = lista.findIndex(
-    (e) => e.user === idusuario && e.mapa === estado.mapa,
+    (e) => e.partida === idpartida && e.mapa === estado.mapa,
   );
 
   const registro = {
-    user: idusuario,
+    partida: idpartida,
     ...estado,
     actualizado: Date.now(), // ✅ timestamp para saber cuál es el último
   };
@@ -40,15 +40,15 @@ export function guardarEstadoUsuario(idusuario, estado) {
   return { exito: true };
 }
 
-export function obtenerEstadoUsuario(idusuario, mapa) {
+export function obtenerEstadoUsuario(idpartida, mapa) {
   const lista = leer();
-  return lista.find((e) => e.user === idusuario && e.mapa === mapa) ?? null;
+  return lista.find((e) => e.partida === idpartida && e.mapa === mapa) ?? null;
 }
 
-// ✅ NUEVO: devuelve el estado más reciente del usuario, sin filtrar por mapa
-export function obtenerUltimoEstadoUsuario(idusuario) {
+// ✅ devuelve el estado más reciente de la partida, sin filtrar por mapa
+export function obtenerUltimoEstadoUsuario(idpartida) {
   const lista = leer();
-  const registros = lista.filter((e) => e.user === idusuario);
+  const registros = lista.filter((e) => e.partida === idpartida);
 
   if (registros.length === 0) return null;
 

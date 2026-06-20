@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inventario dragones</title> 
+    <title>inventario dragones</title>
+    <link rel="stylesheet" href="../estilos/comun.css">
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/JZylber/SoqueTIC-Client@v1.4.2/soquetic-client.js"></script>
 </head>
 <body>
     <header>
-      <!-- Para filtros y navegacion -->
+      <a class="botonMapa" href="../FRONTEND-PEDRO/Phaser/RPG prueba/RPG 1/index.html">
+        <span class="flecha" aria-hidden="true">&#8592;</span> Volver al mapa
+      </a>
     </header>
 
     <main class="dragon-container" id="dragonContainer">
         <!-- Contenido Dinamico -->
-    </main>     
+    </main>
+
+    <!-- Aparece (.visible) al seleccionar un dragon; main.js lo cablea -->
+    <button id="botonElegir" class="boton-elegir" type="button">Elegir dragón</button>
+
     <script src="./main.js"></script>
 </body>
 </html>

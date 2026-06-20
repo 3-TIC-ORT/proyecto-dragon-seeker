@@ -1,212 +1,390 @@
-* {
-    box-sizing: border-box;
-    font-family: "Pixelify Sans", sans-serif;
+/* ===== Pantalla de Pelea =====
+   Diseño basado en los nodos Figma 205:2158 (menu), 225:922 (ataques) y
+   393:1667 (modal huir). Tokens en ../estilos/comun.css.
+   Botones de ataque: SVG en /imagenes/svg (boton-ataque-normal / -sel).
+   Botones del menu (LUCHAR/DRAGON/ADOPTAR/HUIR): SVG pixel-art en /imagenes/svg
+   (boton-luchar(-apretado), boton-opcion(-apretado), boton-adoptar(-bloqueado)). */
+
+body {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  /* Fondo verde degradado del diseño (coherente con inventario) */
+  background: linear-gradient(
+    180deg,
+    rgb(0, 111, 255) 0%,
+    rgb(0, 255, 77) 30%,
+    rgb(0, 255, 77) 43%,
+    rgb(41, 204, 0) 65%,
+    rgb(51, 255, 0) 100%
+  );
+  background-attachment: fixed;
 }
-body{
-    background-image: url(../imagenes/Frame\ 340.png)
-}
-.footer{
-    position: absolute;
-    bottom: 0%;
-    left: 0%;
-    width: 100%;
-    height: 200px;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: space-between;
-}
+
+/* ---- Dragones ---- */
 .dragon {
-    position: absolute;
-    display: flex;
-    display: block;
-    width: 300px;
-    height: 300px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.2rem, 0.8vh, 0.5rem);
+  z-index: 1;
 }
 
-/* dragón malo (arriba derecha) */
+/* Plataforma naranja bajo cada dragon */
+.dragon::after {
+  content: "";
+  position: absolute;
+  bottom: -6%;
+  width: 115%;
+  height: 16%;
+  background: radial-gradient(ellipse at center, #e8902f 0%, rgba(232, 144, 47, 0) 70%);
+  z-index: -1;
+}
+
 .dragon.malo {
-    bottom: 320px;
-    right: 160px;
+  top: 6%;
+  right: 7%;
 }
 
-/* dragón usuario (abajo izquierda) */
 .dragon.usuario {
-    bottom: 160px;
-    left: 220px;
-}
-.dragon .nombre {
-    font-size: 40px;
-    color: white;
-    margin-top: 25px;
+  bottom: 27%;
+  left: 8%;
 }
 
+.hud {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.dragon .nombre {
+  margin: 0;
+  font-size: var(--fs-md);
+  color: #ffffff;
+  text-shadow: var(--sombra-texto);
+}
+
+.sprite {
+  width: clamp(150px, 18vw, 240px);
+  image-rendering: pixelated;
+}
+
+.ataquechimuelo {
+  position: absolute;
+  bottom: 0;
+  width: clamp(150px, 18vw, 240px);
+  display: none;
+}
+
+/* ---- Tags de tipo / nivel ---- */
+.tipoNivel {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tipoTag,
+.nivelTag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  letter-spacing: 1px;
+}
+
+.nivelTag {
+  background: #333;
+}
+
+.tipoTag {
+  background: #888;
+}
+
+.tipoTag[data-tipo="fuego"] { background: #e25822; }
+.tipoTag[data-tipo="agua"] { background: #2389da; }
+.tipoTag[data-tipo="tierra"] { background: #8b5a2b; }
+.tipoTag[data-tipo="electrico"] { background: #f0c419; color: #222; text-shadow: none; }
+.tipoTag[data-tipo="hielo"] { background: #5fc7d6; }
+.tipoTag[data-tipo="normal"] { background: #999; }
+
+/* ---- Barra de vida ---- */
 .vidaBarra {
-    position: relative;
-    width: 100%;
-    height: 22px;
-    background: #E0E0E0;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: -30px;
-    display: flex;
-    align-items: center;
-    padding-left: 12px;
-    image-rendering: pixelated;
+  position: relative;
+  width: clamp(200px, 24vw, 320px);
+  height: clamp(20px, 2.4vw, 30px);
+  background: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .vidaRelleno {
-    height: 65%;
-    width: 100%;
-    background:#5cff33;
-    image-rendering: pixelated;
-    transition: width 0.4s ease, background 0.3s ease;
-    margin-left: 120px;
-    margin-right: 8px;
+  height: 100%;
+  width: 100%;
+  background: #5cff33;
+  image-rendering: pixelated;
+  transition: width 0.4s ease, background 0.3s ease;
 }
 
 .vidaTexto {
-    position: absolute;
-    width: 100%;
-    text-align: left;
-    top: -1px;
-    font-size: 20px;
-    color: #30c20b;
-    z-index: 5;
-    font-weight: bold;
-    margin-left: -10px;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--fs-xs);
+  color: #2c7a0b;
+  z-index: 2;
+  font-weight: 700;
+  white-space: nowrap;
 }
-.dragon .sprite {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
+
+/* ---- Footer: dialogo + menu ---- */
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: clamp(140px, 22vh, 200px);
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, 3vw, 2rem);
+  padding: clamp(0.6rem, 2vh, 1.2rem) clamp(1rem, 3vw, 2.5rem);
+  z-index: 2;
 }
-.adopcionPelea {
-    top: 20px;
-    right: 180px;
-    display: grid;
-    grid-template-columns: repeat(2, 160px);
-    gap: 100px;
-    position: absolute;
-    transform: translateX(0%);
+
+.cuadroDialogo {
+  flex: 1 1 40%;
+  max-width: 46%;
+  background: #b6722b;
+  border: 4px solid #2a2a2a;
+  border-radius: 18px;
+  padding: clamp(0.7rem, 2.2vw, 1.6rem) clamp(1rem, 3vw, 2rem);
+  color: #ffffff;
 }
+
+.preguntaAccion {
+  margin: 0;
+  font-size: var(--fs-lg);
+  text-shadow: var(--sombra-texto);
+}
+
+/* ---- Base de botones ---- */
 .btn {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-
-    border: none;
-    cursor: pointer;
-    background-color: transparent;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: white;
-    font-size: clamp(16px, 2.5vw, 32px);
-    white-space: nowrap;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-}
-.tamañoPeleaAdopcion{
-    width: 259px;
-    height: 90px;
-}
-.tamañoAtaques{
-    width: 350px;
-    height: 150px;
-}
-.luchar { 
-    background-image: url("../imagenes/boton luchar.png"); 
-}
-.luchar:hover {
-    background-image: url("../imagenes/boton luchar apretado.png");
-}
-.menudeataques {
-    position: absolute;
-    transform: translateX(-200%);
-    /*background-color: #2350ca;
-    width: 100px;*/
-    border-radius: 0px;
-    transition: transform 1s ease-in;
-    z-index: 10;
-    top: -30px;
-    left: 150px;
-    display: grid;
-    grid-template-columns: repeat(2, 160px);
-    column-gap: 190px;
-}
-.menudeataques .btn:nth-child(n+3) {
-    margin-top: -70px;
-}
-.ataque {
-   background-image: url("../imagenes/boton ataque.png");
-}
-.ataque:hover {
-    background-image: url("../imagenes/boton ataque apretado.png");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  color: #ffffff;
+  font-family: var(--fuente);
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
 }
 
-/*.adopcionPelea {
-    position: absolute;
-    transform: translateX(0%);
-}*/
-.ataquechimuelo {
-    position: absolute;
-    display: flex;
-    display: none;
+/* ---- Menu principal (2x2) ---- */
+.menuPrincipal {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.5rem, 1.4vw, 1rem);
+  width: min(50%, 540px);
 }
-.adoptarAbilitado {
-    background-image: url("../imagenes/boton adoptar habilitado.png");
+
+.menuPrincipal.oculto {
+  display: none;
 }
+
+.opcion {
+  /* ratio del SVG pixel-art (64x28) para que el marco no se deforme */
+  aspect-ratio: 64 / 28;
+  font-size: var(--fs-md);
+  background: center / 100% 100% no-repeat;
+  image-rendering: pixelated;
+  transition: filter 0.12s ease, transform 0.12s ease;
+}
+
+.opcion:hover {
+  transform: translateY(-2px);
+}
+
+/* LUCHAR: marco naranja (apretado al hover/activo, como el boton de login) */
+.luchar {
+  background-image: url("../imagenes/svg/boton-luchar.svg");
+  color: #ffffff;
+}
+
+.luchar:hover,
+.luchar:active {
+  background-image: url("../imagenes/svg/boton-luchar-apretado.svg");
+}
+
+/* DRAGON y HUIR: marco blanco, texto oscuro */
+.opcionDragon,
+.huir {
+  background-image: url("../imagenes/svg/boton-opcion.svg");
+  color: #000000;
+}
+
+.opcionDragon:hover,
+.opcionDragon:active,
+.huir:hover,
+.huir:active {
+  background-image: url("../imagenes/svg/boton-opcion-apretado.svg");
+}
+
+/* ADOPTAR: estados controlados por pelea.js (clases que NO se renombran).
+   Bloqueado = marco gris no clickeable; habilitado = marco dorado clickeable. */
 .adoptarBloqueado {
-    background-image: url("../imagenes/boton adoptar bloqueado.png");
+  background-image: url("../imagenes/svg/boton-adoptar-bloqueado.svg");
+  color: #c2c2c2;
+  cursor: not-allowed;
 }
 
-.tipoNivel {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
-    align-items: center;
+.adoptarBloqueado:hover {
+  transform: none;
 }
-.tipoTag,
-.nivelTag {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
-    letter-spacing: 1px;
-}
-.nivelTag {
-    background: #333;
-}
-.tipoTag {
-    background: #888;
-}
-.tipoTag[data-tipo="fuego"]     { background: #e25822; }
-.tipoTag[data-tipo="agua"]      { background: #2389da; }
-.tipoTag[data-tipo="tierra"]    { background: #8b5a2b; }
-.tipoTag[data-tipo="electrico"] { background: #f0c419; color: #222; text-shadow: none; }
-.tipoTag[data-tipo="hielo"]     { background: #5fc7d6; }
-.tipoTag[data-tipo="normal"]    { background: #999; }
 
-.mod {
-    margin-left: 8px;
-    padding: 1px 8px;
-    border-radius: 8px;
-    font-size: 0.7em;
-    font-weight: bold;
+.adoptarAbilitado {
+  background-image: url("../imagenes/svg/boton-adoptar.svg");
+  color: #000000;
 }
-.modBueno  { background: #2ecc71; color: white; }
-.modMalo   { background: #e74c3c; color: white; }
-.modNeutro { background: rgba(255, 255, 255, 0.15); color: #ddd; }
+
+/* ---- Submenu de ataques ---- */
+.menudeataques {
+  display: none;
+  width: min(52%, 560px);
+  align-items: center;
+  gap: clamp(0.5rem, 1.4vw, 1rem);
+}
+
+.menudeataques.visible {
+  display: flex;
+}
+
+.ataquesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.4rem, 1vw, 0.8rem);
+  flex: 1;
+}
+
+.ataque {
+  width: 100%;
+  aspect-ratio: 95 / 22;
+  background: url("../imagenes/svg/boton-ataque-normal.svg") center / 100% 100% no-repeat;
+  font-size: var(--fs-sm);
+  color: #ffffff;
+  padding: 0 6%;
+}
+
+.ataque:hover {
+  background-image: url("../imagenes/svg/boton-ataque-normal-sel.svg");
+}
 
 .btn.ataque[data-desbloqueado="false"] {
-    filter: grayscale(0.8) brightness(0.6);
-    cursor: not-allowed;
+  filter: grayscale(0.8) brightness(0.6);
+  cursor: not-allowed;
+}
+
+.volverAtaques {
+  flex-shrink: 0;
+  align-self: center;
+  background: #ffffff;
+  color: #000000;
+  border: 3px solid #1f1f1f;
+  border-radius: 14px;
+  padding: 0.4em 1em;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+
+.volverAtaques:hover {
+  filter: brightness(0.95);
+}
+
+/* Multiplicador de tipo en el nombre del ataque */
+.mod {
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 8px;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+
+.modBueno { background: #2ecc71; color: white; }
+.modMalo { background: #e74c3c; color: white; }
+.modNeutro { background: rgba(255, 255, 255, 0.15); color: #ddd; }
+
+/* ---- Modal de huida ---- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modalOverlay[hidden] {
+  display: none;
+}
+
+.modalCaja {
+  background: #b6722b;
+  border: 4px solid #2a2a2a;
+  border-radius: 20px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  text-align: center;
+  color: #ffffff;
+  max-width: min(90vw, 460px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modalTexto {
+  margin: 0 0 1.2rem;
+  font-size: var(--fs-md);
+}
+
+.modalBotones {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modalBtn {
+  padding: 0.5em 1.6em;
+  border: 3px solid #1f1f1f;
+  border-radius: 14px;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.modalBtn:hover {
+  transform: translateY(-2px);
+}
+
+.modalVolver {
+  background: #ffffff;
+  color: #000000;
+}
+
+.modalConfirmar {
+  background: #e8902f;
+  color: #ffffff;
 }

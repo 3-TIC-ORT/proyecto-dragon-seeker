@@ -1,34 +1,236 @@
-.imgDragon {
-    width: 100px;
-    height: 100px;
+/* ===== Inventario de dragones =====
+   Diseño basado en los nodos Figma 391:1537 / 393:1515 / 393:1461 / 393:1575.
+   Tokens de escala/paleta en ../estilos/comun.css. */
+
+body {
+  min-height: 100vh;
+  /* Fondo degradado azul -> verde del diseño */
+  background: linear-gradient(
+    180deg,
+    rgb(0, 111, 255) 0%,
+    rgb(0, 255, 77) 30%,
+    rgb(0, 255, 77) 43%,
+    rgb(41, 204, 0) 65%,
+    rgb(51, 255, 0) 100%
+  );
+  background-attachment: fixed;
 }
 
+/* Overlay oscuro suave sobre el fondo */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  pointer-events: none;
+  z-index: 0;
+}
+
+header {
+  position: relative;
+  z-index: 2;
+  padding: clamp(0.6rem, 1.6vh, 1rem);
+}
+
+/* Boton volver al mapa (flecha como en Figma 393:1575) */
+.botonMapa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.5em 1em;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--texto-claro);
+  text-decoration: none;
+  border-radius: var(--radio);
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.botonMapa .flecha {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.botonMapa:hover {
+  background: rgba(0, 0, 0, 0.65);
+  transform: translateY(-2px);
+}
+
+/* Columna de tarjetas */
+.dragon-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.8rem, 2.2vh, 1.7rem);
+  width: var(--ancho-panel);
+  margin: 0 auto;
+  padding: clamp(1rem, 3vh, 2rem) 0 7rem;
+}
+
+/* Tarjeta de dragon: pill verde degradado */
 .tarjeta {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 12px;
-    margin: 10px;
-    width: 220px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    background: #fff;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+  width: 100%;
+  padding: clamp(0.5rem, 1.4vh, 0.9rem) clamp(0.9rem, 2.4vw, 1.8rem);
+  background: linear-gradient(90deg, var(--verde-1), var(--verde-2));
+  border: 4px solid transparent;
+  border-radius: var(--radio-grande);
+  color: var(--texto-claro);
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
 .tarjeta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+  filter: brightness(1.06);
 }
 
+/* Estado seleccionado: borde rojo (Figma) */
+.tarjeta.seleccionada {
+  border-color: var(--rojo-sel);
+}
+
+/* Retrato del dragon: cuadrado gris redondeado */
+.retrato {
+  flex-shrink: 0;
+  width: clamp(54px, 8vw, 88px);
+  aspect-ratio: 87 / 76;
+  background: #484949;
+  border-radius: var(--radio);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imgDragon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  flex: 1; /* ocupa el ancho restante para que la barra de XP tenga lugar */
+  min-width: 0;
+}
+
+.info .nombre {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+.info .nivel {
+  margin: 0.1em 0 0;
+  font-size: var(--fs-md);
+}
+
+.info .tipo {
+  margin: 0.1em 0 0;
+  font-size: var(--fs-xs);
+  opacity: 0.85;
+}
+
+/* Stats del dragon (vida / fuerza) */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 1.6vw, 1.2rem);
+  margin-top: 0.4em;
+}
+
+.stat {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.28);
+  padding: 0.15em 0.6em;
+  border-radius: 8px;
+}
+
+/* Barra de progreso de experiencia */
+.xpBarra {
+  position: relative;
+  margin-top: 0.5em;
+  width: 100%;
+  height: clamp(14px, 1.8vh, 20px);
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.xpRelleno {
+  height: 100%;
+  background: var(--acento);
+  transition: width 0.3s ease;
+}
+
+.xpTexto {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Dragon no adoptado: bloqueado y atenuado */
 .dragonBloqueado {
-    border-color: #cc0000;
-    background: #ffe6e6;
-    color: #660000;
-    opacity: 0.85;
-    pointer-events: none;
-    cursor: not-allowed;
+  filter: grayscale(0.7) brightness(0.85);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.dragonBloqueado:hover {
+  transform: none;
+  filter: grayscale(0.7) brightness(0.85);
 }
 
 .dragonBloqueado .tipo {
-    color: #cc0000;
-    font-weight: 700;
+  color: #ffd0d0;
+  opacity: 1;
+}
+
+/* Boton "Elegir dragon": naranja, abajo a la derecha, aparece al seleccionar */
+.boton-elegir {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1rem, 3vh, 2.5rem);
+  z-index: 4;
+  display: none;
+  padding: 0.55em 1.4em;
+  background: var(--naranja);
+  color: #000000;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.boton-elegir.visible {
+  display: block;
+}
+
+.boton-elegir:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.boton-elegir:active {
+  transform: translateY(1px);
 }

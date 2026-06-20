@@ -1,5 +1,4 @@
 import fs from "fs";
-import { habilitardragon } from "./progresousuario.js";
 
 const rutausuarios = "./usuarios.json";
 
@@ -39,8 +38,8 @@ export function registrarusuario(nombre, correo, contrasena) {
   usuarios.push(nuevo);
   guardarusuarios(usuarios);
 
-  // darle Chimuelo al nuevo usuario
-  habilitardragon(nuevo.id, 4);
+  // El dragon inicial ya no se da al registrarse: ahora pertenece a la PARTIDA.
+  // Se habilita al crear una partida nueva (ver crearPartida en partidas.js).
 
   return {
     exito: true,
