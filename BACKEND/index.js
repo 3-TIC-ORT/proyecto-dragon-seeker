@@ -26,6 +26,7 @@ import {
   iniciarbatalledragon,
   obtenerlistadragones,
   obtenerBossMapa,
+  verificarAccesoZonaBoss,
 } from "./dragones.js";
 import { objeto, obtenerdatosobjeto } from "./items.js";
 //lo puse yo (doble)
@@ -215,6 +216,11 @@ subscribePOSTEvent("obtenerEstadoJuego", (data) => {
 subscribePOSTEvent("obtenerBossMapa", (query) => {
   const { mapa } = query;
   return obtenerBossMapa(Number(mapa));
+});
+
+subscribePOSTEvent("verificarAccesoZonaBoss", (data) => {
+  const { idpartida } = data;
+  return verificarAccesoZonaBoss(Number(idpartida));
 });
 
 console.log("Servidor iniciado");

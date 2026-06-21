@@ -1,6 +1,7 @@
 import { Player } from "../GameObjects/player.js";
 import { guardarEstado } from "../utils/persistencia.js";
 import { Veterinario } from "../GameObjects/veterinario.js";
+import { DialogoRPG } from "../utils/DialogoRPG.js";
 
 connect2Server();
 
@@ -45,10 +46,7 @@ export class Casa extends Phaser.Scene {
       .setDepth(1000)
       .setVisible(false);
 
-    // ✅ estado del diálogo de confirmación
-    this.dialogoAbierto = false;
-    this.opcionSeleccionada = 0; // 0 = Sí, 1 = No
-    this.dialogoElements = [];
+    this.dialogo = new DialogoRPG(this);
 
     const casa = this.make.tilemap({ key: "casa" });
     const tileset = casa.addTilesetImage("Decoracion casa interna", "tiles");
@@ -178,139 +176,6 @@ export class Casa extends Phaser.Scene {
     });
   }
 
-  // === Sistema de diálogo de confirmación tipo RPG ===
-
-  mostrarConfirmacion(texto, onSi, onNo) {
-    this.dialogoAbierto = true;
-    this.opcionSeleccionada = 0;
-    this.onConfirmarSi = onSi;
-    this.onConfirmarNo = onNo;
-
-    // bloquea movimiento del player
-    this.player.setVelocity(0);
-    this.playerBloqueado = true;
-
-    const cam = this.cameras.main;
-    const centerX = cam.width / 2;
-    const centerY = cam.height / 2;
-
-    // overlay negro difuminado (fondo)
-    const overlay = this.add.rectangle(
-      cam.width / 2,
-      cam.height / 2,
-      cam.width,
-      cam.height,
-      0x000000,
-      0.55,
-    );
-    overlay.setScrollFactor(0).setDepth(3000);
-
-    // caja del diálogo
-    const boxWidth = 360;
-    const boxHeight = 160;
-    const boxX = centerX - boxWidth / 2;
-    const boxY = centerY - boxHeight / 2;
-
-    const box = this.add.graphics();
-    box.setScrollFactor(0).setDepth(3001);
-    box.fillStyle(0x1a1208, 1); // fondo oscuro tipo madera/pergamino
-    box.fillRoundedRect(boxX, boxY, boxWidth, boxHeight, 10);
-    box.lineStyle(4, 0xc9a64a, 1); // borde dorado
-    box.strokeRoundedRect(boxX, boxY, boxWidth, boxHeight, 10);
-
-    // texto de la pregunta
-    const pregunta = this.add
-      .text(centerX, boxY + 35, texto, {
-        fontSize: "18px",
-        fill: "#f7e8ad",
-        fontFamily: "Pixelify Sans",
-        align: "center",
-        wordWrap: { width: boxWidth - 40 },
-      })
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(3002);
-
-    // botones Sí / No
-    const btnY = boxY + boxHeight - 40;
-    const btnSi = this.crearBotonDialogo(centerX - 70, btnY, "Sí", 0);
-    const btnNo = this.crearBotonDialogo(centerX + 70, btnY, "No", 1);
-
-    this.dialogoElements = [overlay, box, pregunta, ...btnSi, ...btnNo];
-    this.botonesDialogo = [btnSi, btnNo]; // para resaltar la opción seleccionada
-
-    this.actualizarSeleccionDialogo();
-  }
-
-  crearBotonDialogo(x, y, label, index) {
-    const w = 90;
-    const h = 36;
-
-    const bg = this.add.graphics();
-    bg.setScrollFactor(0).setDepth(3002);
-
-    const text = this.add
-      .text(x, y, label, {
-        fontSize: "16px",
-        fill: "#f7e8ad",
-        fontFamily: "Pixelify Sans",
-      })
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(3003);
-
-    // zona clickeable
-    const hitZone = this.add
-      .zone(x, y, w, h)
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(3003)
-      .setInteractive({ useHandCursor: true });
-
-    hitZone.on("pointerover", () => {
-      this.opcionSeleccionada = index;
-      this.actualizarSeleccionDialogo();
-    });
-
-    hitZone.on("pointerdown", () => {
-      this.opcionSeleccionada = index;
-      this.confirmarOpcionDialogo();
-    });
-
-    // guardo referencia de posición/tamaño en el propio gráfico para redibujar
-    bg.boxX = x - w / 2;
-    bg.boxY = y - h / 2;
-    bg.boxW = w;
-    bg.boxH = h;
-
-    return [bg, text, hitZone];
-  }
-
-  actualizarSeleccionDialogo() {
-    this.botonesDialogo.forEach(([bg], i) => {
-      bg.clear();
-      const activo = i === this.opcionSeleccionada;
-      bg.fillStyle(activo ? 0xc9a64a : 0x2a1f12, 1);
-      bg.fillRoundedRect(bg.boxX, bg.boxY, bg.boxW, bg.boxH, 6);
-      bg.lineStyle(2, 0xc9a64a, 1);
-      bg.strokeRoundedRect(bg.boxX, bg.boxY, bg.boxW, bg.boxH, 6);
-    });
-  }
-
-  confirmarOpcionDialogo() {
-    const callback =
-      this.opcionSeleccionada === 0 ? this.onConfirmarSi : this.onConfirmarNo;
-    this.cerrarDialogo();
-    if (callback) callback();
-  }
-
-  cerrarDialogo() {
-    this.dialogoElements.forEach((el) => el.destroy());
-    this.dialogoElements = [];
-    this.dialogoAbierto = false;
-    this.playerBloqueado = false;
-  }
-
   showMessage(text) {
     this.interactionMessage = true;
 
@@ -330,7 +195,8 @@ export class Casa extends Phaser.Scene {
   }
 
   handleCurandero() {
-    if (this.dialogoAbierto) return;
+    this.nearCurandero = true;
+    if (this.dialogo.abierto) return;
 
     if (!this.showingInteractMessageCurandero) {
       this.messageText.setText("Presioná E para interactuar");
@@ -340,7 +206,7 @@ export class Casa extends Phaser.Scene {
 
     if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
       this.messageText.setVisible(false);
-      this.mostrarConfirmacion(
+      this.dialogo.confirmar(
         "¿Querés curar a tus dragones?",
         () => {
           const idpartida = Number(localStorage.getItem("partida"));
@@ -350,25 +216,26 @@ export class Casa extends Phaser.Scene {
             }
           });
         },
-        () => {}, // no hace nada si elige "No"
+        () => {},
       );
     }
   }
 
   update() {
-    if (this.dialogoAbierto) {
-      if (
-        Phaser.Input.Keyboard.JustDown(this.cursors.left) ||
-        Phaser.Input.Keyboard.JustDown(this.cursors.right)
-      ) {
-        this.opcionSeleccionada = this.opcionSeleccionada === 0 ? 1 : 0;
-        this.actualizarSeleccionDialogo();
+    // resetea el estado de "cerca del curadero" cada frame;
+    // si seguís en overlap, handleCurandero lo vuelve a poner en true
+    if (!this.nearCurandero) {
+      if (this.showingInteractMessageCurandero) {
+        this.messageText.setVisible(false);
+        this.showingInteractMessageCurandero = false;
       }
-      if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-        this.confirmarOpcionDialogo();
-      }
+    }
+    this.nearCurandero = false; // se resetea, y si hay overlap este frame, handleCurandero lo vuelve a marcar true
+
+    if (this.dialogo.abierto) {
+      this.dialogo.manejarInput(this.cursors, this.keyE);
       this.player.setVelocity(0);
-      return; // bloquea el resto del update (movimiento) mientras el diálogo está abierto
+      return;
     }
 
     if (

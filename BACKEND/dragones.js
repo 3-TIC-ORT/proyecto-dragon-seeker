@@ -155,3 +155,36 @@ export function obtenerBossMapa(idzona) {
 
   return { exito: true, boss };
 }
+
+export function verificarAccesoZonaBoss(idpartida, nivelMinimoPromedio = 6) {
+  const data = leerdragones();
+  const progreso = leerprogreso();
+
+  const dragonesPropios = progreso
+    .filter((p) => p.partida === idpartida && p.habilitado === true)
+    .sort((a, b) => b.nivel - a.nivel)
+    .slice(0, 5);
+
+  if (dragonesPropios.length === 0) {
+    return {
+      exito: true,
+      puedePasar: false,
+      promedio: 0,
+      nivelMinimo: nivelMinimoPromedio,
+      mensaje: "No tenés dragones habilitados todavía.",
+    };
+  }
+
+  const sumaNiveles = dragonesPropios.reduce((acc, d) => acc + d.nivel, 0);
+  const promedio = sumaNiveles / dragonesPropios.length;
+
+  const puedePasar = promedio >= nivelMinimoPromedio;
+
+  return {
+    exito: true,
+    puedePasar,
+    promedio: Math.round(promedio * 10) / 10,
+    nivelMinimo: nivelMinimoPromedio,
+    cantidadDragones: dragonesPropios.length,
+  };
+}

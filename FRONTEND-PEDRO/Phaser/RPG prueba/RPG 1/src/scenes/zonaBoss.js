@@ -142,7 +142,7 @@ export class zonaBoss extends Phaser.Scene {
 
     //puerta
     const doorTrigger = zonaBoss.findObject(
-      "doorMap",
+      "puertaMapa1",
       (obj) => obj.name === "doorMap",
     );
 
@@ -151,7 +151,7 @@ export class zonaBoss extends Phaser.Scene {
     this.door.setVisible(false);
 
     this.physics.add.overlap(this.player, this.door, () => {
-      this.scene.start("Game", { x: 2912, y: 416 }); // posición cuando sale del mapa 2
+      this.scene.start("Game", { x: 2932, y: 416 }); // posición cuando sale del mapa 2
     });
   }
 
