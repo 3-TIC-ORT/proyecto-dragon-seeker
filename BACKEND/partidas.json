@@ -33,5 +33,40 @@
     "nombre": "mision de prueba",
     "creada": 1781835355222,
     "actualizada": 1781835355222
+  },
+  {
+    "id": 6,
+    "usuario": 5,
+    "nombre": "sigma",
+    "creada": 1781998590933,
+    "actualizada": 1781998590933
+  },
+  {
+    "id": 7,
+    "usuario": 6,
+    "nombre": "s",
+    "creada": 1782002963278,
+    "actualizada": 1782002963278
+  },
+  {
+    "id": 8,
+    "usuario": 7,
+    "nombre": "f",
+    "creada": 1782003287261,
+    "actualizada": 1782003287261
+  },
+  {
+    "id": 9,
+    "usuario": 7,
+    "nombre": "a",
+    "creada": 1782003628528,
+    "actualizada": 1782003628528
+  },
+  {
+    "id": 10,
+    "usuario": 8,
+    "nombre": "h",
+    "creada": 1782004537177,
+    "actualizada": 1782004537177
   }
 ]

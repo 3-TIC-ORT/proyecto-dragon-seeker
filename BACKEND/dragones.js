@@ -139,3 +139,19 @@ export function obtenerlistadragones(idpartida = null, escalarRivales = false) {
   });
   return { exito: true, dragones: dragoensactualizados };
 }
+
+export function obtenerBossMapa(idzona) {
+  const data = leerdragones();
+
+  if (!data || !data.bosses) {
+    return { exito: false, mensaje: "No se pudo leer la base de bosses" };
+  }
+
+  const boss = data.bosses.find((b) => b.mapa === idzona);
+
+  if (!boss) {
+    return { exito: false, mensaje: "No se encontro boss para esta zona" };
+  }
+
+  return { exito: true, boss };
+}

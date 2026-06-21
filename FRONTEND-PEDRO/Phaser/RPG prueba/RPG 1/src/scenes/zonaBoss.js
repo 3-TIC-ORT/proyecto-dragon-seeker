@@ -20,9 +20,18 @@ export class zonaBoss extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+
+    this.load.spritesheet(
+      "bossRoca",
+      "../../../../../../BACKEND/img/boss1.png",
+      {
+        frameWidth: 128,
+        frameHeight: 128,
+      },
+    );
   }
 
-  create() {
+  create(data) {
     const zonaBoss = this.make.tilemap({ key: "zonaBoss" });
 
     //creacion de las capas
@@ -49,6 +58,7 @@ export class zonaBoss extends Phaser.Scene {
       0,
       0,
     );
+    hojasArboles.setDepth(2.5);
     const pasto = zonaBoss.createLayer("pasto", allTilesets, 0, 0);
 
     //creando las teclas para movimiento
@@ -59,7 +69,8 @@ export class zonaBoss extends Phaser.Scene {
     const startY = data?.y ?? 544;
 
     // Spawn del jugador en la posición recibida desde Mapa1
-    this.player = new Player(this, 0, 544, this.cursors);
+    this.player = new Player(this, startX, startY, this.cursors);
+    this.player.setDepth(1);
 
     //worldbounds
     this.physics.world.setBounds(
@@ -79,10 +90,87 @@ export class zonaBoss extends Phaser.Scene {
     );
     this.cameras.main.setRoundPixels(true);
 
+    //colliders
+    decoracion.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, decoracion);
+
+    // ✅ grupo del boss + collider registrado sobre el grupo (aunque esté vacío)
+    this.bossGroup = this.physics.add.group();
+    this.physics.add.collider(this.bossGroup, decoracion);
+
+    this.battleCooldown = false;
+
+    // ✅ pedir y spawnear el boss
+    postEvent("obtenerBossMapa", { mapa: 1 }, (res) => {
+      console.log("DEBUG respuesta obtenerBossMapa:", JSON.stringify(res));
+      if (!res.exito) {
+        console.log("DEBUG no exito, mensaje:", res.mensaje);
+        return;
+      }
+
+      const boss = res.boss;
+      console.log("DEBUG boss recibido:", JSON.stringify(boss));
+
+      const bossSprite = new NPC(this, 1568, 544, "bossRoca");
+      console.log(
+        "DEBUG bossSprite creado:",
+        bossSprite.x,
+        bossSprite.y,
+        bossSprite.visible,
+        bossSprite.texture.key,
+      );
+
+      bossSprite.setCollideWorldBounds(true);
+      bossSprite.info = boss;
+      bossSprite.instanceId = `boss_${boss.id}`;
+
+      this.bossGroup.add(bossSprite);
+
+      this.physics.add.overlap(
+        this.player,
+        this.bossGroup,
+        this.bossEncuentro,
+        null,
+        this,
+      );
+    });
+
     // ✅ guardar estado al cerrar/recargar
     window.addEventListener("beforeunload", () => {
       guardarEstado(3, this.player);
     });
+
+    //puerta
+    const doorTrigger = zonaBoss.findObject(
+      "doorMap",
+      (obj) => obj.name === "doorMap",
+    );
+
+    this.door = this.physics.add.sprite(doorTrigger.x, doorTrigger.y, null);
+    this.door.setSize(doorTrigger.width, doorTrigger.height);
+    this.door.setVisible(false);
+
+    this.physics.add.overlap(this.player, this.door, () => {
+      this.scene.start("Game", { x: 2912, y: 416 }); // posición cuando sale del mapa 2
+    });
+  }
+
+  bossEncuentro(player, bossSprite) {
+    console.log(
+      "DEBUG bossEncuentro disparado. battleCooldown =",
+      this.battleCooldown,
+    );
+    if (this.battleCooldown) return;
+    this.battleCooldown = true;
+
+    bossSprite.disableBody(true, true);
+
+    localStorage.setItem("dragon_enemigo", JSON.stringify(bossSprite.info));
+    localStorage.removeItem("dragon_eliminado");
+
+    console.log("DEBUG redirigiendo a pelea con boss:", bossSprite.info);
+
+    window.location.href = "../../../../inventario/inventario.html";
   }
 
   update() {}

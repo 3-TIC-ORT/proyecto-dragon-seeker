@@ -25,6 +25,7 @@ import {
   enviardatosdragon,
   iniciarbatalledragon,
   obtenerlistadragones,
+  obtenerBossMapa,
 } from "./dragones.js";
 import { objeto, obtenerdatosobjeto } from "./items.js";
 //lo puse yo (doble)
@@ -209,6 +210,11 @@ subscribePOSTEvent("obtenerEstadoJuego", (data) => {
       : obtenerUltimoEstadoUsuario(Number(idpartida));
 
   return { exito: true, estado };
+});
+
+subscribePOSTEvent("obtenerBossMapa", (query) => {
+  const { mapa } = query;
+  return obtenerBossMapa(Number(mapa));
 });
 
 console.log("Servidor iniciado");
