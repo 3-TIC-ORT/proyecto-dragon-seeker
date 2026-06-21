@@ -115,9 +115,6 @@ export class Game extends Phaser.Scene {
   create(data) {
     this.cambiandoEscena = false;
 
-    const usuarioActual = JSON.parse(localStorage.getItem("usuario"));
-    this.userId = usuarioActual?.id;
-
     this.partidaId = getPartidaId();
     // Al volver al mapa se borra cualquier intencion de pelea pendiente, asi una
     // visita casual al inventario (boton huevo) nunca termina mandando a la pelea.

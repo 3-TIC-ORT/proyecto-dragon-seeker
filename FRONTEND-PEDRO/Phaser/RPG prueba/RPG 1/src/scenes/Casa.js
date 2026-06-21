@@ -1,5 +1,6 @@
 import { Player } from "../GameObjects/player.js";
 import { guardarEstado } from "../utils/persistencia.js";
+import { Veterinario } from "../GameObjects/veterinario.js";
 
 connect2Server();
 
@@ -13,8 +14,14 @@ export class Casa extends Phaser.Scene {
     this.load.image("tiles", "assets/casa_interna.png");
     this.load.tilemapTiledJSON("casa", "assets/curadero.json");
 
-    //asignacion del sprite al personaje
+    //asignacion del sprite al player
     this.load.spritesheet("player", "assets/player.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
+    //asignacion del sprite al veterinario
+    this.load.spritesheet("veterinario", "assets/veterinario.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
@@ -47,6 +54,13 @@ export class Casa extends Phaser.Scene {
     const alfombras = casa.createLayer("Alfombras", tileset, 0, 0);
     const paredes = casa.createLayer("Paredes ventana", tileset, 0, 0);
     const decoracion = casa.createLayer("Decoracion", tileset, 0, 0);
+    decoracion.setDepth(2);
+    const estantes_inferiores = casa.createLayer(
+      "estantes inferiores",
+      tileset,
+      0,
+      0,
+    );
 
     const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
     limit.setVisible(false);
@@ -55,19 +69,38 @@ export class Casa extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     // ✅ posición default por si entra sin data
-    const startX = data?.x ?? 368;
-    const startY = data?.y ?? 448;
+    const startX = data?.x ?? 80;
+    const startY = data?.y ?? 416;
 
     // Spawn del jugador en la posición recibida desde Mapa1
     this.player = new Player(this, startX, startY, this.cursors);
+    this.player.setDepth(1);
+
+    this.veterinario = new Veterinario(this, 96, 165);
+    this.veterinario.setDepth(1.5);
 
     //colliders
+    const colisionesGroup = this.physics.add.staticGroup();
+    const colisionesObjetos = casa.getObjectLayer("colisiones").objects;
+
+    colisionesObjetos.forEach((obj) => {
+      const rect = this.add.rectangle(
+        obj.x + obj.width / 2,
+        obj.y + obj.height / 2,
+        obj.width,
+        obj.height,
+      );
+      this.physics.add.existing(rect, true); // true = estático
+      colisionesGroup.add(rect);
+    });
+
     decoracion.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, decoracion);
     paredes.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, paredes);
     limit.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, limit);
+    this.physics.add.collider(this.player, colisionesGroup);
 
     //worldbounds
     this.physics.world.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);
@@ -76,6 +109,21 @@ export class Casa extends Phaser.Scene {
     //camara
     this.cameras.main.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);
     this.cameras.main.startFollow(this.player);
+
+    // BOTON INVENTARIO DRAGONES
+    this.botonInventario = this.add.image(cam.width - 45, 30, "huevoDragon");
+
+    this.botonInventario
+      .setScrollFactor(0)
+      .setDepth(2000)
+      .setScale(0.08)
+      .setInteractive({ useHandCursor: true });
+
+    this.botonInventario.on("pointerdown", () => {
+      // Desde el mapa el inventario es para ver/elegir dragon activo: vuelve al mapa.
+      localStorage.setItem("origenInventario", "mapa");
+      window.location.href = "../../../../inventario/inventario.html";
+    });
 
     //puerta
     const doorTrigger = casa.findObject(
@@ -89,31 +137,31 @@ export class Casa extends Phaser.Scene {
 
     this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
-    //healer
-    /*const healerObjects = casa.getObjectLayer("Healers").objects;
-
-    const healerTrigger = casa.findObject(
-      "Healers",
-      (obj) => obj.name === "Healer",
+    // trigger del curadero/veterinario
+    const curaderoTrigger = casa.findObject(
+      "curadero",
+      (obj) => obj.name === "curadero",
     );
-    this.healer = this.physics.add.sprite(
-      healerTrigger.x,
-      healerTrigger.y,
+    this.curadero = this.physics.add.sprite(
+      curaderoTrigger.x,
+      curaderoTrigger.y,
       null,
     );
-    this.healer.setSize(healerTrigger.width, healerTrigger.height);
-    this.healer.setVisible(true);
+    this.curadero.setSize(curaderoTrigger.width, curaderoTrigger.height);
+    this.curadero.setVisible(false);
+    this.curadero.body.setAllowGravity(false);
+    this.curadero.body.moves = false;
 
-    this.nearHealer = false;
-    this.showingInteractMessage = false;
+    this.nearCurandero = false;
+    this.showingInteractMessageCurandero = false;
 
     this.physics.add.overlap(
       this.player,
-      this.healer,
-      this.handleHealer,
+      this.curadero,
+      this.handleCurandero,
       null,
       this,
-    );*/
+    );
 
     this.physics.add.overlap(this.player, this.door, () => {
       this.scene.start("Game", { x: 256, y: 320 }); // posición cuando sale del mapa 2
@@ -143,11 +191,11 @@ export class Casa extends Phaser.Scene {
     });
   }
 
-  handleHealer() {
-    if (!this.showingInteractMessage) {
+  handleCurandero() {
+    if (!this.showingInteractMessageCurandero) {
       this.messageText.setText("Presioná E para interactuar");
       this.messageText.setVisible(true);
-      this.showingInteractMessage = true;
+      this.showingInteractMessageCurandero = true;
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
