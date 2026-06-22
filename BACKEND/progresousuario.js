@@ -198,6 +198,22 @@ export function actualizarVida(idpartida, iddragon, vidaNueva) {
   };
 }
 
+// PROVISORIO (revertir cuando este el curandero/medico posta): cura UN dragon
+// puntual restaurando su vida al maximo. Lo usa el boton "Curar" del inventario
+// como stopgap mientras no existe la curacion real en el curadero.
+export function curarDragon(idpartida, iddragon) {
+  const lista = leer();
+  const reg = buscar(lista, idpartida, iddragon);
+
+  if (!reg) {
+    return { exito: false, mensaje: "Este dragón no pertenece a la partida" };
+  }
+
+  reg.vida = reg.vidaMax;
+  guardar(lista);
+  return { exito: true, mensaje: "Dragón curado", progreso: reg };
+}
+
 export function curarDragones(idpartida) {
   const lista = leer();
 

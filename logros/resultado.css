@@ -8,9 +8,12 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* safe center + scroll: si el detalle crece (ej. subida de nivel) y no entra,
+     no recorta el boton CONTINUAR; deja scrollear en vez de tirarlo afuera. */
+  justify-content: safe center;
   padding: clamp(1rem, 4vw, 3rem);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: #1a1a1a;
   background-size: cover;
   background-position: center;

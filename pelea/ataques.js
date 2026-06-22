@@ -45,6 +45,16 @@ let usuario = JSON.parse(localStorage.getItem("usuario"));
 let dragon = JSON.parse(localStorage.getItem("dragonardo"));
 let dragonEnemigo = JSON.parse(localStorage.getItem("dragon_enemigo"));
 
+// El progreso que devuelve el backend (progreso.json) no incluye imagen/nombre/id
+// del dragon: esos viven en el catalogo y se setean al elegirlo en el inventario.
+// Por eso al actualizar el dragon del usuario se MERGEA sobre el dragon actual en
+// vez de pisarlo; si no, se rompen el sprite y el id en el head-to-head y en la
+// siguiente pelea (BACKEND/undefined e iddragon undefined).
+function actualizarDragonardo(progreso) {
+  dragon = { ...dragon, ...progreso };
+  localStorage.setItem("dragonardo", JSON.stringify(dragon));
+}
+
 if (!dragon.vidaInicial) {
   dragon.vidaInicial = dragon.vida;
   localStorage.setItem("dragonardo", JSON.stringify(dragon));
@@ -172,7 +182,7 @@ function checkFinDeBatalla() {
         },
         (data) => {
           if (data.exito) {
-            localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+            actualizarDragonardo(data.progreso);
           }
           // Fracaso -> overlay in-place (no pantalla aparte).
           window.mostrarOverlayFracaso({
@@ -213,7 +223,7 @@ function checkFinDeBatalla() {
         },
         (data) => {
           if (data.exito) {
-            localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+            actualizarDragonardo(data.progreso);
           }
         },
       );
@@ -226,7 +236,7 @@ function checkFinDeBatalla() {
           idpartida: idpartida,
         },
         (data) => {
-          localStorage.setItem("dragonardo", JSON.stringify(data.progreso));
+          actualizarDragonardo(data.progreso);
           let detalle = `Derrotaste a ${dragonEnemigo.nombre}.\n+${expGanada} XP`;
           if (
             typeof data.mensaje === "string" &&

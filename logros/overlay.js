@@ -50,6 +50,17 @@
         transition: filter 0.12s ease;
       }
       .overlayFracaso-boton:hover { filter: brightness(1.08); }
+      /* Variante con dos botones (confirmar / cancelar) */
+      .overlayConfirmar-botones {
+        display: flex;
+        gap: 0.8rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .overlayConfirmar-cancelar {
+        background: #cfcfcf;
+        color: #1a1a1a;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -79,6 +90,52 @@
     boton.addEventListener("click", () => {
       if (destino) window.location.href = destino;
       else overlay.remove();
+    });
+
+    document.body.appendChild(overlay);
+  };
+
+  // Overlay de CONFIRMACION (dos botones). Para acciones que conviene confirmar,
+  // como cerrar sesion. Reusa la caja del overlay de fracaso.
+  //   opciones = { titulo, detalle, textoConfirmar?, textoCancelar?,
+  //                onConfirmar?, onCancelar? }
+  window.mostrarOverlayConfirmar = function (opciones) {
+    const {
+      titulo = "",
+      detalle = "",
+      textoConfirmar = "CONFIRMAR",
+      textoCancelar = "CANCELAR",
+      onConfirmar = null,
+      onCancelar = null,
+    } = opciones || {};
+
+    const overlay = document.createElement("div");
+    overlay.className = "overlayFracaso overlayConfirmar";
+    overlay.innerHTML = `
+      <div class="overlayFracaso-caja">
+        <h2 class="overlayFracaso-titulo"></h2>
+        <p class="overlayFracaso-detalle"></p>
+        <div class="overlayConfirmar-botones">
+          <button type="button" class="overlayFracaso-boton overlayConfirmar-cancelar"></button>
+          <button type="button" class="overlayFracaso-boton overlayConfirmar-aceptar"></button>
+        </div>
+      </div>`;
+
+    // textContent: el contenido no se interpreta como HTML.
+    overlay.querySelector(".overlayFracaso-titulo").textContent = titulo;
+    overlay.querySelector(".overlayFracaso-detalle").textContent = detalle;
+    const botonCancelar = overlay.querySelector(".overlayConfirmar-cancelar");
+    const botonAceptar = overlay.querySelector(".overlayConfirmar-aceptar");
+    botonCancelar.textContent = textoCancelar;
+    botonAceptar.textContent = textoConfirmar;
+
+    botonCancelar.addEventListener("click", () => {
+      overlay.remove();
+      if (onCancelar) onCancelar();
+    });
+    botonAceptar.addEventListener("click", () => {
+      overlay.remove();
+      if (onConfirmar) onConfirmar();
     });
 
     document.body.appendChild(overlay);

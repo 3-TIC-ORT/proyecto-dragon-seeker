@@ -58,31 +58,31 @@ export class Game extends Phaser.Scene {
     // spritesheets de los 6 dragones del mapa 1 y chimuelo
     this.load.spritesheet(
       "terragon",
-      "../../../../../../BACKEND/img/terragon.png",
+      "../../../../../../BACKEND/img/mapa/terragon_mapa.png",
       {
         frameWidth: 32,
         frameHeight: 32,
       },
     );
-    this.load.spritesheet("oso", "../../../../../../BACKEND/img/oso.png", {
+    this.load.spritesheet("oso", "../../../../../../BACKEND/img/mapa/oso_mapa.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
     this.load.spritesheet(
       "escarcha",
-      "../../../../../../BACKEND/img/escarcha.png",
+      "../../../../../../BACKEND/img/mapa/escarcha_mapa.png",
       {
         frameWidth: 32,
         frameHeight: 32,
       },
     );
-    this.load.spritesheet("burbu", "../../../../../../BACKEND/img/burbu.png", {
+    this.load.spritesheet("burbu", "../../../../../../BACKEND/img/mapa/burbu_mapa.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
     this.load.spritesheet(
       "chimuelo",
-      "../../../../../../BACKEND/img/chimuelo.png",
+      "../../../../../../BACKEND/img/mapa/chimuelo_mapa.png",
       {
         frameWidth: 32,
         frameHeight: 32,
@@ -90,7 +90,7 @@ export class Game extends Phaser.Scene {
     );
     this.load.spritesheet(
       "amarillo",
-      "../../../../../../BACKEND/img/amarillo.png",
+      "../../../../../../BACKEND/img/mapa/amarillo_mapa.png",
       {
         frameWidth: 32,
         frameHeight: 32,
@@ -98,7 +98,7 @@ export class Game extends Phaser.Scene {
     );
     this.load.spritesheet(
       "llamafuria",
-      "../../../../../../BACKEND/img/llamafuria.png",
+      "../../../../../../BACKEND/img/mapa/llamafuria_mapa.png",
       {
         frameWidth: 32,
         frameHeight: 32,
@@ -193,6 +193,11 @@ export class Game extends Phaser.Scene {
 
     this.sceneStarted = true;
 
+    // Al entrar/volver al mapa no se dispara ningun encuentro hasta que el player
+    // quede separado de todos los dragones. Evita el re-encuentro instantaneo
+    // cuando se vuelve de una pelea/inventario y el dragon quedo guardado encima.
+    this.battleCooldown = true;
+
     const spawnZone = map.findObject(
       "spawn dragons",
       (obj) => obj.name === "spawn_dragons",
@@ -201,15 +206,16 @@ export class Game extends Phaser.Scene {
     //creacion de los dragones
     this.dragons = this.physics.add.group();
 
-    //mapa de imagen del JSON → key del spritesheet
+    //mapa de id de dragon → key del spritesheet del mapa (img/mapa/*_mapa.png).
+    //Se keyea por id (no por imagen) porque imagen ahora apunta al SVG de display.
     this.keyMap = {
-      "img/terragon.png": "terragon",
-      "img/oso.png": "oso",
-      "img/escarcha.png": "escarcha",
-      "img/burbu.png": "burbu",
-      "img/chimuelo.png": "chimuelo",
-      "img/amarillo.png": "amarillo",
-      "img/llamafuria.png": "llamafuria",
+      1: "terragon",
+      16: "oso",
+      13: "escarcha",
+      10: "burbu",
+      4: "chimuelo",
+      7: "amarillo",
+      5: "llamafuria",
     };
 
     this.spawnDragons = (cantidad) => {
@@ -228,7 +234,7 @@ export class Game extends Phaser.Scene {
           spawnZone.y,
           spawnZone.y + spawnZone.height,
         );
-        const key = this.keyMap[d.imagen];
+        const key = this.keyMap[d.id];
         const dragon = new NPC(this, x, y, key);
         dragon.setBounce(1);
         dragon.setCollideWorldBounds(true);
@@ -336,6 +342,44 @@ export class Game extends Phaser.Scene {
       localStorage.setItem("origenInventario", "mapa");
       window.location.href = "../../../../inventario/inventario.html";
     });
+
+    // BOTON CERRAR SESION (arriba a la izquierda)
+    this.botonSalir = this.add
+      .text(16, 16, "Salir", {
+        fontSize: "20px",
+        fill: "#ffffff",
+        backgroundColor: "rgba(0,0,0,0.55)",
+        padding: { x: 12, y: 7 },
+        fontFamily: "Pixelify Sans",
+      })
+      .setScrollFactor(0)
+      .setDepth(2000)
+      .setInteractive({ useHandCursor: true });
+
+    this.botonSalir.on("pointerover", () => this.botonSalir.setColor("#ffd83d"));
+    this.botonSalir.on("pointerout", () => this.botonSalir.setColor("#ffffff"));
+    this.botonSalir.on("pointerdown", () => this.cerrarSesion());
+
+    // BOTON CAMBIAR / CREAR PARTIDA (debajo de Salir)
+    this.botonPartidas = this.add
+      .text(16, 60, "Partidas", {
+        fontSize: "20px",
+        fill: "#ffffff",
+        backgroundColor: "rgba(0,0,0,0.55)",
+        padding: { x: 12, y: 7 },
+        fontFamily: "Pixelify Sans",
+      })
+      .setScrollFactor(0)
+      .setDepth(2000)
+      .setInteractive({ useHandCursor: true });
+
+    this.botonPartidas.on("pointerover", () =>
+      this.botonPartidas.setColor("#ffd83d"),
+    );
+    this.botonPartidas.on("pointerout", () =>
+      this.botonPartidas.setColor("#ffffff"),
+    );
+    this.botonPartidas.on("pointerdown", () => this.irAPartidas());
 
     // trigger para pasar a la casa
     const triggerCasa = map.findObject("puertas", (obj) => obj.name === "door");
@@ -466,7 +510,7 @@ export class Game extends Phaser.Scene {
           this,
           ds.x,
           ds.y,
-          this.keyMap[dragonInfo.imagen],
+          this.keyMap[dragonInfo.id],
         );
         dragon.setBounce(1);
         dragon.setCollideWorldBounds(true);
@@ -493,6 +537,74 @@ export class Game extends Phaser.Scene {
     guardarEstado(1, this.player, dragonesSpawneados);
   }
 
+  // Cerrar sesion desde el mapa: pide confirmacion (overlay) y, si acepta,
+  // guarda el estado y vuelve a la pantalla de inicio.
+  cerrarSesion() {
+    if (typeof window.mostrarOverlayConfirmar !== "function") {
+      this.hacerLogout();
+      return;
+    }
+    window.mostrarOverlayConfirmar({
+      titulo: "¿Cerrar sesión?",
+      detalle:
+        "Los cambios de la partida en curso quedan guardados.\n¿Querés cerrar sesión?",
+      textoConfirmar: "CERRAR SESIÓN",
+      textoCancelar: "CANCELAR",
+      onConfirmar: () => this.hacerLogout(),
+    });
+  }
+
+  // Guarda el estado actual del mapa y ejecuta el callback recien cuando el
+  // backend confirma (mismo patron que las puertas de cambio de escena).
+  guardarEstadoYluego(callback) {
+    const dragonesSpawneados = this.dragons.getChildren().map((d) => ({
+      instanceId: d.instanceId,
+      id: d.info.id,
+      x: Math.round(d.x),
+      y: Math.round(d.y),
+    }));
+
+    postEvent(
+      "guardarEstadoJuego",
+      {
+        idpartida: getPartidaId(),
+        estado: {
+          mapa: 1,
+          x: Math.round(this.player.x),
+          y: Math.round(this.player.y),
+          dragonesSpawneados,
+        },
+      },
+      callback,
+    );
+  }
+
+  hacerLogout() {
+    // Guarda y, al confirmar, limpia la sesion y vuelve a la pantalla de inicio.
+    this.guardarEstadoYluego(() => {
+      for (const clave of [
+        "usuario",
+        "partida",
+        "dragon_enemigo",
+        "vidaFinalRival",
+        "dragonardo",
+        "origenInventario",
+        "resultado",
+      ]) {
+        localStorage.removeItem(clave);
+      }
+      window.location.href = "http://127.0.0.1:5501/menu/splash.html";
+    });
+  }
+
+  // Cambiar / crear partida: guarda la partida actual (seguis logueado) y va a
+  // la pantalla de partidas a elegir otra o crear una nueva.
+  irAPartidas() {
+    this.guardarEstadoYluego(() => {
+      window.location.href = "http://127.0.0.1:5501/menu/partida.html";
+    });
+  }
+
   dragonEnemigo(player, dragon) {
     if (this.battleCooldown) return;
     this.battleCooldown = true;
@@ -513,9 +625,16 @@ export class Game extends Phaser.Scene {
     // guarda el estado actual, INCLUYENDO este dragón con su posición
     this.guardarEstado();
 
-    // venis a elegir con que dragon peleas: al elegir, el inventario va a la pelea
-    localStorage.setItem("origenInventario", "pelea");
-    window.location.href = "../../../../inventario/inventario.html";
+    // Si ya tenes un dragon equipado CON vida, vas directo al head-to-head y de
+    // ahi a la pelea. Si no tenes (o el equipado quedo en 0), primero pasas por
+    // el inventario a elegir uno (origen "encuentro" -> head-to-head -> pelea).
+    const equipado = JSON.parse(localStorage.getItem("dragonardo"));
+    if (equipado && (equipado.vida ?? 0) > 0) {
+      window.location.href = "../../../../enfrentamiento/enfrentamiento.html";
+    } else {
+      localStorage.setItem("origenInventario", "encuentro");
+      window.location.href = "../../../../inventario/inventario.html";
+    }
   }
 
   pickUpCoke(player, coke) {
@@ -548,6 +667,16 @@ export class Game extends Phaser.Scene {
   }
 
   update() {
+    // Habilita los encuentros recien cuando los dragones ya estan en el mapa y
+    // el player no esta encima de ninguno (ver battleCooldown inicial en create()).
+    if (
+      this.battleCooldown &&
+      this.initialSpawnDone &&
+      !this.physics.overlap(this.player, this.dragons)
+    ) {
+      this.battleCooldown = false;
+    }
+
     if (this.nearMinero) {
       if (!this.showingInteractMessage && !gameData.cokeGiven) {
         this.messageText.setText("Presioná E para interactuar");

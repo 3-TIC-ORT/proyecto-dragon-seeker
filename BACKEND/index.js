@@ -14,6 +14,7 @@ import {
   habilitardragon,
   actualizarVida,
   curarDragones,
+  curarDragon,
 } from "./progresousuario.js";
 import {
   elegirataqueenemigo,
@@ -193,6 +194,13 @@ subscribePOSTEvent("actualizarVida", (data) => {
 subscribePOSTEvent("curarDragones", (data) => {
   const { idpartida } = data;
   return curarDragones(Number(idpartida));
+});
+
+// PROVISORIO (revertir cuando este el medico posta): curar un dragon puntual
+// desde el boton "Curar" del inventario.
+subscribePOSTEvent("curarDragon", (data) => {
+  const { idpartida, iddragon } = data;
+  return curarDragon(Number(idpartida), Number(iddragon));
 });
 
 subscribePOSTEvent("guardarEstadoJuego", (data) => {

@@ -1,0 +1,93 @@
+/* ===== Pantalla de enfrentamiento (head-to-head, previa a la pelea) =====
+   Tokens de escala/paleta en ../estilos/comun.css (linkear ANTES que este). */
+
+.enfrentamiento {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 5vh, 3.5rem);
+  padding: clamp(1rem, 4vw, 3rem);
+  /* Degradado oscuro azul -> violeta -> rojo, para dar clima de batalla */
+  background: linear-gradient(180deg, #1b2a4a 0%, #3a1f4a 50%, #4a1f1f 100%);
+  overflow: hidden;
+}
+
+.arena {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 6vw, 5rem);
+  width: min(94vw, 900px);
+}
+
+.lado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.4rem, 1.4vh, 0.9rem);
+  flex: 1;
+  min-width: 0;
+}
+
+.sprite {
+  width: clamp(96px, 22vw, 220px);
+  height: clamp(96px, 22vw, 220px);
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5));
+}
+
+/* El rival mira hacia el jugador (espejado) */
+.lado-rival .sprite {
+  transform: scaleX(-1);
+}
+
+.nombre {
+  margin: 0;
+  color: var(--texto-claro);
+  font-size: var(--fs-xl);
+  text-align: center;
+  text-shadow: var(--sombra-texto);
+}
+
+.datos {
+  margin: 0;
+  color: var(--acento);
+  font-size: var(--fs-md);
+  text-shadow: var(--sombra-texto);
+}
+
+.vs {
+  flex-shrink: 0;
+  color: var(--rojo-sel);
+  font-size: clamp(2.4rem, 9vw, 6rem);
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(255, 45, 45, 0.6), var(--sombra-texto);
+}
+
+.boton-pelear {
+  width: min(80vw, 360px);
+  padding: 0.6em 1.4em;
+  background: var(--naranja);
+  color: #000000;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-xl);
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease, filter 0.12s ease;
+}
+
+.boton-pelear:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.boton-pelear:active {
+  transform: translateY(1px);
+}

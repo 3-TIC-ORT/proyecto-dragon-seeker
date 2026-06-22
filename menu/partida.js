@@ -23,6 +23,9 @@ let partidasCargadas = [];
 // A partir de aca todo el juego lee localStorage.partida.
 function entrarAPartida(idpartida) {
   localStorage.setItem("partida", idpartida);
+  // Cada partida arranca sin dragon equipado: el primer encuentro te manda al
+  // inventario a elegir. Evita arrastrar el dragon activo de otra partida.
+  localStorage.removeItem("dragonardo");
   window.location.href = URL_MAPA;
 }
 
@@ -86,9 +89,6 @@ btnCrear.addEventListener("click", () => {
   });
 });
 
-// Icono "salir": vuelve a la pantalla de Jugar.
-document.getElementById("iconoSalir").addEventListener("click", () => {
-  window.location.href = "jugar.html";
-});
+// El icono "salir" (cerrar sesion) lo maneja sesion.js (compartido).
 
 cargarPartidas();

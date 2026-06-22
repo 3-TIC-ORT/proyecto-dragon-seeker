@@ -7,7 +7,5 @@ document.getElementById("btnRegistrarse").addEventListener("click", () => {
   window.location.href = "../inicioSesion/registro.html";
 });
 
-// Icono "salir": vuelve al splash.
-document.getElementById("iconoSalir").addEventListener("click", () => {
-  window.location.href = "splash.html";
-});
+// El icono "salir" lo maneja sesion.js (compartido). En el menu principal,
+// como todavia no hay sesion, simplemente vuelve al splash.

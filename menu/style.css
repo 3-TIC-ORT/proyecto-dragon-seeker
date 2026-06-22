@@ -10,13 +10,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* "safe center": centra cuando entra, pero alinea al inicio (sin recortar)
+     cuando el contenido es mas alto que la pantalla, asi el form de nueva
+     partida / la lista no se salen ni quedan inalcanzables. */
+  justify-content: safe center;
   padding: clamp(1rem, 4vw, 3rem);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Overlay oscuro (en Figma es un gradiente negro 0.2 a 0.2 sobre el fondo) */
@@ -34,20 +38,24 @@
 .fondo-menu   { background-image: url(../imagenes/fondo-login.jpg); }
 .fondo-mundo  { background-image: url(../imagenes/fondo-mundo.png); }
 
-/* Contenedor de botones del menu */
+/* Contenedor de botones del menu.
+   Mismo ancho y gap que los forms de login/registro (--ancho-form / --gap)
+   para que todas las pantallas previas a jugar se vean como un mismo conjunto. */
 .menu-opciones {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 3.2vh, 2.2rem);
-  width: min(90vw, 600px);
+  gap: var(--gap);
+  width: var(--ancho-form);
 }
 
-/* Boton de madera: SVG de fondo, texto centrado encima */
+/* Boton de madera: SVG de fondo, texto centrado encima.
+   Mismo aspect-ratio (102/20) y font-size (fs-lg) que el boton de login/registro
+   para que midan igual en todas las pantallas previas a jugar. */
 .boton-madera {
   width: 100%;
-  aspect-ratio: 83 / 20;
+  aspect-ratio: 102 / 20;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,7 +66,7 @@
   color: var(--texto-claro);
   font-family: var(--fuente);
   font-weight: 700;
-  font-size: var(--fs-xl);
+  font-size: var(--fs-lg);
   letter-spacing: 0.04em;
   text-shadow: var(--sombra-texto);
   transition: transform 0.08s ease;

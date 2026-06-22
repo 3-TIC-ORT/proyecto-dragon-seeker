@@ -13,7 +13,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/terragon.png",
+      "imagen": "img/terragon.svg",
       "ataques": [
         { "nombre": "Coletazo", "dano": 7, "nivel": 1 },
         { "nombre": "Bola de barro", "dano": 12, "nivel": 5 },
@@ -77,7 +77,7 @@
       "especial": true,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/chimuelo.png",
+      "imagen": "img/chimuelo.svg",
       "ataques": [
         { "nombre": "Llamarada", "dano": 8, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 13, "nivel": 5 },
@@ -98,7 +98,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/llamafuria.png",
+      "imagen": "img/llamafuria.svg",
       "ataques": [
         { "nombre": "Llamarada", "dano": 11, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 17, "nivel": 5 },
@@ -141,7 +141,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/amarillo.png",
+      "imagen": "img/amarillo.svg",
       "ataques": [
         { "nombre": "Chispa", "dano": 7, "nivel": 1 },
         { "nombre": "Tormenta electrica", "dano": 12, "nivel": 5 },
@@ -205,7 +205,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/burbu.png",
+      "imagen": "img/burbu.svg",
       "ataques": [
         { "nombre": "Burbuja", "dano": 6, "nivel": 1 },
         { "nombre": "Salpicadura", "dano": 12, "nivel": 5 },
@@ -269,7 +269,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/escarcha.png",
+      "imagen": "img/escarcha.svg",
       "ataques": [
         { "nombre": "Ventisca", "dano": 7, "nivel": 1 },
         { "nombre": "Nevada", "dano": 13, "nivel": 5 },
@@ -333,7 +333,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/oso.png",
+      "imagen": "img/oso.svg",
       "ataques": [
         { "nombre": "Arañazo", "dano": 7, "nivel": 1 },
         { "nombre": "Patada", "dano": 9, "nivel": 1 },

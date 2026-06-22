@@ -70,7 +70,7 @@ function nivelMaxJugador(progreso, idpartida) {
 }
 
 function escalarRival(d, nivelJugador) {
-  const offset = Math.floor(Math.random() * 5) - 2; // -2..+2
+  const offset = Math.floor(Math.random() * 3) - 1; // -1..+1
   const nivel = Math.max(1, nivelJugador + offset);
   const factorVida = 1 + 0.15 * (nivel - 1);
   const factorFuerza = 1 + 0.1 * (nivel - 1);
@@ -111,10 +111,19 @@ export function obtenerlistadragones(idpartida = null, escalarRivales = false) {
         ? progreso.find((p) => p.dragon === d.id && p.partida === idpartida)
         : progreso.find((p) => p.dragon === d.id);
 
+    // Rival del mapa: SIEMPRE un dragon salvaje escalado al nivel del jugador,
+    // sin importar si el jugador ya tiene un dragon de esa especie. De progreso
+    // se toma SOLO el flag "habilitado" (para no poder re-adoptar lo que ya
+    // tenes). Antes, si tenias progreso de esa especie, el rival salia con TU
+    // vida de ese dragon (incluso 0 si estaba muerto) -> rival con 0 de vida.
+    if (escalarRivales) {
+      const rival = escalarRival(d, nivelJugador);
+      rival.habilitado = prog?.habilitado ?? false;
+      return rival;
+    }
+
     if (!prog) {
-      return escalarRivales
-        ? escalarRival(d, nivelJugador)
-        : { ...d, habilitado: false };
+      return { ...d, habilitado: false };
     }
 
     return {

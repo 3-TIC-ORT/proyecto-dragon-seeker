@@ -40,6 +40,12 @@ function mostrarDragones() {
       tarjeta.classList.add("dragonBloqueado");
     }
 
+    // Dragon adoptado pero sin vida: no puede pelear ni ser el dragon activo.
+    let sinVida = habilitado && (dragon.vida ?? 0) <= 0;
+    if (sinVida) {
+      tarjeta.classList.add("dragonSinVida");
+    }
+
     // Stats y progreso de XP (solo para dragones adoptados).
     // experiencianecesaria(nivel) = 100 * nivel (igual que el backend).
     let statsHTML = "";
@@ -67,8 +73,14 @@ function mostrarDragones() {
         <h4 class="nombre">${dragon.nombre}</h4>
         <p class="nivel">Lv ${dragon.nivel}</p>
         <p class="tipo">${habilitado ? dragon.tipo : "No adoptado"}</p>
+        ${sinVida ? '<p class="avisoSinVida">Sin vida - no puede pelear</p>' : ""}
         ${statsHTML}
       </div>
+      ${
+        habilitado
+          ? `<button type="button" class="botonCurar" data-iddragon="${dragon.id}">Curar</button>`
+          : ""
+      }
     `;
 
     containerDragon.appendChild(tarjeta);
@@ -78,7 +90,11 @@ function mostrarDragones() {
 // Seleccionar una tarjeta (no navega todavia; el boton "Elegir dragon" confirma)
 function seleccionarDragon(e) {
   let tarjeta = e.target.closest(".tarjeta");
-  if (!tarjeta || tarjeta.classList.contains("dragonBloqueado")) {
+  if (
+    !tarjeta ||
+    tarjeta.classList.contains("dragonBloqueado") ||
+    tarjeta.classList.contains("dragonSinVida")
+  ) {
     return;
   }
   if (tarjetaSeleccionada) {
@@ -102,12 +118,43 @@ function elegirDragon() {
   const origen = localStorage.getItem("origenInventario");
   localStorage.removeItem("origenInventario");
   if (origen === "pelea") {
+    // Cambio de dragon en medio de una pelea: vuelve directo a la pelea.
     window.location.href = "../pelea/peleadesplegada.html";
+  } else if (origen === "encuentro") {
+    // Elegiste dragon recien al chocar un rival: pasa por el head-to-head.
+    window.location.href = "../enfrentamiento/enfrentamiento.html";
   } else {
     window.location.href =
       "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
   }
 }
 
-containerDragon.addEventListener("click", seleccionarDragon);
+// Click en el contenedor: si tocaste el boton "Curar" cura ese dragon; si no,
+// selecciona la tarjeta.
+function onClickTarjeta(e) {
+  const botonCurar = e.target.closest(".botonCurar");
+  if (botonCurar) {
+    curarDragon(Number(botonCurar.dataset.iddragon));
+    return;
+  }
+  seleccionarDragon(e);
+}
+
+// PROVISORIO (revertir cuando este el curandero/medico posta): cura un dragon
+// restaurando su vida al maximo en el backend y refresca la lista.
+function curarDragon(iddragon) {
+  postEvent("curarDragon", { idpartida, iddragon }, (res) => {
+    if (res && res.exito) {
+      const d = dragones.find((x) => x.id === iddragon);
+      if (d) d.vida = res.progreso.vida;
+      tarjetaSeleccionada = null;
+      botonElegir.classList.remove("visible");
+      mostrarDragones();
+    } else {
+      alert(res?.mensaje || "No se pudo curar el dragón.");
+    }
+  });
+}
+
+containerDragon.addEventListener("click", onClickTarjeta);
 botonElegir.addEventListener("click", elegirDragon);
