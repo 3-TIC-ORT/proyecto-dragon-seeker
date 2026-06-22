@@ -2,12 +2,10 @@ let BotonPelea = document.getElementById("pelear");
 let BotonAdopcion = document.getElementById("adoptar");
 let MenuAtaques = document.getElementById("menudeataques");
 let MenuPrincipal = document.getElementById("menuPrincipal");
-let BotonDragon = document.getElementById("botonDragon");
 let BotonHuir = document.getElementById("botonHuir");
 let VolverAtaques = document.getElementById("volverAtaques");
 let ModalHuir = document.getElementById("modalHuir");
 let ModalVolver = document.getElementById("modalVolver");
-let ModalConfirmar = document.getElementById("modalConfirmar");
 let nombreAccion = document.getElementById("nombreAccion");
 
 // Nombre del dragon del usuario en la pregunta "¿Que hara X?"
@@ -30,11 +28,8 @@ function volverAlMenu() {
 BotonPelea.addEventListener("click", desplegarMenu);
 VolverAtaques.addEventListener("click", volverAlMenu);
 
-// DRAGON -> ir al inventario a elegir otro dragon (volviendo despues a la pelea)
-BotonDragon.addEventListener("click", () => {
-  localStorage.setItem("origenInventario", "pelea");
-  window.location.href = "../inventario/inventario.html";
-});
+// DRAGON y HUIR (la parte que guarda la vida y navega) las maneja ataques.js,
+// que es donde vive el estado de la pelea (dragon activo, vida, idpartida).
 
 // HUIR -> abrir modal de confirmacion
 BotonHuir.addEventListener("click", () => {
@@ -42,10 +37,6 @@ BotonHuir.addEventListener("click", () => {
 });
 ModalVolver.addEventListener("click", () => {
   ModalHuir.hidden = true;
-});
-ModalConfirmar.addEventListener("click", () => {
-  window.location.href =
-    "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
 });
 
 export function desbloquearBoton() {

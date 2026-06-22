@@ -99,6 +99,38 @@ if (tipoEnemigo) tipoEnemigo.dataset.tipo = dragonEnemigo.tipo ?? "normal";
 let idpartida = Number(localStorage.getItem("partida"));
 let iddragon = dragon.id;
 
+// HUIR y DRAGON (cambiar de dragon activo) salen de la pelea sin que termine por
+// victoria/derrota: hay que guardar la vida actual antes de navegar, si no el
+// daño recibido se pierde y el dragon vuelve a aparecer con vida llena.
+let BotonDragon = document.getElementById("botonDragon");
+let ModalConfirmar = document.getElementById("modalConfirmar");
+
+BotonDragon.addEventListener("click", () => {
+  // El rival solo vive en localStorage (no en el backend): si no lo volvemos a
+  // guardar aca, al volver de elegir dragon se relee el "dragon_enemigo" de
+  // localStorage tal cual estaba ANTES de la pelea, con vida llena.
+  localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
+
+  // El dragon que elijas en el inventario tiene que entrar a la pelea con el
+  // mismo % de vida que le quedaba a este. Guardamos ese % para que el
+  // inventario lo aplique sobre el dragon nuevo al confirmar la eleccion.
+  const vidaMax = dragon.vidaMax || dragon.vidaInicial || dragon.vida;
+  const porcentajeVida = vidaMax > 0 ? dragon.vida / vidaMax : 0;
+  localStorage.setItem("porcentajeVidaCambio", String(porcentajeVida));
+
+  postEvent("actualizarVida", { idpartida, iddragon, vida: dragon.vida }, () => {
+    localStorage.setItem("origenInventario", "pelea");
+    window.location.href = "../inventario/inventario.html";
+  });
+});
+
+ModalConfirmar.addEventListener("click", () => {
+  postEvent("actualizarVida", { idpartida, iddragon, vida: dragon.vida }, () => {
+    window.location.href =
+      "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
+  });
+});
+
 let batallaTerminada = false;
 let turnoUsuario = true;
 

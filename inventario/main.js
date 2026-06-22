@@ -9,6 +9,13 @@ if (!usuario) {
   window.location.href = "/inicioSesion/inicioSesion.html";
 }
 
+// Si entraste al inventario desde una pelea, no podes volver al mapa desde aca:
+// la pelea sigue en curso y solo se sale de ella huyendo o ganando/perdiendo.
+const botonMapa = document.querySelector(".botonMapa");
+if (botonMapa && localStorage.getItem("origenInventario") === "pelea") {
+  botonMapa.remove();
+}
+
 const containerDragon = document.getElementById("dragonContainer");
 const botonElegir = document.getElementById("botonElegir");
 let tarjetaSeleccionada = null;
@@ -113,14 +120,42 @@ function elegirDragon() {
   }
   let indice = tarjetaSeleccionada.dataset.index;
   let dragon = dragones[indice];
-  localStorage.setItem("dragonardo", JSON.stringify(dragon));
 
   const origen = localStorage.getItem("origenInventario");
   localStorage.removeItem("origenInventario");
+
   if (origen === "pelea") {
-    // Cambio de dragon en medio de una pelea: vuelve directo a la pelea.
+    // Cambio de dragon en medio de una pelea: el nuevo dragon entra con el
+    // mismo % de vida que le quedaba al que estaba peleando antes de cambiarlo.
+    const porcentajeVida = Number(localStorage.getItem("porcentajeVidaCambio"));
+    localStorage.removeItem("porcentajeVidaCambio");
+
+    if (Number.isFinite(porcentajeVida)) {
+      const vidaMax = dragon.vidaMax || dragon.vida;
+      const vidaAjustada = Math.max(
+        0,
+        Math.min(vidaMax, Math.round(vidaMax * porcentajeVida)),
+      );
+      dragon = { ...dragon, vida: vidaAjustada, vidaInicial: vidaMax };
+
+      postEvent(
+        "actualizarVida",
+        { idpartida, iddragon: dragon.id, vida: vidaAjustada },
+        () => {
+          localStorage.setItem("dragonardo", JSON.stringify(dragon));
+          window.location.href = "../pelea/peleadesplegada.html";
+        },
+      );
+      return;
+    }
+
+    localStorage.setItem("dragonardo", JSON.stringify(dragon));
     window.location.href = "../pelea/peleadesplegada.html";
-  } else if (origen === "encuentro") {
+    return;
+  }
+
+  localStorage.setItem("dragonardo", JSON.stringify(dragon));
+  if (origen === "encuentro") {
     // Elegiste dragon recien al chocar un rival: pasa por el head-to-head.
     window.location.href = "../enfrentamiento/enfrentamiento.html";
   } else {

@@ -44,8 +44,8 @@ subscribePOSTEvent("registrarusuario", (data) => {
 });
 
 subscribePOSTEvent("iniciarsesion", (data) => {
-  const { correo, contrasena } = data;
-  return iniciarsesion(correo, contrasena);
+  const { nombre, contrasena } = data;
+  return iniciarsesion(nombre, contrasena);
 });
 
 subscribePOSTEvent("guardarpersonalizacion", (data) => {

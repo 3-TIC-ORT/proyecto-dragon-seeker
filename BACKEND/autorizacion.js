@@ -48,14 +48,14 @@ export function registrarusuario(nombre, correo, contrasena) {
   };
 }
 
-export function iniciarsesion(correo, contrasena) {
+export function iniciarsesion(nombre, contrasena) {
   const usuarios = leerusuarios();
 
   let usuario = null;
   let i = 0;
   while (i < usuarios.length) {
     if (
-      usuarios[i].correo === correo &&
+      usuarios[i].nombre === nombre &&
       usuarios[i].contrasena === contrasena
     ) {
       usuario = usuarios[i];
@@ -64,7 +64,7 @@ export function iniciarsesion(correo, contrasena) {
   }
 
   if (usuario === null) {
-    return { exito: false, mensaje: "Correo o contraseña incorrectos" };
+    return { exito: false, mensaje: "Usuario o contraseña incorrectos" };
   }
 
   return { exito: true, mensaje: "Sesion iniciada", usuario: usuario };
