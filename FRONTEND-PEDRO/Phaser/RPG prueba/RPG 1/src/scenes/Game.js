@@ -3,6 +3,7 @@ import { NPC } from "../GameObjects/npc.js";
 import { Minero } from "../GameObjects/minero.js";
 import { gameData } from "./Objetos.js";
 import { guardarEstado, getPartidaId } from "../utils/persistencia.js";
+import { DialogoRPG } from "../utils/DialogoRPG.js";
 
 connect2Server();
 
@@ -47,6 +48,7 @@ export class Game extends Phaser.Scene {
     this.load.image("arbol_manzanas", "assets/arbol_manzanas.png");
     this.load.image("arbol", "assets/arbol.png");
     this.load.image("huevoDragon", "assets/huevoDragon.png");
+    this.load.image("cartel_curadero", "assets/cartel curadero.png");
     this.load.tilemapTiledJSON("map", "assets/mapa1.json");
 
     //asignacion del sprite al personaje
@@ -112,6 +114,8 @@ export class Game extends Phaser.Scene {
     this.load.image("coke", "assets/coke.png");
   }
   create(data) {
+    this.cambiandoEscena = false;
+
     this.partidaId = getPartidaId();
     // Al volver al mapa se borra cualquier intencion de pelea pendiente, asi una
     // visita casual al inventario (boton huevo) nunca termina mandando a la pelea.
@@ -141,6 +145,8 @@ export class Game extends Phaser.Scene {
     // esto lo deja PERFECTO arriba derecha
     this.messageText.setPosition(cam.width - margin, margin);
 
+    this.dialogo = new DialogoRPG(this);
+
     const map = this.make.tilemap({ key: "map" });
 
     //creacion de las capas
@@ -157,17 +163,28 @@ export class Game extends Phaser.Scene {
     );
     const ts6 = map.addTilesetImage("Camino normal +", "camino_normal");
     const ts7 = map.addTilesetImage("CP Camino Ciudad", "cp_camino_ciudad");
+    const ts8 = map.addTilesetImage("cartel curadero", "cartel_curadero");
 
-    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7];
+    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8];
 
     const suelo = map.createLayer("suelo", allTilesets, 0, 0);
     const caminoCiud = map.createLayer("camino ciudad", allTilesets, 0, 0);
     const caminoNorm = map.createLayer("Camino normal", allTilesets, 0, 0);
     const decoracion = map.createLayer("decoracion", allTilesets, 0, 0);
     const pasto = map.createLayer("Pasto", allTilesets, 0, 0);
+    const cartel_curadero = map.createLayer(
+      "cartel curadero",
+      allTilesets,
+      0,
+      0,
+    );
+
+    cartel_curadero.setDepth(2);
+
     const casasCiudad = map.createLayer("casas ciudad", allTilesets, 0, 0);
+    casasCiudad.setDepth(3);
     const hojasArboles = map.createLayer("hojas arboles", allTilesets, 0, 0);
-    hojasArboles.setDepth(2);
+    hojasArboles.setDepth(2.5);
     const corralDragones = map.createLayer(
       "corral dragones",
       allTilesets,
@@ -260,7 +277,6 @@ export class Game extends Phaser.Scene {
       (res) => {
         this.estadoGuardado = res.estado;
         this.estadoJuegoRecibido = true;
-        console.log("Estado recibido del backend:", JSON.stringify(res.estado));
 
         // si los dragones ya llegaron antes, procesá ahora
         if (this.dragonesListos) {
@@ -306,12 +322,11 @@ export class Game extends Phaser.Scene {
 
     //colliders con el player
     this.physics.add.collider(this.player, decoracion);
-    this.physics.add.collider(this.player, casasCiudad);
     this.physics.add.collider(this.player, colisionesGroup);
 
     //colliders con el dragon
     this.physics.add.collider(this.dragons, decoracion);
-    this.physics.add.collider(this.dragons, casasCiudad);
+    this.physics.add.collider(this.dragons, colisionesGroup);
     this.physics.add.collider(this.dragons, corralDragones);
 
     this.physics.add.collider(this.dragons, this.dragons, (d1, d2) => {
@@ -412,7 +427,7 @@ export class Game extends Phaser.Scene {
         },
         () => {
           // ✅ recién cuando el backend confirmó, cambiamos de escena
-          this.scene.start("Casa", { x: 368, y: 448 });
+          this.scene.start("Casa", { x: 80, y: 416 });
         },
       );
     });
@@ -430,33 +445,55 @@ export class Game extends Phaser.Scene {
     this.zonaBoss.setSize(triggerZonaBoss.width, triggerZonaBoss.height);
     this.zonaBoss.setVisible(false);
 
-    //puerta de acceso a la zonaBoss (cambio de escena)
+    //puerta de acceso a la zonaBoss (requiere nivel promedio mínimo)
     this.physics.add.overlap(this.player, this.zonaBoss, () => {
-      if (this.cambiandoEscena) return;
-      this.cambiandoEscena = true;
+      if (this.cambiandoEscena || this.dialogo.abierto) return;
 
-      const dragonesSpawneados = this.dragons.getChildren().map((d) => ({
-        instanceId: d.instanceId,
-        id: d.info.id,
-        x: Math.round(d.x),
-        y: Math.round(d.y),
-      }));
+      const idpartida = getPartidaId();
 
-      postEvent(
-        "guardarEstadoJuego",
-        {
-          idpartida: getPartidaId(),
-          estado: {
-            mapa: 1,
-            x: Math.round(this.player.x),
-            y: Math.round(this.player.y),
-            dragonesSpawneados,
-          },
-        },
-        () => {
-          this.scene.start("zonaBoss", { x: 0, y: 544 });
-        },
-      );
+      postEvent("verificarAccesoZonaBoss", { idpartida }, (res) => {
+        if (!res.exito) return;
+
+        if (res.puedePasar) {
+          this.dialogo.confirmar(
+            `Nivel promedio: ${res.promedio}. ¿Querés entrar a la zona del jefe?`,
+            () => {
+              this.cambiandoEscena = true;
+
+              const dragonesSpawneados = this.dragons
+                .getChildren()
+                .map((d) => ({
+                  instanceId: d.instanceId,
+                  id: d.info.id,
+                  x: Math.round(d.x),
+                  y: Math.round(d.y),
+                }));
+
+              postEvent(
+                "guardarEstadoJuego",
+                {
+                  idpartida,
+                  estado: {
+                    mapa: 1,
+                    x: Math.round(this.player.x),
+                    y: Math.round(this.player.y),
+                    dragonesSpawneados,
+                  },
+                },
+                () => {
+                  this.scene.start("zonaBoss", { x: 32, y: 544 });
+                },
+              );
+            },
+            () => {},
+          );
+        } else {
+          this.dialogo.aviso(
+            `Necesitás nivel promedio ${res.nivelMinimo} (tenés ${res.promedio}).`,
+            () => {},
+          );
+        }
+      });
     });
 
     //paso de informacion del dragonEnemigo y cambio de escena
@@ -485,10 +522,6 @@ export class Game extends Phaser.Scene {
 
   procesarEstadoInicial() {
     if (this.initialSpawnDone) return;
-    console.log(
-      "Dragones guardados a restaurar:",
-      JSON.stringify(this.estadoGuardado?.dragonesSpawneados),
-    );
 
     const dragonEliminadoId = localStorage.getItem("dragon_eliminado") ?? "";
     localStorage.removeItem("dragon_eliminado");
@@ -667,6 +700,13 @@ export class Game extends Phaser.Scene {
   }
 
   update() {
+    // Dialogo abierto (curadero/veterinario): consume el input y frena al player.
+    if (this.dialogo.abierto) {
+      this.dialogo.manejarInput(this.cursors, this.keyE);
+      this.player.setVelocity(0);
+      return;
+    }
+
     // Habilita los encuentros recien cuando los dragones ya estan en el mapa y
     // el player no esta encima de ninguno (ver battleCooldown inicial en create()).
     if (
@@ -677,7 +717,7 @@ export class Game extends Phaser.Scene {
       this.battleCooldown = false;
     }
 
-    if (this.nearMinero) {
+    /* if (this.nearMinero) {
       if (!this.showingInteractMessage && !gameData.cokeGiven) {
         this.messageText.setText("Presioná E para interactuar");
         this.messageText.setVisible(true);
@@ -706,6 +746,7 @@ export class Game extends Phaser.Scene {
     }
 
     this.nearMinero = false;
+    */
 
     //si quedan menos de 4 dragones spawnean 2
     if (

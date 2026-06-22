@@ -22,8 +22,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.anims.create({
       key: "idle",
-      frames: [{ key: "player", frame: 0 }],
-      frameRate: 1,
+      frames: this.anims.generateFrameNumbers("player", { start: 10, end: 13 }),
+      frameRate: 5,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "up",
+      frames: this.anims.generateFrameNumbers("player", { start: 7, end: 9 }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "down",
+      frames: this.anims.generateFrameNumbers("player", { start: 4, end: 6 }),
+      frameRate: 10,
+      repeat: -1,
     });
   }
 
@@ -41,12 +56,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   moveUp() {
     this.setVelocityY(-150);
-    this.anims.play("walk", true);
+    this.anims.play("up", true);
   }
 
   moveDown() {
     this.setVelocityY(150);
-    this.anims.play("walk", true);
+    this.anims.play("down", true);
   }
 
   idle() {

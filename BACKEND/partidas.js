@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ruta = path.join(__dirname, "partidas.json");
 
-// Dragon con el que arranca toda partida nueva (Llamafuria, id 4).
+// Dragon con el que arranca toda partida nueva (Chimuelo, id 4).
 const DRAGON_INICIAL = 4;
 
 function leer() {

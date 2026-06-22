@@ -1,5 +1,7 @@
 import { Player } from "../GameObjects/player.js";
 import { guardarEstado } from "../utils/persistencia.js";
+import { Veterinario } from "../GameObjects/veterinario.js";
+import { DialogoRPG } from "../utils/DialogoRPG.js";
 
 connect2Server();
 
@@ -13,8 +15,14 @@ export class Casa extends Phaser.Scene {
     this.load.image("tiles", "assets/casa_interna.png");
     this.load.tilemapTiledJSON("casa", "assets/curadero.json");
 
-    //asignacion del sprite al personaje
+    //asignacion del sprite al player
     this.load.spritesheet("player", "assets/player.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
+    //asignacion del sprite al veterinario
+    this.load.spritesheet("veterinario", "assets/veterinario.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
@@ -33,36 +41,69 @@ export class Casa extends Phaser.Scene {
         fontFamily: "Pixelify Sans",
         wordWrap: { width: cam.width * 0.3 },
       })
-      .setPosition(cam.width - margin, margin)
+      .setPosition(margin, margin)
       .setScrollFactor(0)
       .setDepth(1000)
       .setVisible(false);
+
+    this.dialogo = new DialogoRPG(this);
 
     const casa = this.make.tilemap({ key: "casa" });
     const tileset = casa.addTilesetImage("Decoracion casa interna", "tiles");
 
     //capas
     const piso = casa.createLayer("Piso", tileset, 0, 0);
-    const alfombras = casa.createLayer("Alfombras", 0, 0);
-    // TODO: capa "paredes" del mapa del curadero (quedo sin terminar en fce8b40).
-    // Declaracion incompleta `const paredes;` comentada porque rompia el parseo del modulo.
+
+    const alfombras = casa.createLayer("Alfombras", tileset, 0, 0);
+    const paredes = casa.createLayer("Paredes ventana", tileset, 0, 0);
+    const decoracion = casa.createLayer("Decoracion", tileset, 0, 0);
+    decoracion.setDepth(2);
+    const estantes_inferiores = casa.createLayer(
+      "estantes inferiores",
+      tileset,
+      0,
+      0,
+    );
+
     const limit = casa.createLayer("bloques invisibles", tileset, 0, 0);
+    limit.setVisible(false);
 
     //creando las teclas para movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
 
     // ✅ posición default por si entra sin data
-    const startX = data?.x ?? 368;
-    const startY = data?.y ?? 448;
+    const startX = data?.x ?? 80;
+    const startY = data?.y ?? 416;
 
     // Spawn del jugador en la posición recibida desde Mapa1
-    this.player = new Player(this, data.x, data.y, this.cursors);
+    this.player = new Player(this, startX, startY, this.cursors);
+    this.player.setDepth(1);
+
+    this.veterinario = new Veterinario(this, 96, 165);
+    this.veterinario.setDepth(1.5);
 
     //colliders
-    cofres.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, cofres);
+    const colisionesGroup = this.physics.add.staticGroup();
+    const colisionesObjetos = casa.getObjectLayer("colisiones").objects;
+
+    colisionesObjetos.forEach((obj) => {
+      const rect = this.add.rectangle(
+        obj.x + obj.width / 2,
+        obj.y + obj.height / 2,
+        obj.width,
+        obj.height,
+      );
+      this.physics.add.existing(rect, true); // true = estático
+      colisionesGroup.add(rect);
+    });
+
+    decoracion.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, decoracion);
+    paredes.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, paredes);
     limit.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, limit);
+    this.physics.add.collider(this.player, colisionesGroup);
 
     //worldbounds
     this.physics.world.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);
@@ -72,46 +113,62 @@ export class Casa extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);
     this.cameras.main.startFollow(this.player);
 
+    // BOTON INVENTARIO DRAGONES
+    this.botonInventario = this.add.image(cam.width - 45, 30, "huevoDragon");
+
+    this.botonInventario
+      .setScrollFactor(0)
+      .setDepth(2000)
+      .setScale(0.08)
+      .setInteractive({ useHandCursor: true });
+
+    this.botonInventario.on("pointerdown", () => {
+      // Desde el mapa el inventario es para ver/elegir dragon activo: vuelve al mapa.
+      localStorage.setItem("origenInventario", "mapa");
+      window.location.href = "../../../../inventario/inventario.html";
+    });
+
     //puerta
     const doorTrigger = casa.findObject(
       "puertas",
       (obj) => obj.name === "door",
     );
+
     this.door = this.physics.add.sprite(doorTrigger.x, doorTrigger.y, null);
     this.door.setSize(doorTrigger.width, doorTrigger.height);
-    this.door.setVisible(true);
+    this.door.setVisible(false);
 
     this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
-    //healer
-    const healerObjects = casa.getObjectLayer("Healers").objects;
-
-    const healerTrigger = casa.findObject(
-      "Healers",
-      (obj) => obj.name === "Healer",
+    // trigger del curadero/veterinario
+    const curaderoTrigger = casa.findObject(
+      "curadero",
+      (obj) => obj.name === "curadero",
     );
-    this.healer = this.physics.add.sprite(
-      healerTrigger.x,
-      healerTrigger.y,
+    this.curadero = this.physics.add.sprite(
+      curaderoTrigger.x,
+      curaderoTrigger.y,
       null,
     );
-    this.healer.setSize(healerTrigger.width, healerTrigger.height);
-    this.healer.setVisible(true);
+    this.curadero.setSize(curaderoTrigger.width, curaderoTrigger.height);
+    this.curadero.setVisible(false);
+    this.curadero.body.setAllowGravity(false);
+    this.curadero.body.moves = false;
 
-    this.physics.add.overlap(this.player, this.door, () => {
-      this.scene.start("Game", { x: 992, y: 320 }); // posición cuando sale del mapa 2
-    });
-
-    this.nearHealer = false;
-    this.showingInteractMessage = false;
+    this.nearCurandero = false;
+    this.showingInteractMessageCurandero = false;
 
     this.physics.add.overlap(
       this.player,
-      this.healer,
-      this.handleHealer,
+      this.curadero,
+      this.handleCurandero,
       null,
       this,
     );
+
+    this.physics.add.overlap(this.player, this.door, () => {
+      this.scene.start("Game", { x: 256, y: 320 }); // posición cuando sale del mapa 2
+    });
 
     // ✅ guardar estado al cerrar/recargar
     window.addEventListener("beforeunload", () => {
@@ -137,26 +194,50 @@ export class Casa extends Phaser.Scene {
     });
   }
 
-  handleHealer() {
-    if (!this.showingInteractMessage) {
+  handleCurandero() {
+    this.nearCurandero = true;
+    if (this.dialogo.abierto) return;
+
+    if (!this.showingInteractMessageCurandero) {
       this.messageText.setText("Presioná E para interactuar");
       this.messageText.setVisible(true);
-      this.showingInteractMessage = true;
+      this.showingInteractMessageCurandero = true;
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-      const idpartida = Number(localStorage.getItem("partida"));
-
-      postEvent("curarDragones", { idpartida }, (respuesta) => {
-        console.log("Respuesta:", respuesta);
-        if (respuesta.exito) {
-          this.showMessage("¡Tus dragones fueron curados!");
-        }
-      });
+      this.messageText.setVisible(false);
+      this.dialogo.confirmar(
+        "¿Querés curar a tus dragones?",
+        () => {
+          const idpartida = Number(localStorage.getItem("partida"));
+          postEvent("curarDragones", { idpartida }, (respuesta) => {
+            if (respuesta.exito) {
+              this.showMessage("¡Tus dragones fueron curados!");
+            }
+          });
+        },
+        () => {},
+      );
     }
   }
 
   update() {
+    // resetea el estado de "cerca del curadero" cada frame;
+    // si seguís en overlap, handleCurandero lo vuelve a poner en true
+    if (!this.nearCurandero) {
+      if (this.showingInteractMessageCurandero) {
+        this.messageText.setVisible(false);
+        this.showingInteractMessageCurandero = false;
+      }
+    }
+    this.nearCurandero = false; // se resetea, y si hay overlap este frame, handleCurandero lo vuelve a marcar true
+
+    if (this.dialogo.abierto) {
+      this.dialogo.manejarInput(this.cursors, this.keyE);
+      this.player.setVelocity(0);
+      return;
+    }
+
     if (
       this.cursors.left.isDown ||
       this.cursors.right.isDown ||
