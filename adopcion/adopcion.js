@@ -25,6 +25,13 @@ if (!dragonEnemigo) {
   window.location.href = "../FRONTEND-PEDRO/Phaser/RPG prueba/RPG 1/index.html";
 }
 
+// Seguridad: a los jefes (boss de zona) no se los puede adoptar. El boton de la
+// pelea ya no se habilita para ellos, pero por las dudas se corta aca tambien.
+if (dragonEnemigo && dragonEnemigo.esBoss === true) {
+  window.location.href =
+    "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
+}
+
 // Mostrar el dragon que se esta por adoptar (nombre + sprite real)
 const nombreDragonEl = document.getElementById("nombreDragon");
 const spriteEl = document.querySelector(".dragon .sprite");
@@ -32,14 +39,29 @@ if (dragonEnemigo && nombreDragonEl) nombreDragonEl.innerText = dragonEnemigo.no
 if (dragonEnemigo && spriteEl) spriteEl.src = `../BACKEND/${dragonEnemigo.imagen}`;
 
 function obtenerLongitudPorVida() {
-  let vida = Number(localStorage.getItem("vidaFinalRival"));
+  const vida = Number(localStorage.getItem("vidaFinalRival"));
 
-  if (vida <= 5) return 3;
-  if (vida <= 10) return 4;
-  if (vida <= 15) return 5;
-  if (vida <= 20) return 6;
-  if (vida <= 25) return 7;
-  if (vida <= 30) return 8;
+  // El umbral adoptable es 30% de la vida maxima del rival (mismo criterio que
+  // habilita el boton en la pelea). El largo de la secuencia escala con cuanta
+  // vida le quedaba DENTRO de ese rango: cuanto mas vida tenia, mas larga
+  // (mas dificil). Se usa porcentaje para que sea justo entre rivales con
+  // distinta vidaMax.
+  const FRACCION_ADOPTABLE = 0.3;
+  const vidaMax =
+    dragonEnemigo?.vidaMax ??
+    dragonEnemigo?.vidaInicial ??
+    dragonEnemigo?.vida ??
+    0;
+  const umbral = vidaMax * FRACCION_ADOPTABLE;
+  // 0 = casi muerto (secuencia corta), 1 = justo en el umbral (secuencia larga)
+  const frac = umbral > 0 ? Math.max(0, Math.min(1, vida / umbral)) : 0;
+
+  if (frac <= 1 / 6) return 3;
+  if (frac <= 2 / 6) return 4;
+  if (frac <= 3 / 6) return 5;
+  if (frac <= 4 / 6) return 6;
+  if (frac <= 5 / 6) return 7;
+  return 8;
 }
 
 function generarSecuencia() {
@@ -139,8 +161,14 @@ function verificar() {
   if (intento === 1) {
     intento++;
     secuenciaUsuario = [];
-    alert("Fallaste, te queda un intento.");
-    setTimeout(mostrarSecuencia, 500);
+    // Aviso diseñado (overlay) en vez del alert pelado: al cerrar vuelve a
+    // mostrarse la secuencia para el segundo (y ultimo) intento.
+    window.mostrarOverlayFracaso({
+      titulo: "¡Casi!",
+      detalle: "Fallaste la secuencia.\nTe queda un último intento.",
+      textoBoton: "REINTENTAR",
+      onCerrar: () => setTimeout(mostrarSecuencia, 400),
+    });
   } else {
     // Fracaso -> overlay in-place (no pantalla aparte).
     window.mostrarOverlayFracaso({

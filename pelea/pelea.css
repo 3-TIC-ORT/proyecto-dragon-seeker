@@ -150,19 +150,22 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  min-height: clamp(140px, 22vh, 200px);
+  /* alto de la franja: alcanza para el menu mas alto (el principal). Sin slack de
+     mas y con padding vertical minimo => la franja baja sin achicar los botones. */
+  min-height: clamp(180px, 24vh, 240px);
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: clamp(1rem, 3vw, 2rem);
-  padding: clamp(0.6rem, 2vh, 1.2rem) clamp(1rem, 3vw, 2.5rem);
+  /* sin padding vertical: el grid de ataques queda pegado a los bordes de la franja */
+  padding: 0 clamp(1rem, 3vw, 2.5rem);
   z-index: 2;
 }
 
 .cuadroDialogo {
-  flex: 1 1 40%;
-  max-width: 46%;
+  flex: 0 1 38%;
+  max-width: 40%;
   background: #b6722b;
   border: 4px solid #2a2a2a;
   border-radius: 18px;
@@ -175,6 +178,34 @@ body {
   font-size: var(--fs-lg);
   text-shadow: var(--sombra-texto);
 }
+
+/* En modo ataques la caja muestra tipo + eficacia en vez de la pregunta */
+.infoAtaque {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+}
+
+.infoAtaque[hidden] {
+  display: none;
+}
+
+.infoTipo {
+  margin: 0;
+  font-size: var(--fs-md);
+  text-shadow: var(--sombra-texto);
+}
+
+.infoEfecto {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  text-shadow: var(--sombra-texto);
+}
+
+.infoEfecto.efBueno { color: #7dffa0; }
+.infoEfecto.efMalo { color: #ff9b9b; }
+.infoEfecto.efNeutro { color: #ffffff; }
 
 /* ---- Base de botones ---- */
 .btn {
@@ -196,12 +227,23 @@ body {
 .menuPrincipal {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.5rem, 1.4vw, 1rem);
-  width: min(50%, 540px);
+  /* filas pegadas (sin hueco vertical) como el menu de ataques; separacion solo
+     entre columnas. Los botones mantienen su proporcion por aspect-ratio. */
+  row-gap: 0;
+  column-gap: clamp(0.4rem, 1vw, 0.8rem);
+  width: min(50%, 520px);
 }
 
 .menuPrincipal.oculto {
   display: none;
+}
+
+/* Pelea de boss: el boton ADOPTAR no aparece (lo oculta ataques.js y agrega la
+   clase sinAdoptar). LUCHAR y DRAGON quedan arriba y HUIR ocupa el ancho de
+   abajo; se ajusta su ratio para conservar la altura de los de arriba. */
+.menuPrincipal.sinAdoptar .huir {
+  grid-column: 1 / -1;
+  aspect-ratio: 128 / 28;
 }
 
 .opcion {
@@ -262,8 +304,11 @@ body {
 /* ---- Submenu de ataques ---- */
 .menudeataques {
   display: none;
-  width: min(52%, 560px);
-  align-items: center;
+  /* crece para ocupar el espacio que dejo el dialogo: botones mas grandes */
+  flex: 1 1 0;
+  min-width: 0;
+  align-self: stretch;
+  align-items: stretch;
   gap: clamp(0.5rem, 1.4vw, 1rem);
 }
 
@@ -274,17 +319,30 @@ body {
 .ataquesGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.4rem, 1vw, 0.8rem);
-  flex: 1;
+  /* las dos filas reparten TODO el alto del footer (sin margen arriba/abajo) y
+     quedan pegadas entre si; separacion solo entre columnas */
+  grid-template-rows: 1fr 1fr;
+  row-gap: 0;
+  column-gap: clamp(4px, 0.8vw, 12px);
+  /* crece para llenar el menu: el boton Volver ya es chico y va a la derecha */
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .ataque {
+  /* llenan la celda completa: el grid ocupa todo el alto del footer, sin margen
+     arriba/abajo. El SVG estira con la celda (background 100% 100%). */
   width: 100%;
-  aspect-ratio: 95 / 22;
+  height: 100%;
   background: url("../imagenes/svg/boton-ataque-normal.svg") center / 100% 100% no-repeat;
   font-size: var(--fs-sm);
   color: #ffffff;
-  padding: 0 6%;
+  /* el nombre puede usar 2 lineas: entra sin deformar el marco */
+  white-space: normal;
+  line-height: 1;
+  /* padding lateral amplio: el texto esquiva las puntas del hexagono y queda adentro */
+  padding: 0 12%;
+  overflow: hidden;
 }
 
 .ataque:hover {
@@ -298,12 +356,13 @@ body {
 
 .volverAtaques {
   flex-shrink: 0;
+  /* compacto: centrado verticalmente al costado de la grilla, no llena el alto */
   align-self: center;
   background: #ffffff;
   color: #000000;
   border: 3px solid #1f1f1f;
-  border-radius: 14px;
-  padding: 0.4em 1em;
+  border-radius: 12px;
+  padding: 0.35em 0.9em;
   font-family: var(--fuente);
   font-weight: 700;
   font-size: var(--fs-sm);

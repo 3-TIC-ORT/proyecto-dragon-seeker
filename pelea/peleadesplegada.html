@@ -51,7 +51,12 @@
 <footer class="footer">
     <!-- Cuadro de dialogo "¿Que hara X?" -->
     <div class="cuadroDialogo">
-        <p class="preguntaAccion">¿Qué hará "<span id="nombreAccion">Dragón</span>"?</p>
+        <p class="preguntaAccion" id="preguntaAccion">¿Qué hará "<span id="nombreAccion">Dragón</span>"?</p>
+        <!-- En modo ataques la pregunta se oculta y aca se muestra tipo + eficacia -->
+        <div class="infoAtaque" id="infoAtaque" hidden>
+            <p class="infoTipo" id="infoTipo"></p>
+            <p class="infoEfecto" id="infoEfecto"></p>
+        </div>
     </div>
 
     <!-- Menu principal: 4 opciones -->

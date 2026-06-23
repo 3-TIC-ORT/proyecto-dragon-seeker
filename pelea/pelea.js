@@ -7,6 +7,8 @@ let VolverAtaques = document.getElementById("volverAtaques");
 let ModalHuir = document.getElementById("modalHuir");
 let ModalVolver = document.getElementById("modalVolver");
 let nombreAccion = document.getElementById("nombreAccion");
+let PreguntaAccion = document.getElementById("preguntaAccion");
+let InfoAtaque = document.getElementById("infoAtaque");
 
 // Nombre del dragon del usuario en la pregunta "¿Que hara X?"
 let dragonardo = JSON.parse(localStorage.getItem("dragonardo"));
@@ -14,15 +16,20 @@ if (dragonardo && nombreAccion) {
   nombreAccion.innerText = dragonardo.nombre;
 }
 
-// LUCHAR -> mostrar submenu de ataques
+// LUCHAR -> mostrar submenu de ataques. La pregunta se oculta y la caja pasa a
+// mostrar el tipo + la eficacia del ataque (lo llena ataques.js).
 function desplegarMenu() {
   MenuPrincipal.classList.add("oculto");
   MenuAtaques.classList.add("visible");
+  if (PreguntaAccion) PreguntaAccion.hidden = true;
+  if (InfoAtaque) InfoAtaque.hidden = false;
 }
-// Volver del submenu de ataques al menu principal
+// Volver del submenu de ataques al menu principal (reaparece la pregunta)
 function volverAlMenu() {
   MenuAtaques.classList.remove("visible");
   MenuPrincipal.classList.remove("oculto");
+  if (PreguntaAccion) PreguntaAccion.hidden = false;
+  if (InfoAtaque) InfoAtaque.hidden = true;
 }
 
 BotonPelea.addEventListener("click", desplegarMenu);
