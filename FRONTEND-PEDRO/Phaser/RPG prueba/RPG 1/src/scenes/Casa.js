@@ -79,8 +79,15 @@ export class Casa extends Phaser.Scene {
     this.player = new Player(this, startX, startY, this.cursors);
     this.player.setDepth(1);
 
-    this.veterinario = new Veterinario(this, 384, 325);
-    this.veterinario.setDepth(1.5);
+    //spawn de los veterinarios
+    const vetX = 384;
+    const vetY = 325;
+    const separacion = 32 * 3; // 3 bloques de 32px
+
+    for (let i = 0; i < 7; i++) {
+      const vet = new Veterinario(this, vetX + separacion * i, vetY);
+      vet.setDepth(1.5);
+    }
 
     //colliders
     const colisionesGroup = this.physics.add.staticGroup();
@@ -143,30 +150,28 @@ export class Casa extends Phaser.Scene {
     this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
     // trigger del curadero/veterinario
-    const curaderoTrigger = casa.findObject(
-      "curadero",
-      (obj) => obj.name === "curadero",
-    );
-    this.curadero = this.physics.add.sprite(
-      curaderoTrigger.x,
-      curaderoTrigger.y,
-      null,
-    );
-    this.curadero.setSize(curaderoTrigger.width, curaderoTrigger.height);
-    this.curadero.setVisible(false);
-    this.curadero.body.setAllowGravity(false);
-    this.curadero.body.moves = false;
-
     this.nearCurandero = false;
     this.showingInteractMessageCurandero = false;
 
-    this.physics.add.overlap(
-      this.player,
-      this.curadero,
-      this.handleCurandero,
-      null,
-      this,
-    );
+    const curaderosTriggers = casa
+      .getObjectLayer("curadero")
+      .objects.filter((obj) => obj.name === "curadero");
+
+    curaderosTriggers.forEach((trigger) => {
+      const curadero = this.physics.add.sprite(trigger.x, trigger.y, null);
+      curadero.setSize(trigger.width, trigger.height);
+      curadero.setVisible(false);
+      curadero.body.setAllowGravity(false);
+      curadero.body.moves = false;
+
+      this.physics.add.overlap(
+        this.player,
+        curadero,
+        this.handleCurandero,
+        null,
+        this,
+      );
+    });
 
     this.physics.add.overlap(this.player, this.door, () => {
       this.scene.start("Game", { x: 256, y: 320 }); // posición cuando sale del mapa 2

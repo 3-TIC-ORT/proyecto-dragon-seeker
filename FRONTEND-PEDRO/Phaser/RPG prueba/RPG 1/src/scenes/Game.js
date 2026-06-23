@@ -49,6 +49,8 @@ export class Game extends Phaser.Scene {
     this.load.image("arbol", "assets/arbol.png");
     this.load.image("huevoDragon", "assets/huevoDragon.png");
     this.load.image("cartel_curadero", "assets/cartel curadero.png");
+    this.load.image("carteles", "assets/carteles.png");
+
     this.load.tilemapTiledJSON("map", "assets/mapa1.json");
 
     //asignacion del sprite al personaje
@@ -78,8 +80,8 @@ export class Game extends Phaser.Scene {
       "escarcha",
       "../../../../../../BACKEND/img/mapa/escarcha_mapa.png",
       {
-        frameWidth: 32,
-        frameHeight: 32,
+        frameWidth: 38,
+        frameHeight: 37,
       },
     );
     this.load.spritesheet(
@@ -126,8 +128,8 @@ export class Game extends Phaser.Scene {
       "burpi",
       "../../../../../../BACKEND/img/mapa/burpi_mapa.png",
       {
-        frameWidth: 32,
-        frameHeight: 32,
+        frameWidth: 50,
+        frameHeight: 37,
       },
     );
     this.load.spritesheet(
@@ -142,8 +144,8 @@ export class Game extends Phaser.Scene {
       "rocabrava",
       "../../../../../../BACKEND/img/mapa/rocabrava_mapa.png",
       {
-        frameWidth: 32,
-        frameHeight: 32,
+        frameWidth: 50,
+        frameHeight: 37,
       },
     );
     this.load.spritesheet(
@@ -166,16 +168,16 @@ export class Game extends Phaser.Scene {
       "tsunami",
       "../../../../../../BACKEND/img/mapa/tsunami_mapa.png",
       {
-        frameWidth: 32,
-        frameHeight: 32,
+        frameWidth: 50,
+        frameHeight: 37,
       },
     );
     this.load.spritesheet(
       "yetihelado",
       "../../../../../../BACKEND/img/mapa/yetihelado_mapa.png",
       {
-        frameWidth: 32,
-        frameHeight: 32,
+        frameWidth: 38,
+        frameHeight: 37,
       },
     );
 
@@ -236,8 +238,9 @@ export class Game extends Phaser.Scene {
     const ts6 = map.addTilesetImage("Camino normal +", "camino_normal");
     const ts7 = map.addTilesetImage("CP Camino Ciudad", "cp_camino_ciudad");
     const ts8 = map.addTilesetImage("cartel curadero", "cartel_curadero");
+    const ts9 = map.addTilesetImage("carteles", "carteles");
 
-    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8];
+    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8, ts9];
 
     const suelo = map.createLayer("suelo", allTilesets, 0, 0);
     const caminoCiud = map.createLayer("camino ciudad", allTilesets, 0, 0);
@@ -269,6 +272,8 @@ export class Game extends Phaser.Scene {
       0,
       0,
     );
+    const casa_inferior = map.createLayer("casa_inferior", allTilesets, 0, 0);
+    const carteles = map.createLayer("carteles", allTilesets, 0, 0);
 
     //movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -287,11 +292,22 @@ export class Game extends Phaser.Scene {
     // cuando se vuelve de una pelea/inventario y el dragon quedo guardado encima.
     this.battleCooldown = true;
 
-    const spawnZone = map.findObject(
+    this.spawnZone = map.findObject(
       "spawn dragons",
       (obj) => obj.name === "spawn_dragons",
     );
+    this.spawnZone2 = map.findObject(
+      "spawn dragons",
+      (obj) => obj.name === "spawn_dragons2",
+    );
+    this.spawnZone3 = map.findObject(
+      "spawn dragons",
+      (obj) => obj.name === "spawn_dragons3",
+    );
 
+    console.log("spawnZone:", this.spawnZone);
+    console.log("spawnZone2:", this.spawnZone2);
+    console.log("spawnZone3:", this.spawnZone3);
     //creacion de los dragones
     this.dragons = this.physics.add.group();
 
@@ -315,38 +331,37 @@ export class Game extends Phaser.Scene {
       6: "burpi",
     };
 
-    this.spawnDragons = (cantidad) => {
+    this.spawnDragonsEnZona = (cantidad, zona) => {
       if (!this.dragonesSeleccionados) return;
 
-      const dragones_mapa1 = Phaser.Utils.Array.Shuffle([
+      const dragones = Phaser.Utils.Array.Shuffle([
         ...this.dragonesSeleccionados,
       ]).slice(0, cantidad);
 
-      dragones_mapa1.forEach((d) => {
-        const x = Phaser.Math.Between(
-          spawnZone.x,
-          spawnZone.x + spawnZone.width,
-        );
-        const y = Phaser.Math.Between(
-          spawnZone.y,
-          spawnZone.y + spawnZone.height,
-        );
+      dragones.forEach((d) => {
+        const x = Phaser.Math.Between(zona.x, zona.x + zona.width);
+        const y = Phaser.Math.Between(zona.y, zona.y + zona.height);
         const key = this.keyMap[d.id];
         const dragon = new NPC(this, x, y, key);
         dragon.setBounce(1);
         dragon.setCollideWorldBounds(true);
         dragon.body.setAllowGravity(false);
         dragon.info = d;
-        // ✅ id único por instancia
         dragon.instanceId = `${d.id}_${Date.now()}_${Math.random()}`;
+        dragon.zona = zona.name; // ← marca a qué zona pertenece
         this.dragons.add(dragon);
       });
     };
 
-    //funcion que crea los 5 dragones iniciales
+    this.spawnDragons = (cantidad) => {
+      this.spawnDragonsEnZona(cantidad, this.spawnZone);
+    };
+
     this.spawnInitialDragons = () => {
       if (!this.dragonesSeleccionados || this.initialSpawnDone) return;
-      this.spawnDragons(5);
+      this.spawnDragonsEnZona(5, this.spawnZone);
+      this.spawnDragonsEnZona(3, this.spawnZone2);
+      this.spawnDragonsEnZona(3, this.spawnZone3);
       this.initialSpawnDone = true;
     };
 
@@ -494,6 +509,7 @@ export class Game extends Phaser.Scene {
         id: d.info.id,
         x: Math.round(d.x),
         y: Math.round(d.y),
+        zona: d.zona, // ← agregar
       }));
 
       postEvent(
@@ -554,6 +570,7 @@ export class Game extends Phaser.Scene {
                   id: d.info.id,
                   x: Math.round(d.x),
                   y: Math.round(d.y),
+                  zona: d.zona, // ← agregar
                 }));
 
               postEvent(
@@ -632,6 +649,7 @@ export class Game extends Phaser.Scene {
         dragon.body.setAllowGravity(false);
         dragon.info = dragonInfo;
         dragon.instanceId = ds.instanceId;
+        dragon.zona = ds.zona ?? "spawn_dragons"; // ← única línea nueva
         this.dragons.add(dragon);
       });
       this.initialSpawnDone = true;
@@ -647,6 +665,7 @@ export class Game extends Phaser.Scene {
       id: d.info.id,
       x: Math.round(d.x),
       y: Math.round(d.y),
+      zona: d.zona, // ← agregar
     }));
 
     guardarEstado(1, this.player, dragonesSpawneados);
@@ -677,6 +696,7 @@ export class Game extends Phaser.Scene {
       id: d.info.id,
       x: Math.round(d.x),
       y: Math.round(d.y),
+      zona: d.zona, // ← agregar
     }));
 
     postEvent(
@@ -836,12 +856,34 @@ export class Game extends Phaser.Scene {
     */
 
     //si quedan menos de 4 dragones spawnean 2
+    // zona 1: menos de 4 → spawn 2
     if (
       this.initialSpawnDone &&
-      this.dragons.getChildren().length < 4 &&
-      this.dragonesSeleccionados
+      this.dragonesSeleccionados &&
+      this.dragons.getChildren().filter((d) => d.zona === "spawn_dragons")
+        .length < 4
     ) {
-      this.spawnDragons(2);
+      this.spawnDragonsEnZona(2, this.spawnZone);
+    }
+
+    // zona 2: menos de 2 → spawn 2
+    if (
+      this.initialSpawnDone &&
+      this.dragonesSeleccionados &&
+      this.dragons.getChildren().filter((d) => d.zona === "spawn_dragons2")
+        .length < 2
+    ) {
+      this.spawnDragonsEnZona(2, this.spawnZone2);
+    }
+
+    // zona 3: menos de 2 → spawn 2
+    if (
+      this.initialSpawnDone &&
+      this.dragonesSeleccionados &&
+      this.dragons.getChildren().filter((d) => d.zona === "spawn_dragons3")
+        .length < 2
+    ) {
+      this.spawnDragonsEnZona(2, this.spawnZone3);
     }
   }
 }

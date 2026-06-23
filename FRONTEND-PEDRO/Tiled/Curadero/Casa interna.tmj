@@ -227,6 +227,72 @@
                  "width":64.1425,
                  "x":351.0172,
                  "y":349.052
+                }, 
+                {
+                 "height":28.1327,
+                 "id":7,
+                 "name":"curadero",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64.1425,
+                 "x":447.0172,
+                 "y":349.052
+                }, 
+                {
+                 "height":28.1327,
+                 "id":8,
+                 "name":"curadero",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64.1425,
+                 "x":543.0172,
+                 "y":349.052
+                }, 
+                {
+                 "height":28.1327,
+                 "id":9,
+                 "name":"curadero",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64.1425,
+                 "x":639.0172,
+                 "y":349.052
+                }, 
+                {
+                 "height":28.1327,
+                 "id":10,
+                 "name":"curadero",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64.1425,
+                 "x":735.0172,
+                 "y":349.052
+                }, 
+                {
+                 "height":28.1327,
+                 "id":11,
+                 "name":"curadero",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64.1425,
+                 "x":831.0172,
+                 "y":349.052
+                }, 
+                {
+                 "height":28.1327,
+                 "id":12,
+                 "name":"curadero",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64.1425,
+                 "x":927.0172,
+                 "y":349.052
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -279,7 +345,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":7,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

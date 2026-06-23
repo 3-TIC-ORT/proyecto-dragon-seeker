@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="42" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="7">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="42" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="13">
  <editorsettings>
   <export target="Casa interna.tmj" format="json"/>
  </editorsettings>
@@ -176,6 +176,12 @@
  </layer>
  <objectgroup id="9" name="curadero">
   <object id="3" name="curadero" x="351.017" y="349.052" width="64.1425" height="28.1327"/>
+  <object id="7" name="curadero" x="447.017" y="349.052" width="64.1425" height="28.1327"/>
+  <object id="8" name="curadero" x="543.017" y="349.052" width="64.1425" height="28.1327"/>
+  <object id="9" name="curadero" x="639.017" y="349.052" width="64.1425" height="28.1327"/>
+  <object id="10" name="curadero" x="735.017" y="349.052" width="64.1425" height="28.1327"/>
+  <object id="11" name="curadero" x="831.017" y="349.052" width="64.1425" height="28.1327"/>
+  <object id="12" name="curadero" x="927.017" y="349.052" width="64.1425" height="28.1327"/>
  </objectgroup>
  <objectgroup id="10" name="colisiones">
   <object id="5" name="colisiones" x="544.57" y="559.484" width="505.263" height="16.8796"/>

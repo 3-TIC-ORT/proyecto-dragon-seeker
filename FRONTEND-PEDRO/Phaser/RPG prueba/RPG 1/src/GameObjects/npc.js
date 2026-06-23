@@ -42,7 +42,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       // Obtenemos los frames de forma segura
       const frames = this.scene.anims.generateFrameNumbers(this.dragonKey, {
         start: 0,
-        end: 1,
+        end: 3,
       });
 
       // Si por alguna razón frames está vacío o es indefinido, evitamos el crash
