@@ -10,9 +10,22 @@ const destino = (datos && datos.destino) || URL_MAPA;
 const pantalla = document.getElementById("pantalla");
 pantalla.classList.add(datos && datos.tipo === "fracaso" ? "fracaso" : "exito");
 
+// La subida de nivel tiene su propio tratamiento (banner + numero) para que se
+// distinga claramente de una victoria con XP normal.
+if (datos && datos.subioNivel) {
+  pantalla.classList.add("nivelUp");
+}
+
 if (datos) {
   document.getElementById("titulo").textContent = datos.titulo || "";
   document.getElementById("detalle").textContent = datos.detalle || "";
+
+  if (datos.subioNivel && datos.nivel != null) {
+    const badge = document.getElementById("nivelBadge");
+    document.getElementById("nivelNumero").textContent = datos.nivel;
+    badge.hidden = false;
+  }
+
   if (datos.sprite) {
     const img = document.getElementById("sprite");
     img.src = datos.sprite;

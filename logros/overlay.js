@@ -2,8 +2,9 @@
 // Para los logros/exitos se usa la pantalla dedicada logros/resultado.html;
 // para los fracasos va este cartel superpuesto, sin cambiar de pagina.
 // Se carga como script clasico y expone window.mostrarOverlayFracaso(opciones).
-//   opciones = { titulo, detalle, destino?, textoBoton? }
+//   opciones = { titulo, detalle, destino?, textoBoton?, onCerrar? }
 //   - destino: si se pasa, el boton navega ahi; si no, solo cierra el overlay.
+//   - onCerrar: callback opcional que se ejecuta al cerrar (si no hay destino).
 (function () {
   // Inyecta los estilos una sola vez (autocontenido, no depende del CSS de la pagina).
   if (!document.getElementById("overlayFracasoEstilos")) {
@@ -71,6 +72,7 @@
       detalle = "",
       destino = null,
       textoBoton = "CONTINUAR",
+      onCerrar = null,
     } = opciones || {};
 
     const overlay = document.createElement("div");
@@ -88,8 +90,12 @@
     const boton = overlay.querySelector(".overlayFracaso-boton");
     boton.textContent = textoBoton;
     boton.addEventListener("click", () => {
-      if (destino) window.location.href = destino;
-      else overlay.remove();
+      if (destino) {
+        window.location.href = destino;
+      } else {
+        overlay.remove();
+        if (onCerrar) onCerrar();
+      }
     });
 
     document.body.appendChild(overlay);

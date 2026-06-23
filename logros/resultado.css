@@ -124,3 +124,106 @@
 .boton-continuar:active {
   transform: translateY(2px);
 }
+
+/* ===== Animaciones de entrada (coherentes para todas las pantallas) ===== */
+@keyframes aparecerTitulo {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes subirSprite {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aparecerAbajo {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.titulo {
+  animation: aparecerTitulo 0.55s ease-out both;
+}
+
+.sprite {
+  animation: subirSprite 0.6s ease-out 0.2s both;
+}
+
+.detalle,
+.boton-continuar {
+  animation: aparecerAbajo 0.5s ease-out 0.35s both;
+}
+
+/* ===== Variante subida de nivel (bien distinta del XP normal) ===== */
+@keyframes pulsoDorado {
+  0%, 100% { box-shadow: 0 0 12px 2px rgba(251, 184, 25, 0.5); }
+  50% { box-shadow: 0 0 28px 10px rgba(251, 184, 25, 0.85); }
+}
+
+@keyframes destelloFondo {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+/* Resplandor dorado de fondo solo en la subida de nivel */
+#pantalla.nivelUp::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(251, 184, 25, 0.45) 0%,
+    rgba(251, 118, 1, 0.15) 35%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  animation: destelloFondo 1.8s ease-in-out infinite;
+}
+
+#pantalla.nivelUp .titulo {
+  font-size: clamp(2rem, 7vw, 4rem);
+}
+
+/* Banner con el numero de nivel alcanzado */
+.nivelBadge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
+  padding: 0.5em 1.2em;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fbba19 0%, #fb7601 100%);
+  border: 3px solid rgba(0, 0, 0, 0.4);
+  color: #2a1500;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  animation: aparecerTitulo 0.6s ease-out 0.25s both,
+    pulsoDorado 1.6s ease-in-out 0.85s infinite;
+}
+
+.nivelBadge[hidden] {
+  display: none;
+}
+
+.nivelEtiqueta {
+  font-size: var(--fs-sm);
+  letter-spacing: 0.18em;
+}
+
+.nivelNumero {
+  font-size: clamp(2.4rem, 8vw, 4.2rem);
+  line-height: 1;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titulo,
+  .sprite,
+  .detalle,
+  .boton-continuar,
+  .nivelBadge,
+  #pantalla.nivelUp::after {
+    animation: none;
+  }
+}

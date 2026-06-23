@@ -91,3 +91,60 @@
 .boton-pelear:active {
   transform: translateY(1px);
 }
+
+/* ===== Animaciones de entrada (coherentes con el resto del juego) =====
+   Los dragones entran enfrentandose, el VS aparece de golpe y el boton sube. */
+@keyframes entrarDesdeIzquierda {
+  0% { opacity: 0; transform: translateX(-80px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes entrarDesdeDerecha {
+  0% { opacity: 0; transform: translateX(80px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes aparecerVS {
+  0% { opacity: 0; transform: scale(2.4); }
+  70% { opacity: 1; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes latirVS {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+@keyframes subirBoton {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.lado-usuario {
+  animation: entrarDesdeIzquierda 0.6s ease-out both;
+}
+
+.lado-rival {
+  animation: entrarDesdeDerecha 0.6s ease-out both;
+}
+
+/* El rival queda espejado: la animacion no debe pisar el scaleX(-1) del sprite,
+   por eso anima el contenedor .lado-rival y no el .sprite. */
+.vs {
+  animation: aparecerVS 0.5s ease-out 0.55s both,
+    latirVS 1.4s ease-in-out 1.05s infinite;
+}
+
+/* Se anima el contenedor (no el boton) para no pisar el transform del hover */
+.boton-pelear-wrap {
+  animation: subirBoton 0.5s ease-out 0.8s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lado-usuario,
+  .lado-rival,
+  .vs,
+  .boton-pelear-wrap {
+    animation: none;
+  }
+}

@@ -77,11 +77,11 @@
     "partida": 2,
     "dragon": 4,
     "habilitado": true,
-    "nivel": 1,
-    "exp": 50,
-    "vida": 46,
+    "nivel": 2,
+    "exp": 100,
+    "vida": 55,
     "vidaMax": 55,
-    "fuerza": 10,
+    "fuerza": 15,
     "tipo": "fuego",
     "ataques": [
       {
@@ -189,8 +189,8 @@
     "dragon": 13,
     "habilitado": true,
     "nivel": 1,
-    "exp": 0,
-    "vida": 21,
+    "exp": 50,
+    "vida": 55,
     "vidaMax": 55,
     "fuerza": 10,
     "tipo": "hielo",
@@ -226,8 +226,8 @@
     "dragon": 4,
     "habilitado": true,
     "nivel": 1,
-    "exp": 0,
-    "vida": 0,
+    "exp": 50,
+    "vida": 21,
     "vidaMax": 55,
     "fuerza": 10,
     "tipo": "fuego",
@@ -440,6 +440,43 @@
     ],
     "desbloqueados": [
       "Llamarada",
+      "Arañazo"
+    ]
+  },
+  {
+    "partida": 2,
+    "dragon": 1,
+    "habilitado": true,
+    "nivel": 1,
+    "exp": 0,
+    "vida": 60,
+    "vidaMax": 60,
+    "fuerza": 10,
+    "tipo": "tierra",
+    "ataques": [
+      {
+        "nombre": "Coletazo",
+        "nivel": 1,
+        "dano": 7
+      },
+      {
+        "nombre": "Bola de barro",
+        "nivel": 5,
+        "dano": 12
+      },
+      {
+        "nombre": "Terremoto",
+        "nivel": 13,
+        "dano": 20
+      },
+      {
+        "nombre": "Arañazo",
+        "nivel": 1,
+        "dano": 8
+      }
+    ],
+    "desbloqueados": [
+      "Coletazo",
       "Arañazo"
     ]
   }

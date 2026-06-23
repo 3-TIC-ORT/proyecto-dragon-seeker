@@ -69,8 +69,24 @@ imagenamarillo.src = `../BACKEND/${dragonEnemigo.imagen}`;
 // Un dragon ya adoptado (habilitado) no se puede volver a adoptar: si te lo
 // volves a cruzar en el mapa, podes pelear pero el unico premio es experiencia.
 let yaAdoptado = dragonEnemigo.habilitado === true;
+// Los jefes (boss de zona) NO se pueden adoptar nunca: el boton ADOPTAR
+// directamente no aparece en su pelea.
+let esBoss = dragonEnemigo.esBoss === true;
+if (esBoss && BotonAdopcion) {
+  BotonAdopcion.style.display = "none";
+  const menuPrincipal = document.getElementById("menuPrincipal");
+  if (menuPrincipal) menuPrincipal.classList.add("sinAdoptar");
+}
 
-if (!yaAdoptado && dragonEnemigo.vida <= 30) {
+// La adopcion se habilita cuando el rival queda con POCA vida. Como los rivales
+// escalan y cada uno tiene una vidaMax distinta, el umbral es un PORCENTAJE de
+// su vida maxima (no un valor absoluto, que seria injusto entre rivales).
+const FRACCION_ADOPTABLE = 0.3; // 30% de la vida maxima del rival
+const umbralAdopcion =
+  (dragonEnemigo.vidaMax ?? dragonEnemigo.vidaInicial ?? dragonEnemigo.vida) *
+  FRACCION_ADOPTABLE;
+
+if (!yaAdoptado && !esBoss && dragonEnemigo.vida <= umbralAdopcion) {
   desbloquearBoton();
   BotonAdopcion.onclick = null;
 } else {
@@ -78,9 +94,11 @@ if (!yaAdoptado && dragonEnemigo.vida <= 30) {
   BotonAdopcion.onclick = (e) => {
     e.preventDefault();
     console.log(
-      yaAdoptado
-        ? "Este dragón ya es tuyo, no se puede adoptar de nuevo"
-        : "Todavía no lo podés adoptar",
+      esBoss
+        ? "A los jefes no se los puede adoptar"
+        : yaAdoptado
+          ? "Este dragón ya es tuyo, no se puede adoptar de nuevo"
+          : "Todavía no lo podés adoptar",
     );
   };
 }
@@ -168,27 +186,62 @@ function actualizarBarraVida(
   elementoTexto.innerText = `Hp (${vidaActual} / ${vidaInicial})`;
 }
 
+function ataqueDesbloqueado(a) {
+  if (!a) return false;
+  return (
+    a.desbloqueado ?? dragon.desbloqueados?.includes(a.nombre) ?? a.nivel <= 1
+  );
+}
+
+// El boton muestra SOLO el nombre (asi entra bien); el tipo y la eficacia van en
+// la caja de la pregunta, que en modo ataques pasa a mostrar esa info.
 function etiquetaAtaque(i) {
   const a = dragon.ataques[i];
   if (!a) return "Sin ataque";
-  const desbloqueado =
-    a.desbloqueado ?? dragon.desbloqueados?.includes(a.nombre) ?? a.nivel <= 1;
-  if (!desbloqueado) return `${a.nombre} (Nv ${a.nivel})`;
+  if (!ataqueDesbloqueado(a)) return `${a.nombre} (Nv ${a.nivel})`;
+  return a.nombre;
+}
+
+const infoTipo = document.getElementById("infoTipo");
+const infoEfecto = document.getElementById("infoEfecto");
+
+// Llena la caja con el tipo + la eficacia del ataque i (color segun multiplicador)
+function mostrarInfoAtaque(i) {
+  if (!infoTipo) return;
+  const a = dragon.ataques[i];
+  if (!a) {
+    infoTipo.textContent = "Sin ataque";
+    infoEfecto.textContent = "";
+    infoEfecto.className = "infoEfecto";
+    return;
+  }
+  if (!ataqueDesbloqueado(a)) {
+    infoTipo.textContent = "Bloqueado";
+    infoEfecto.textContent = `Se desbloquea en Nv ${a.nivel}`;
+    infoEfecto.className = "infoEfecto";
+    return;
+  }
+  infoTipo.textContent = `Tipo ${(dragon.tipo ?? "?").toUpperCase()}`;
   const mult = multiplicadorTipo(dragon.tipo, dragonEnemigo.tipo);
-  const clase = mult > 1 ? "modBueno" : mult < 1 ? "modMalo" : "modNeutro";
-  return `${a.nombre} <span class="mod ${clase}">×${mult}</span>`;
+  const etiqueta =
+    mult > 1 ? "Muy eficaz" : mult < 1 ? "Poco eficaz" : "Eficacia normal";
+  const clase = mult > 1 ? "efBueno" : mult < 1 ? "efMalo" : "efNeutro";
+  infoEfecto.textContent = `${etiqueta} ×${mult}`;
+  infoEfecto.className = `infoEfecto ${clase}`;
 }
 
 [ataque1, ataque2, ataque3, ataque4].forEach((btn, i) => {
   btn.innerHTML = etiquetaAtaque(i);
-  const a = dragon.ataques[i];
-  const desbloqueado = a
-    ? (a.desbloqueado ??
-      dragon.desbloqueados?.includes(a.nombre) ??
-      a.nivel <= 1)
-    : false;
-  btn.dataset.desbloqueado = desbloqueado ? "true" : "false";
+  btn.dataset.desbloqueado = ataqueDesbloqueado(dragon.ataques[i])
+    ? "true"
+    : "false";
+  btn.addEventListener("mouseenter", () => mostrarInfoAtaque(i));
+  btn.addEventListener("focus", () => mostrarInfoAtaque(i));
 });
+
+// Arranca mostrando el primer ataque desbloqueado (se ve al tocar LUCHAR).
+const primerDesbloqueado = dragon.ataques.findIndex((a) => ataqueDesbloqueado(a));
+mostrarInfoAtaque(primerDesbloqueado >= 0 ? primerDesbloqueado : 0);
 
 function checkFinDeBatalla() {
   if (batallaTerminada) return true;
@@ -269,19 +322,21 @@ function checkFinDeBatalla() {
         },
         (data) => {
           actualizarDragonardo(data.progreso);
-          let detalle = `Derrotaste a ${dragonEnemigo.nombre}.\n+${expGanada} XP`;
-          if (
+          const subioNivel =
             typeof data.mensaje === "string" &&
-            data.mensaje.toLowerCase().includes("subiste")
-          ) {
-            detalle += `\n¡Subiste al nivel ${data.progreso.nivel}!`;
+            data.mensaje.toLowerCase().includes("subiste");
+          let detalle = `Derrotaste a ${dragonEnemigo.nombre}.\n+${expGanada} XP`;
+          if (subioNivel) {
+            detalle += `\n${dragon.nombre} alcanzó el nivel ${data.progreso.nivel}.`;
           }
           localStorage.setItem(
             "resultado",
             JSON.stringify({
               tipo: "exito",
-              titulo: "¡Ganaste!",
+              titulo: subioNivel ? "¡SUBIÓ DE NIVEL!" : "¡Ganaste!",
               detalle,
+              subioNivel,
+              nivel: subioNivel ? data.progreso.nivel : undefined,
               sprite: dragon?.imagen ? `../BACKEND/${dragon.imagen}` : undefined,
             }),
           );
@@ -400,7 +455,7 @@ function terminarTurno2() {
     }
   }, 1500);
 
-  if (!yaAdoptado && dragonEnemigo.vida <= 30) {
+  if (!yaAdoptado && !esBoss && dragonEnemigo.vida <= umbralAdopcion) {
     desbloquearBoton();
     BotonAdopcion.onclick = null;
     BotonAdopcion.onclick = () => {
@@ -412,9 +467,11 @@ function terminarTurno2() {
     BotonAdopcion.onclick = (e) => {
       e.preventDefault();
       console.log(
-        yaAdoptado
-          ? "Este dragón ya es tuyo, no se puede adoptar de nuevo"
-          : "Todavía no lo podés adoptar",
+        esBoss
+          ? "A los jefes no se los puede adoptar"
+          : yaAdoptado
+            ? "Este dragón ya es tuyo, no se puede adoptar de nuevo"
+            : "Todavía no lo podés adoptar",
       );
     };
   }

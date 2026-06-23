@@ -132,6 +132,7 @@ export function obtenerlistadragones(idpartida = null, escalarRivales = false) {
       nivel: prog.nivel ?? d.nivel,
       exp: prog.exp ?? 0,
       vida: prog.vida ?? d.vida,
+      vidaMax: prog.vidaMax ?? d.vidaMax ?? d.vida,
       fuerza: prog.fuerza ?? d.fuerza,
       desbloqueados: prog.desbloqueados ?? [],
       ataques: (d.ataques || []).map((atBase) => {

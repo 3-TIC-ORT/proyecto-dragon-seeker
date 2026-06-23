@@ -9,10 +9,13 @@ if (!usuario) {
   window.location.href = "/inicioSesion/inicioSesion.html";
 }
 
-// Si entraste al inventario desde una pelea, no podes volver al mapa desde aca:
-// la pelea sigue en curso y solo se sale de ella huyendo o ganando/perdiendo.
+// Si entraste al inventario desde una pelea (boton DRAGON, para cambiar de
+// dragon en medio del combate), no podes ni volver al mapa ni CURAR: la pelea
+// sigue en curso y curar ahi seria hacer trampa.
+const enPelea = localStorage.getItem("origenInventario") === "pelea";
+
 const botonMapa = document.querySelector(".botonMapa");
-if (botonMapa && localStorage.getItem("origenInventario") === "pelea") {
+if (botonMapa && enPelea) {
   botonMapa.remove();
 }
 
@@ -26,8 +29,53 @@ postEvent("obtenerdragonesUsuario", { idpartida }, (data) => {
   mostrarDragones();
 });
 
+// Relaciones de tipo (mismas que en la pelea) para recomendar el dragon que mas
+// conviene contra el rival actual.
+const TIPO_RELACIONES = {
+  tierra: { efectivo: "electrico", debil: ["agua", "hielo"] },
+  fuego: { efectivo: "hielo", debil: ["agua"] },
+  hielo: { efectivo: "tierra", debil: ["fuego"] },
+  electrico: { efectivo: "agua", debil: ["tierra"] },
+  agua: { efectivo: "fuego", debil: ["electrico"] },
+};
+function multiplicadorTipo(tipoAtaque, tipoDefensor) {
+  const rel = TIPO_RELACIONES[tipoAtaque];
+  if (!rel) return 1;
+  if (rel.efectivo === tipoDefensor) return 2;
+  if (rel.debil.includes(tipoDefensor)) return 0.5;
+  return 1;
+}
+
+// La recomendacion solo aplica cuando estas eligiendo con quien pelear (hay un
+// rival cargado y venis de una pelea/encuentro). Desde el mapa no hay "caso".
+const rival = JSON.parse(localStorage.getItem("dragon_enemigo") || "null");
+const eligiendoParaPelea =
+  !!rival &&
+  ["pelea", "encuentro"].includes(localStorage.getItem("origenInventario"));
+
+// Indice del dragon que mas conviene contra el rival: mejor efectividad de tipo,
+// solo entre los adoptados y con vida; desempata por nivel y luego por vida.
+function calcularRecomendado() {
+  if (!eligiendoParaPelea) return -1;
+  let mejor = -1;
+  let mejorPuntaje = -Infinity;
+  for (let i = 0; i < dragones.length; i++) {
+    const d = dragones[i];
+    if (d.habilitado !== true || (d.vida ?? 0) <= 0) continue;
+    const mult = multiplicadorTipo(d.tipo, rival.tipo);
+    const puntaje = mult * 1000 + (d.nivel ?? 1) * 10 + (d.vida ?? 0) / 100;
+    if (puntaje > mejorPuntaje) {
+      mejorPuntaje = puntaje;
+      mejor = i;
+    }
+  }
+  return mejor;
+}
+
 function mostrarDragones() {
   containerDragon.innerHTML = "";
+
+  const recomendado = calcularRecomendado();
 
   for (let i = 0; i < dragones.length; i++) {
     let dragon = dragones[i];
@@ -36,6 +84,7 @@ function mostrarDragones() {
     let tarjeta = document.createElement("div");
     tarjeta.classList.add("tarjeta");
     tarjeta.dataset.index = i;
+    tarjeta.dataset.iddragon = dragon.id;
 
     if (dragon.especial === true) {
       tarjeta.classList.add("dragonEspecial");
@@ -47,10 +96,42 @@ function mostrarDragones() {
       tarjeta.classList.add("dragonBloqueado");
     }
 
-    // Dragon adoptado pero sin vida: no puede pelear ni ser el dragon activo.
-    let sinVida = habilitado && (dragon.vida ?? 0) <= 0;
+    // Estado de salud del dragon (solo aplica a los adoptados).
+    // vidaMax viene del backend; el % decide cuan critico esta y si hay que curar.
+    const vida = dragon.vida ?? 0;
+    const vidaMax = dragon.vidaMax || dragon.vida || 1;
+    const pctVida = Math.max(0, Math.min(100, Math.round((vida / vidaMax) * 100)));
+
+    let sinVida = habilitado && vida <= 0;
+    // "Necesita curacion" = adoptado y por debajo del 100% de vida.
+    let necesitaCura = habilitado && vida < vidaMax;
+    // "Critico" = sin vida o por debajo del 30%: tinte rojo mas fuerte + pulso.
+    let critico = habilitado && pctVida <= 30;
+
     if (sinVida) {
       tarjeta.classList.add("dragonSinVida");
+    }
+    if (necesitaCura) {
+      tarjeta.classList.add("necesitaCura");
+    }
+    if (critico) {
+      tarjeta.classList.add("vidaCritica");
+    }
+
+    // Dragon recomendado contra el rival actual (mejor efectividad de tipo).
+    const esRecomendado = i === recomendado;
+    if (esRecomendado) {
+      tarjeta.classList.add("recomendado");
+    }
+
+    // Cartel de estado: distingue sin vida / critico / herido.
+    let avisoHTML = "";
+    if (sinVida) {
+      avisoHTML = '<p class="avisoSalud avisoCritico">Sin vida - no puede pelear</p>';
+    } else if (critico) {
+      avisoHTML = '<p class="avisoSalud avisoCritico">¡Estado crítico! Necesita curación</p>';
+    } else if (necesitaCura) {
+      avisoHTML = '<p class="avisoSalud">Necesita curación</p>';
     }
 
     // Stats y progreso de XP (solo para dragones adoptados).
@@ -62,7 +143,7 @@ function mostrarDragones() {
       const pct = Math.min(100, Math.round((exp / necesaria) * 100));
       statsHTML = `
         <div class="stats">
-          <span class="stat">VIDA ${dragon.vida}</span>
+          <span class="stat">VIDA ${vida}/${vidaMax}</span>
           <span class="stat">FUERZA ${dragon.fuerza}</span>
         </div>
         <div class="xpBarra">
@@ -77,14 +158,15 @@ function mostrarDragones() {
         <img src="../BACKEND/${dragon.imagen}" alt="${dragon.nombre}" class="imgDragon">
       </div>
       <div class="info">
+        ${esRecomendado ? '<span class="badgeRecomendado">Recomendado</span>' : ""}
         <h4 class="nombre">${dragon.nombre}</h4>
         <p class="nivel">Lv ${dragon.nivel}</p>
         <p class="tipo">${habilitado ? dragon.tipo : "No adoptado"}</p>
-        ${sinVida ? '<p class="avisoSinVida">Sin vida - no puede pelear</p>' : ""}
+        ${avisoHTML}
         ${statsHTML}
       </div>
       ${
-        habilitado
+        necesitaCura && !enPelea
           ? `<button type="button" class="botonCurar" data-iddragon="${dragon.id}">Curar</button>`
           : ""
       }
@@ -185,6 +267,16 @@ function curarDragon(iddragon) {
       tarjetaSeleccionada = null;
       botonElegir.classList.remove("visible");
       mostrarDragones();
+
+      // Feedback de curado: la tarjeta destella en verde un instante para que
+      // se note el cambio de estado (de "necesita curacion" a sano).
+      const tarjeta = containerDragon.querySelector(
+        `.tarjeta[data-iddragon="${iddragon}"]`,
+      );
+      if (tarjeta) {
+        tarjeta.classList.add("recienCurado");
+        setTimeout(() => tarjeta.classList.remove("recienCurado"), 1200);
+      }
     } else {
       alert(res?.mensaje || "No se pudo curar el dragón.");
     }
