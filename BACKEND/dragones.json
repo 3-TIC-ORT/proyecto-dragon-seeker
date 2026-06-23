@@ -437,7 +437,7 @@
       "fuerza": 30,
       "capturable": false,
       "esBoss": true,
-      "imagen": "img/boss1.png",
+      "imagen": "img/dragonNegroBoss.svg",
       "ataques": [
         { "nombre": "Coletazo", "dano": 20 },
         { "nombre": "Gas verde", "dano": 25 },

@@ -241,13 +241,60 @@
   font-weight: 700;
 }
 
+/* ===== Variante "ganaste el juego" (derrota del boss final) ===== */
+/* Reusa el look de .exito (titulo dorado + fondo del mundo) y le suma un
+   resplandor de fondo siempre activo y un titulo aun mas grande. */
+#pantalla.juegoGanado::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(251, 184, 25, 0.4) 0%,
+    rgba(251, 118, 1, 0.12) 40%,
+    rgba(0, 0, 0, 0) 72%
+  );
+  animation: destelloFondo 2s ease-in-out infinite;
+}
+
+/* Como tiene titulo grande + sprite + detalle + boton ancho, se compacta y se
+   ata al alto del viewport (vh) para que entre completa sin scrollear. */
+#pantalla.juegoGanado {
+  padding-block: clamp(0.6rem, 2.5vh, 1.4rem);
+}
+
+#pantalla.juegoGanado .resultado {
+  gap: clamp(0.5rem, 1.8vh, 1.1rem);
+}
+
+/* El titulo y el detalle quedan con el tamaño estandar de .exito (sin achicar);
+   solo se compacta el sprite por alto para no forzar scroll. */
+#pantalla.juegoGanado .sprite {
+  width: auto;
+  height: clamp(110px, 26vh, 200px);
+}
+
+/* Boton mas ancho y un poco mas alto para que "IR A LAS PARTIDAS" entre en una
+   linea (el ratio chato de CONTINUAR le quedaba corto). */
+#pantalla.juegoGanado .boton-continuar {
+  width: min(92vw, 440px);
+  aspect-ratio: auto;
+  min-height: clamp(48px, 8vh, 64px);
+  padding-inline: 1.4rem;
+  font-size: clamp(1rem, min(3vw, 3vh), 1.35rem);
+  letter-spacing: 0.02em;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .titulo,
   .sprite,
   .detalle,
   .boton-continuar,
   .nivelBadge,
-  #pantalla.nivelUp::after {
+  #pantalla.nivelUp::after,
+  #pantalla.juegoGanado::after {
     animation: none;
   }
 }

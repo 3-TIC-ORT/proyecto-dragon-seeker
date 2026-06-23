@@ -165,12 +165,28 @@ export class zonaBoss extends Phaser.Scene {
 
     bossSprite.disableBody(true, true);
 
-    localStorage.setItem("dragon_enemigo", JSON.stringify(bossSprite.info));
+    localStorage.setItem(
+      "dragon_enemigo",
+      JSON.stringify({ ...bossSprite.info, instanceId: bossSprite.instanceId }),
+    );
     localStorage.removeItem("dragon_eliminado");
+
+    // guardamos el estado de la zona boss antes de saltar a la pelea
+    guardarEstado(3, this.player);
 
     console.log("DEBUG redirigiendo a pelea con boss:", bossSprite.info);
 
-    window.location.href = "../../../../inventario/inventario.html";
+    // Mismo ruteo que un encuentro normal del mapa (ver Game.js): si tenes un
+    // dragon equipado con vida, vas directo al head-to-head; si no, pasas por el
+    // inventario a elegir (origen "encuentro" -> head-to-head -> pelea). Sin el
+    // flag origenInventario, el inventario te devolvia al mapa en vez de pelear.
+    const equipado = JSON.parse(localStorage.getItem("dragonardo"));
+    if (equipado && (equipado.vida ?? 0) > 0) {
+      window.location.href = "../../../../enfrentamiento/enfrentamiento.html";
+    } else {
+      localStorage.setItem("origenInventario", "encuentro");
+      window.location.href = "../../../../inventario/inventario.html";
+    }
   }
 
   update() {}

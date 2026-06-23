@@ -622,6 +622,25 @@ export class Game extends Phaser.Scene {
       null,
       this,
     );
+
+    // Aviso unico de desbloqueo de la zona del jefe: la primera vez que el nivel
+    // promedio alcanza el minimo, lo anunciamos al volver al mapa. El flag por
+    // partida evita repetirlo cada vez que se entra al mapa.
+    const flagBoss = `bossDesbloqueadoAvisado_${this.partidaId}`;
+    if (!localStorage.getItem(flagBoss)) {
+      postEvent(
+        "verificarAccesoZonaBoss",
+        { idpartida: this.partidaId },
+        (res) => {
+          if (res && res.exito && res.puedePasar) {
+            localStorage.setItem(flagBoss, "1");
+            this.dialogo.aviso(
+              "¡Desbloqueaste la zona del jefe! Buscá el portal del jefe en el mapa para enfrentarlo.",
+            );
+          }
+        },
+      );
+    }
   }
 
   procesarEstadoInicial() {

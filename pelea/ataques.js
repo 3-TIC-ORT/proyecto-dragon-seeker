@@ -52,6 +52,7 @@ const GIFS_ATAQUE = {
   2: ["rocabrava_attack_nightmare.gif", "rocabrava_attack_shadow_claw.gif", "rocabrava_attack_soul_drain.gif", "rocabrava_attack_void_rift.gif"],
   3: ["golem verde_attack_charge.gif", "golem verde_attack_claw_slash.gif", "golem verde_attack_fire_breath.gif", "golem verde_attack_tail_whip.gif"],
   4: ["ataque chimuelo 1.gif", "ataque chimuelo 2.gif", "ataque chimuelo 3.gif", "ataque chimuelo 4.gif"],
+  5: ["ataque llamafuria 1.gif", "ataque llamafuria 2.gif", "ataque llamafuria 3.gif", "ataque llamafuria 4.gif"],
   6: ["burpi_attack_fire.gif", "burpi_attack_inferno.gif", "burpi_attack_lava.gif", "burpi_attack_scorched.gif"],
   7: ["ataque amarillo 1.gif", "ataque amarillo 2.gif", "ataque amarillo 3.gif", "ataque amarillo 4.gif"],
   9: ["truenoz_attack_charge.gif", "truenoz_attack_claw_slash.gif", "truenoz_attack_fire_breath.gif", "truenoz_attack_tail_whip.gif"],
@@ -87,10 +88,13 @@ const ALTO_DRAGON_PX = 32;
 // Escala el gif para que esos 32px de abajo midan lo mismo que el SVG (100% del
 // stage); el efecto sobresale por arriba. Asi el dragon queda del mismo tamaño y
 // posicion que el sprite estatico sin importar el alto del frame (32/40/48/64).
-// El boss no sigue esa convencion de encuadre: se encuadra entero al stage (100%).
+// El boss no sigue esa convencion de encuadre. Sus 4 gifs estan exportados con
+// frames de distinto tamaño y el dragon descentrado, asi que no matchean exacto
+// con el SVG estatico; 120% solo agranda un poco el gif para que el salto de
+// tamaño al SVG no sea tan brusco (no busca matcheo perfecto -> reexportar gifs).
 function ajustarAltoGif(gifEl, esBoss) {
   if (esBoss) {
-    gifEl.style.height = "100%";
+    gifEl.style.height = "120%";
     return;
   }
   if (!gifEl.naturalHeight) return;
@@ -393,7 +397,30 @@ function checkFinDeBatalla() {
 
       localStorage.setItem("dragon_eliminado", dragonEnemigo.instanceId);
 
-      let expGanada = 50;
+      // XP variable. Base que escala con el nivel del rival (nv1 = 50, +20/nivel),
+      // ajustada por dos factores:
+      //  - factorNivel: ganarle a alguien mas fuerte que vos da mas XP; a uno mas
+      //    debil, menos. (+/-15% por nivel de diferencia, clampeado).
+      //  - factorTipo: preferencia de tipo desde TU lado. Si tu tipo es debil
+      //    contra el suyo (tus ataques le hacen x0.5, pelea mas dura) -> mas XP;
+      //    si tenes ventaja (x2) -> menos XP. Es el inverso de la efectividad.
+      const nivelRival = dragonEnemigo.nivel ?? 1;
+      const nivelMio = dragon.nivel ?? 1;
+      let expGanada = 30 + nivelRival * 20;
+
+      const factorNivel = Math.min(
+        1.5,
+        Math.max(0.7, 1 + (nivelRival - nivelMio) * 0.1),
+      );
+      const efectividadMia = multiplicadorTipo(dragon.tipo, dragonEnemigo.tipo);
+      // Ajuste suave por preferencia de tipo (no el inverso directo, seria mucho):
+      // si tenes ventaja (le pegas x2, mas facil) -> -15%; si sos debil (x0.5,
+      // mas dificil) -> +20%; neutro -> sin cambio.
+      const factorTipo =
+        efectividadMia >= 2 ? 0.85 : efectividadMia <= 0.5 ? 1.2 : 1;
+
+      expGanada = Math.max(10, Math.round(expGanada * factorNivel * factorTipo));
+      if (dragonEnemigo.esBoss) expGanada = Math.round(expGanada * 2.5);
 
       postEvent(
         "actualizarVida",
@@ -421,6 +448,28 @@ function checkFinDeBatalla() {
           const subioNivel =
             typeof data.mensaje === "string" &&
             data.mensaje.toLowerCase().includes("subiste");
+
+          // Derrotar a un boss = ganar el juego: pantalla de felicitacion con
+          // boton a la seleccion de partidas, en vez del resultado normal de XP.
+          if (dragonEnemigo.esBoss === true) {
+            localStorage.setItem(
+              "resultado",
+              JSON.stringify({
+                tipo: "exito",
+                titulo: "¡GANASTE EL JUEGO!",
+                detalle: `Derrotaste a ${dragonEnemigo.nombre} y completaste Dragon Seekers.\n¡Felicitaciones!`,
+                juegoGanado: true,
+                textoBoton: "IR A LAS PARTIDAS",
+                destino: "http://127.0.0.1:5501/menu/partida.html",
+                sprite: dragon?.imagen
+                  ? `../BACKEND/${dragon.imagen}`
+                  : undefined,
+              }),
+            );
+            window.location.href = "../logros/resultado.html";
+            return;
+          }
+
           let detalle = `Derrotaste a ${dragonEnemigo.nombre}.\n+${expGanada} XP`;
           if (subioNivel) {
             detalle += `\n${dragon.nombre} alcanzó el nivel ${data.progreso.nivel}.`;

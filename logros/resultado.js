@@ -16,9 +16,19 @@ if (datos && datos.subioNivel) {
   pantalla.classList.add("nivelUp");
 }
 
+// Variante "ganaste el juego" (derrota del boss final): estilo celebratorio y
+// boton con texto propio (lo define datos.textoBoton).
+if (datos && datos.juegoGanado) {
+  pantalla.classList.add("juegoGanado");
+}
+
 if (datos) {
   document.getElementById("titulo").textContent = datos.titulo || "";
   document.getElementById("detalle").textContent = datos.detalle || "";
+
+  if (datos.textoBoton) {
+    document.getElementById("btnContinuar").textContent = datos.textoBoton;
+  }
 
   if (datos.subioNivel && datos.nivel != null) {
     const badge = document.getElementById("nivelBadge");
