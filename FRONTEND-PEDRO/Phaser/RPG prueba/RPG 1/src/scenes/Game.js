@@ -66,10 +66,14 @@ export class Game extends Phaser.Scene {
         frameHeight: 32,
       },
     );
-    this.load.spritesheet("oso", "../../../../../../BACKEND/img/mapa/oso_mapa.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
+    this.load.spritesheet(
+      "oso",
+      "../../../../../../BACKEND/img/mapa/oso_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
     this.load.spritesheet(
       "escarcha",
       "../../../../../../BACKEND/img/mapa/escarcha_mapa.png",
@@ -78,10 +82,14 @@ export class Game extends Phaser.Scene {
         frameHeight: 32,
       },
     );
-    this.load.spritesheet("burbu", "../../../../../../BACKEND/img/mapa/burbu_mapa.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
+    this.load.spritesheet(
+      "burbu",
+      "../../../../../../BACKEND/img/mapa/burbu_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
     this.load.spritesheet(
       "chimuelo",
       "../../../../../../BACKEND/img/mapa/chimuelo_mapa.png",
@@ -101,6 +109,70 @@ export class Game extends Phaser.Scene {
     this.load.spritesheet(
       "llamafuria",
       "../../../../../../BACKEND/img/mapa/llamafuria_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "bengal",
+      "../../../../../../BACKEND/img/mapa/bengal_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "burpi",
+      "../../../../../../BACKEND/img/mapa/burpi_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "golemVerde",
+      "../../../../../../BACKEND/img/mapa/golemVerde_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "rocabrava",
+      "../../../../../../BACKEND/img/mapa/rocabrava_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "tormato",
+      "../../../../../../BACKEND/img/mapa/tormato_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "truenoz",
+      "../../../../../../BACKEND/img/mapa/truenoz_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "tsunami",
+      "../../../../../../BACKEND/img/mapa/tsunami_mapa.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      "yetihelado",
+      "../../../../../../BACKEND/img/mapa/yetihelado_mapa.png",
       {
         frameWidth: 32,
         frameHeight: 32,
@@ -233,6 +305,14 @@ export class Game extends Phaser.Scene {
       4: "chimuelo",
       7: "amarillo",
       5: "llamafuria",
+      2: "rocabrava",
+      3: "golemVerde",
+      9: "truenoz",
+      11: "tsunami",
+      15: "yetihelado",
+      19: "tormato",
+      20: "bengal",
+      6: "burpi",
     };
 
     this.spawnDragons = (cantidad) => {
@@ -371,7 +451,9 @@ export class Game extends Phaser.Scene {
       .setDepth(2000)
       .setInteractive({ useHandCursor: true });
 
-    this.botonSalir.on("pointerover", () => this.botonSalir.setColor("#ffd83d"));
+    this.botonSalir.on("pointerover", () =>
+      this.botonSalir.setColor("#ffd83d"),
+    );
     this.botonSalir.on("pointerout", () => this.botonSalir.setColor("#ffffff"));
     this.botonSalir.on("pointerdown", () => this.cerrarSesion());
 
@@ -427,7 +509,7 @@ export class Game extends Phaser.Scene {
         },
         () => {
           // ✅ recién cuando el backend confirmó, cambiamos de escena
-          this.scene.start("Casa", { x: 80, y: 416 });
+          this.scene.start("Casa", { x: 368, y: 576 });
         },
       );
     });
@@ -446,8 +528,13 @@ export class Game extends Phaser.Scene {
     this.zonaBoss.setVisible(false);
 
     //puerta de acceso a la zonaBoss (requiere nivel promedio mínimo)
+    this.nearZonaBoss = false;
+
     this.physics.add.overlap(this.player, this.zonaBoss, () => {
-      if (this.cambiandoEscena || this.dialogo.abierto) return;
+      this.nearZonaBoss = true;
+      if (this.cambiandoEscena || this.dialogo.abierto || this.zonaBossCooldown)
+        return;
+      this.zonaBossCooldown = true; // se activa al dispararse, se resetea al alejarse
 
       const idpartida = getPartidaId();
 
@@ -539,12 +626,7 @@ export class Game extends Phaser.Scene {
           (d) => d.id === ds.id,
         );
         if (!dragonInfo) return;
-        const dragon = new NPC(
-          this,
-          ds.x,
-          ds.y,
-          this.keyMap[dragonInfo.id],
-        );
+        const dragon = new NPC(this, ds.x, ds.y, this.keyMap[dragonInfo.id]);
         dragon.setBounce(1);
         dragon.setCollideWorldBounds(true);
         dragon.body.setAllowGravity(false);
@@ -700,7 +782,12 @@ export class Game extends Phaser.Scene {
   }
 
   update() {
-    // Dialogo abierto (curadero/veterinario): consume el input y frena al player.
+    if (!this.nearZonaBoss) {
+      // si te alejaste, reseteamos para que al volver pueda dispararse de nuevo
+      this.zonaBossCooldown = false;
+    }
+    this.nearZonaBoss = false;
+
     if (this.dialogo.abierto) {
       this.dialogo.manejarInput(this.cursors, this.keyE);
       this.player.setVelocity(0);

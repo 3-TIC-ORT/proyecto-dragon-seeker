@@ -33,7 +33,7 @@
       "fuerza": 12,
       "especial": false,
       "esBoss": false,
-      "mapa": 2,
+      "mapa": 1,
       "imagen": "img/2.png",
       "ataques": [
         { "nombre": "Coletazo", "dano": 10, "nivel": 1 },
@@ -54,7 +54,7 @@
       "fuerza": 15,
       "especial": true,
       "esBoss": false,
-      "mapa": 3,
+      "mapa": 1,
       "imagen": "img/3.png",
       "ataques": [
         { "nombre": "Coletazo", "dano": 13, "nivel": 1 },
@@ -108,7 +108,7 @@
     },
     {
       "id": 6,
-      "nombre": "Pyrosombra",
+      "nombre": "Burpi",
       "tipo": "fuego",
       "nivel": 1,
       "nivelMin": 1,
@@ -118,7 +118,7 @@
       "fuerza": 16,
       "especial": false,
       "esBoss": false,
-      "mapa": 3,
+      "mapa": 1,
       "imagen": "img/6.png",
       "ataques": [
         { "nombre": "Llamarada", "dano": 14, "nivel": 1 },
@@ -130,7 +130,7 @@
 
     {
       "id": 7,
-      "nombre": "Amarillo",
+      "nombre": "Jules",
       "tipo": "electrico",
       "nivel": 1,
       "nivelMin": 1,
@@ -182,7 +182,7 @@
       "fuerza": 15,
       "especial": true,
       "esBoss": false,
-      "mapa": 3,
+      "mapa": 1,
       "imagen": "img/9.png",
       "ataques": [
         { "nombre": "Chispa", "dano": 13, "nivel": 1 },
@@ -225,7 +225,7 @@
       "fuerza": 13,
       "especial": false,
       "esBoss": false,
-      "mapa": 2,
+      "mapa": 1,
       "imagen": "img/11.png",
       "ataques": [
         { "nombre": "Burbuja", "dano": 10, "nivel": 1 },
@@ -310,7 +310,7 @@
       "fuerza": 16,
       "especial": true,
       "esBoss": false,
-      "mapa": 3,
+      "mapa": 1,
       "imagen": "img/15.png",
       "ataques": [
         { "nombre": "Ventisca", "dano": 14, "nivel": 1 },
@@ -380,7 +380,49 @@
         { "nombre": "Arañazo", "dano": 13, "nivel": 1 },
         { "nombre": "Patado", "dano": 15, "nivel": 1 },
         { "nombre": "Puñetazo", "dano": 17, "nivel": 1 },
-        { "nombre": "Llamarada", "dano": 20, "nivel": 5 }
+        { "nombre": "Bola de barro", "dano": 17, "nivel": 5 }
+      ]
+    },
+    {
+      "id": 19,
+      "nombre": "Tormato",
+      "tipo": "fuego",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 60,
+      "vidaMax": 85,
+      "fuerza": 16,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/6.png",
+      "ataques": [
+        { "nombre": "Llamarada", "dano": 14, "nivel": 1 },
+        { "nombre": "Bola de fuego", "dano": 21, "nivel": 5 },
+        { "nombre": "Puño de fuego", "dano": 31, "nivel": 13 },
+        { "nombre": "Puñetazo", "dano": 15, "nivel": 1 }
+      ]
+    },
+    {
+      "id": 20,
+      "nombre": "Bengal",
+      "tipo": "fuego",
+      "nivel": 1,
+      "nivelMin": 1,
+      "nivelMax": 13,
+      "vida": 65,
+      "vidaMax": 85,
+      "fuerza": 16,
+      "especial": false,
+      "esBoss": false,
+      "mapa": 1,
+      "imagen": "img/6.png",
+      "ataques": [
+        { "nombre": "Llamarada", "dano": 14, "nivel": 1 },
+        { "nombre": "Bola de fuego", "dano": 21, "nivel": 5 },
+        { "nombre": "Puño de fuego", "dano": 31, "nivel": 13 },
+        { "nombre": "arañazo", "dano": 15, "nivel": 1 }
       ]
     }
   ],
