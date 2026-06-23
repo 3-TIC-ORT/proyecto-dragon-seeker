@@ -72,14 +72,14 @@ export class Casa extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     // ✅ posición default por si entra sin data
-    const startX = data?.x ?? 80;
-    const startY = data?.y ?? 416;
+    const startX = data?.x ?? 368;
+    const startY = data?.y ?? 576;
 
     // Spawn del jugador en la posición recibida desde Mapa1
     this.player = new Player(this, startX, startY, this.cursors);
     this.player.setDepth(1);
 
-    this.veterinario = new Veterinario(this, 96, 165);
+    this.veterinario = new Veterinario(this, 384, 325);
     this.veterinario.setDepth(1.5);
 
     //colliders
@@ -111,6 +111,8 @@ export class Casa extends Phaser.Scene {
 
     //camara
     this.cameras.main.setBounds(0, 0, casa.widthInPixels, casa.heightInPixels);
+    this.cameras.main.setRoundPixels(true);
+
     this.cameras.main.startFollow(this.player);
 
     // BOTON INVENTARIO DRAGONES
@@ -212,7 +214,7 @@ export class Casa extends Phaser.Scene {
           const idpartida = Number(localStorage.getItem("partida"));
           postEvent("curarDragones", { idpartida }, (respuesta) => {
             if (respuesta.exito) {
-              this.showMessage("¡Tus dragones fueron curados!");
+              this.dialogo.aviso("¡Tus dragones fueron curados!");
             }
           });
         },
@@ -236,28 +238,6 @@ export class Casa extends Phaser.Scene {
       this.dialogo.manejarInput(this.cursors, this.keyE);
       this.player.setVelocity(0);
       return;
-    }
-
-    if (
-      this.cursors.left.isDown ||
-      this.cursors.right.isDown ||
-      this.cursors.up.isDown ||
-      this.cursors.down.isDown
-    ) {
-      if (this.cursors.left.isDown) {
-        this.player.moveLeft();
-      }
-      if (this.cursors.right.isDown) {
-        this.player.moveRight();
-      }
-      if (this.cursors.up.isDown) {
-        this.player.moveUp();
-      }
-      if (this.cursors.down.isDown) {
-        this.player.moveDown();
-      }
-    } else {
-      this.player.idle();
     }
   }
 }

@@ -44,23 +44,27 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   moveLeft() {
     this.setVelocityX(-150);
-    this.setFlipX(true); // espejea para la izquierda
+    this.setVelocityY(0); // ← agregar
+    this.setFlipX(true);
     this.anims.play("walk", true);
   }
 
   moveRight() {
     this.setVelocityX(150);
+    this.setVelocityY(0); // ← agregar
     this.setFlipX(false);
     this.anims.play("walk", true);
   }
 
   moveUp() {
     this.setVelocityY(-150);
+    this.setVelocityX(0); // ← agregar
     this.anims.play("up", true);
   }
 
   moveDown() {
     this.setVelocityY(150);
+    this.setVelocityX(0); // ← agregar
     this.anims.play("down", true);
   }
 
@@ -82,11 +86,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.moveDown();
     } else {
       this.idle();
-    }
-
-    // Si no se mueve, animación quieto
-    if (this.body.velocity.x === 0 && this.body.velocity.y === 0) {
-      this.anims.play("idle", true);
     }
   }
 }

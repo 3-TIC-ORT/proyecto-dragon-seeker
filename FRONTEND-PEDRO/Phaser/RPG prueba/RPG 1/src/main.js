@@ -10,15 +10,15 @@ const config = {
   width: window.innerWidth,
   height: window.innerHeight,
   scene: [Boot, Preloader, Game, Casa, zonaBoss, GameOver],
+  render: {
+    antialias: false,
+    pixelArt: true,
+    roundPixels: true,
+  },
   physics: {
     default: "arcade",
     arcade: {
       debug: false,
-    },
-    render: {
-      antialias: false,
-      pixelArt: true,
-      roundPixels: true,
     },
   },
   scale: {
