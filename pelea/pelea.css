@@ -66,16 +66,57 @@ body {
   text-shadow: var(--sombra-texto);
 }
 
-.sprite {
+/* Contenedor que apila el sprite estatico (SVG) y el gif de ataque en el MISMO
+   lugar y tamaño. El cambio SVG<->gif es un crossfade de opacidad (no display),
+   ambos anclados abajo-centro, asi no hay salto de tamaño/posicion ni parpadeo. */
+.spriteStage {
+  position: relative;
   width: clamp(150px, 18vw, 240px);
-  image-rendering: pixelated;
+  line-height: 0;
 }
 
-.ataquechimuelo {
+.sprite {
+  width: 100%;
+  display: block;
+  image-rendering: pixelated;
+  transition: opacity 120ms linear;
+}
+
+/* El gif se escala por ALTURA igualando al SVG (mismo tamaño de dragon) y se
+   centra/ancla abajo. Es mas ancho que el SVG (incluye el efecto del ataque),
+   asi que se deja desbordar a los costados sin agrandar el dragon. */
+.gifAtaque {
   position: absolute;
   bottom: 0;
-  width: clamp(150px, 18vw, 240px);
-  display: none;
+  left: 50%;
+  /* Nudge horizontal para disimular que el dragon del gif no cae exacto donde el
+     del SVG: se corre a la DERECHA. En el rival (stage .espejado con scaleX(-1))
+     el signo se invierte solo -> queda corrido a la IZQUIERDA. Tunear --gif-margen
+     (subir = mas corrimiento; si va para el lado equivocado, cambiar + por -). */
+  --gif-margen: clamp(8px, 1.5vw, 16px);
+  transform: translateX(calc(-50% + var(--gif-margen)));
+  height: 100%;
+  width: auto;
+  max-width: none;
+  image-rendering: pixelated;
+  opacity: 0;
+  transition: opacity 120ms linear;
+  pointer-events: none;
+}
+
+.spriteStage.atacando .sprite {
+  opacity: 0;
+}
+
+.spriteStage.atacando .gifAtaque {
+  opacity: 1;
+}
+
+/* El jugador (abajo-izq) mira a la derecha y el rival (arriba-der) a la izquierda.
+   Se espeja (svg + gif juntos) el sprite cuyo arte esta dibujado al reves para su
+   rol; cuales se espejan lo decide ataques.js segun la direccion nativa del arte. */
+.spriteStage.espejado {
+  transform: scaleX(-1);
 }
 
 /* ---- Tags de tipo / nivel ---- */

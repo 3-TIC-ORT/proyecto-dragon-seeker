@@ -225,11 +225,11 @@
     "partida": 5,
     "dragon": 4,
     "habilitado": true,
-    "nivel": 1,
-    "exp": 50,
-    "vida": 21,
+    "nivel": 2,
+    "exp": 0,
+    "vida": 55,
     "vidaMax": 55,
-    "fuerza": 10,
+    "fuerza": 15,
     "tipo": "fuego",
     "ataques": [
       {

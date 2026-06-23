@@ -34,7 +34,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/2.png",
+      "imagen": "img/rocabrava.svg",
       "ataques": [
         { "nombre": "Coletazo", "dano": 10, "nivel": 1 },
         { "nombre": "Bola de barro", "dano": 16, "nivel": 5 },
@@ -55,7 +55,7 @@
       "especial": true,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/3.png",
+      "imagen": "img/golemVerde.svg",
       "ataques": [
         { "nombre": "Coletazo", "dano": 13, "nivel": 1 },
         { "nombre": "Bola de barro", "dano": 20, "nivel": 5 },
@@ -119,7 +119,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/6.png",
+      "imagen": "img/burpi.svg",
       "ataques": [
         { "nombre": "Llamarada", "dano": 14, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 21, "nivel": 5 },
@@ -183,7 +183,7 @@
       "especial": true,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/9.png",
+      "imagen": "img/truenoz.svg",
       "ataques": [
         { "nombre": "Chispa", "dano": 13, "nivel": 1 },
         { "nombre": "Tormenta electrica", "dano": 20, "nivel": 5 },
@@ -226,7 +226,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/11.png",
+      "imagen": "img/tsunami.svg",
       "ataques": [
         { "nombre": "Burbuja", "dano": 10, "nivel": 1 },
         { "nombre": "Salpicadura", "dano": 17, "nivel": 5 },
@@ -311,7 +311,7 @@
       "especial": true,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/15.png",
+      "imagen": "img/yetihelado.svg",
       "ataques": [
         { "nombre": "Ventisca", "dano": 14, "nivel": 1 },
         { "nombre": "Nevada", "dano": 21, "nivel": 5 },
@@ -396,7 +396,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/6.png",
+      "imagen": "img/tormato.svg",
       "ataques": [
         { "nombre": "Llamarada", "dano": 14, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 21, "nivel": 5 },
@@ -417,7 +417,7 @@
       "especial": false,
       "esBoss": false,
       "mapa": 1,
-      "imagen": "img/6.png",
+      "imagen": "img/bengal.svg",
       "ataques": [
         { "nombre": "Llamarada", "dano": 14, "nivel": 1 },
         { "nombre": "Bola de fuego", "dano": 21, "nivel": 5 },
