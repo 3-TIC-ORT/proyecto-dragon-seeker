@@ -159,7 +159,7 @@ function finalizarAdopcion(idpartida, dragonUsuario) {
     window.location.href = "../logros/resultado.html";
   };
 
-  // Caso raro (sin dragon activo): adoptar igual y seguir sin curar/XP.
+  // Caso raro (sin dragon activo): adoptar igual y seguir sin XP/persistir vida.
   if (!dragonUsuario || dragonUsuario.id == null) {
     irAResultado();
     return;
@@ -170,6 +170,14 @@ function finalizarAdopcion(idpartida, dragonUsuario) {
   const nivelAdoptado = dragonEnemigo.nivel ?? 1;
   const expAdopcion = 15 + (nivelAdoptado - 1) * 5;
 
+  // El dragon con el que peleaste NO se cura: queda con la vida que le quedo en
+  // la pelea (igual que el adoptado conserva la suya), asi en el inventario ambos
+  // figuran heridos y hay que curarlos aparte. ataques.js dejo esa vida restante
+  // en dragonardo al tocar ADOPTAR.
+  const vidaRestante = Math.max(0, Number(dragonUsuario.vida) || 0);
+
+  // 1) XP (puede subir de nivel). 2) Persistir la vida restante COMO VALOR FINAL
+  //    (despues de la XP) para que el inventario muestre la vida real de la pelea.
   postEvent(
     "sumarexperiencia",
     { iddragon: dragonUsuario.id, cantidad: expAdopcion, idpartida },
@@ -182,10 +190,9 @@ function finalizarAdopcion(idpartida, dragonUsuario) {
         extra += `\nAlcanzó el nivel ${xpResp.progreso.nivel}.`;
       }
 
-      // Curar al maximo al dragon con el que peleaste (la pelea ya termino).
       postEvent(
-        "curarDragon",
-        { idpartida, iddragon: dragonUsuario.id },
+        "actualizarVida",
+        { idpartida, iddragon: dragonUsuario.id, vida: vidaRestante },
         () => irAResultado(extra),
       );
     },
