@@ -433,16 +433,16 @@
       "nombre": "Guardián de Piedra",
       "mapa": 1,
       "tipo": "tierra",
-      "vida": 220,
-      "fuerza": 30,
+      "vida": 200,
+      "fuerza": 20,
       "capturable": false,
       "esBoss": true,
       "imagen": "img/dragonNegroBoss.svg",
       "ataques": [
-        { "nombre": "Coletazo", "dano": 20 },
-        { "nombre": "Gas verde", "dano": 25 },
-        { "nombre": "Fuego", "dano": 30 },
-        { "nombre": "Aletazo", "dano": 22 }
+        { "nombre": "Coletazo", "dano": 15 },
+        { "nombre": "Gas verde", "dano": 18 },
+        { "nombre": "Fuego", "dano": 22 },
+        { "nombre": "Aletazo", "dano": 16 }
       ]
     },
     {

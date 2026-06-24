@@ -479,5 +479,42 @@
       "Coletazo",
       "Arañazo"
     ]
+  },
+  {
+    "partida": 11,
+    "dragon": 4,
+    "habilitado": true,
+    "nivel": 1,
+    "exp": 0,
+    "vida": 55,
+    "vidaMax": 55,
+    "fuerza": 10,
+    "tipo": "fuego",
+    "ataques": [
+      {
+        "nombre": "Llamarada",
+        "nivel": 1,
+        "dano": 8
+      },
+      {
+        "nombre": "Bola de fuego",
+        "nivel": 5,
+        "dano": 13
+      },
+      {
+        "nombre": "Puño de fuego",
+        "nivel": 13,
+        "dano": 21
+      },
+      {
+        "nombre": "Arañazo",
+        "nivel": 1,
+        "dano": 7
+      }
+    ],
+    "desbloqueados": [
+      "Llamarada",
+      "Arañazo"
+    ]
   }
 ]

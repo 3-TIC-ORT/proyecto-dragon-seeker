@@ -166,7 +166,7 @@ export function obtenerBossMapa(idzona) {
   return { exito: true, boss };
 }
 
-export function verificarAccesoZonaBoss(idpartida, nivelMinimoPromedio = 6) {
+export function verificarAccesoZonaBoss(idpartida, nivelMinimoPromedio = 3) {
   const data = leerdragones();
   const progreso = leerprogreso();
 
