@@ -37,6 +37,11 @@ import {
   obtenerUltimoEstadoUsuario,
 } from "./estadoJuego.js";
 import { crearPartida, listarPartidas } from "./partidas.js";
+import {
+  obtenerCuraciones,
+  consumirCuracion,
+  renovarCuraciones,
+} from "./curaciones.js";
 
 subscribePOSTEvent("registrarusuario", (data) => {
   const { nombre, correo, contrasena } = data;
@@ -165,7 +170,15 @@ subscribeGETEvent("obtenerdragones", () => {
 
 subscribePOSTEvent("obtenerdragonesUsuario", (data) => {
   const { idpartida } = data;
-  return obtenerlistadragones(Number(idpartida));
+  const partida = Number(idpartida);
+  const res = obtenerlistadragones(partida);
+  // Adjuntamos el cupo de curaciones rapidas para que el inventario lo muestre.
+  const estado = obtenerCuraciones(partida);
+  return {
+    ...res,
+    curacionesRestantes: estado.restantes,
+    curacionesMax: estado.max,
+  };
 });
 
 subscribePOSTEvent("obtenerdragonesMapa", (data) => {
@@ -195,14 +208,49 @@ subscribePOSTEvent("actualizarVida", (data) => {
 
 subscribePOSTEvent("curarDragones", (data) => {
   const { idpartida } = data;
-  return curarDragones(Number(idpartida));
+  const partida = Number(idpartida);
+  const res = curarDragones(partida);
+  // Curar en la casita renueva el cupo de curaciones rapidas del inventario.
+  renovarCuraciones(partida);
+  return res;
 });
 
 // PROVISORIO (revertir cuando este el medico posta): curar un dragon puntual
-// desde el boton "Curar" del inventario.
+// desde el boton "Curar" del inventario. Limitado: gasta una curacion rapida del
+// cupo de la partida; al llegar a 0 hay que renovar curando en la casita.
 subscribePOSTEvent("curarDragon", (data) => {
   const { idpartida, iddragon } = data;
-  return curarDragon(Number(idpartida), Number(iddragon));
+  const partida = Number(idpartida);
+
+  // Sin cupo -> no se cura (hay que ir a la casita a renovar).
+  const estado = obtenerCuraciones(partida);
+  if (estado.restantes <= 0) {
+    return {
+      exito: false,
+      mensaje:
+        "Te quedaste sin curaciones rápidas. Curá en la casita para renovarlas.",
+      curacionesRestantes: 0,
+      curacionesMax: estado.max,
+    };
+  }
+
+  // Curamos primero; solo si la curacion fue valida gastamos una del cupo (asi un
+  // dragon invalido no consume cupo).
+  const res = curarDragon(partida, Number(iddragon));
+  if (!res.exito) {
+    return {
+      ...res,
+      curacionesRestantes: estado.restantes,
+      curacionesMax: estado.max,
+    };
+  }
+
+  const consumo = consumirCuracion(partida);
+  return {
+    ...res,
+    curacionesRestantes: consumo.restantes,
+    curacionesMax: consumo.max,
+  };
 });
 
 subscribePOSTEvent("guardarEstadoJuego", (data) => {

@@ -182,6 +182,39 @@ if (esBoss && BotonAdopcion) {
   if (menuPrincipal) menuPrincipal.classList.add("sinAdoptar");
 }
 
+// --- Cambio de dragon en medio de la pelea (relevo) ---
+// Solo se permite UN cambio por pelea. El flag "cambioDePelea" se scopea al
+// instanceId del rival: si coincide con el rival actual, en ESTA pelea ya
+// cambiaste de dragon, asi que el dragon activo es el de relevo. El relevo entra
+// a vida llena (lo aplica el inventario), pero como contrapeso pega mas flojo,
+// da menos XP si gana, y no podes volver a cambiar.
+const cambioDePelea = JSON.parse(localStorage.getItem("cambioDePelea") || "null");
+const dragonDeRelevo =
+  !!cambioDePelea && cambioDePelea.instanceId === dragonEnemigo.instanceId;
+const FACTOR_DANO_RELEVO = 0.7; // el relevo pega 30% mas flojo
+const FACTOR_XP_RELEVO = 0.6; // ganar con el relevo da 40% menos XP
+
+// El limite de "un cambio por pelea" recien aplica una vez que EMPEZASTE a
+// pelear (tiraste el primer ataque). Antes de eso, cambiar de dragon es gratis:
+// sirve para corregir el matchup si entraste con el tipo equivocado, sin
+// consumir el cambio ni penalizar al que entra. El flag se scopea al rival.
+const peleaIniciadaStore = JSON.parse(
+  localStorage.getItem("peleaIniciada") || "null",
+);
+let peleaIniciada =
+  !!peleaIniciadaStore &&
+  peleaIniciadaStore.instanceId === dragonEnemigo.instanceId;
+
+// Borra el estado de la pelea (cambio usado / pelea iniciada) al SALIR de ella
+// por cualquier via (ganar, perder, adoptar, huir). Importante sobre todo para
+// el boss, que reusa su instanceId: sin esto, al volver a pelearlo arrastraria
+// "ya cambiaste" o "ya empezaste" de la pelea anterior.
+function limpiarEstadoCambio() {
+  localStorage.removeItem("cambioDePelea");
+  localStorage.removeItem("peleaIniciada");
+  localStorage.removeItem("dragonActivoId");
+}
+
 // La adopcion se habilita cuando el rival queda con POCA vida. Como los rivales
 // escalan y cada uno tiene una vidaMax distinta, el umbral es un PORCENTAJE de
 // su vida maxima (no un valor absoluto, que seria injusto entre rivales).
@@ -190,7 +223,31 @@ const umbralAdopcion =
   (dragonEnemigo.vidaMax ?? dragonEnemigo.vidaInicial ?? dragonEnemigo.vida) *
   FRACCION_ADOPTABLE;
 
+// Recordamos si la adopcion ya esta habilitada para detectar la transicion
+// (bloqueado -> habilitado) y avisar UNA sola vez cuando se desbloquea.
+let adopcionHabilitada = false;
+const avisoAdopcion = document.getElementById("avisoAdopcion");
+let avisoAdopcionTimer = null;
+
+// Cartel breve que aparece cuando se habilita la adopcion (rival debilitado).
+function mostrarAvisoAdopcion() {
+  if (!avisoAdopcion) return;
+  avisoAdopcion.textContent = `¡${dragonEnemigo.nombre} está débil! Ya podés adoptarlo`;
+  avisoAdopcion.hidden = false;
+  // Reinicia la animacion de entrada aunque ya estuviera visible.
+  avisoAdopcion.classList.remove("visible");
+  void avisoAdopcion.offsetWidth;
+  avisoAdopcion.classList.add("visible");
+  if (avisoAdopcionTimer) clearTimeout(avisoAdopcionTimer);
+  avisoAdopcionTimer = setTimeout(() => {
+    avisoAdopcion.classList.remove("visible");
+  }, 3500);
+}
+
 if (!yaAdoptado && !esBoss && dragonEnemigo.vida <= umbralAdopcion) {
+  // Ya entras con la adopcion habilitada (volviste con el rival debilitado): el
+  // boton arranca pulsando, sin cartel (no es un "se acaba de desbloquear").
+  adopcionHabilitada = true;
   desbloquearBoton();
   BotonAdopcion.onclick = null;
 } else {
@@ -218,6 +275,10 @@ if (nivelEnemigo) nivelEnemigo.innerText = `Nv ${dragonEnemigo.nivel ?? 1}`;
 if (tipoUsuario) tipoUsuario.dataset.tipo = dragon.tipo ?? "normal";
 if (tipoEnemigo) tipoEnemigo.dataset.tipo = dragonEnemigo.tipo ?? "normal";
 
+// Aviso visual de que el dragon activo entro de relevo (pega mas flojo).
+const relevoTag = document.getElementById("relevoTag");
+if (relevoTag && dragonDeRelevo) relevoTag.hidden = false;
+
 let idpartida = Number(localStorage.getItem("partida"));
 let iddragon = dragon.id;
 
@@ -227,26 +288,36 @@ let iddragon = dragon.id;
 let BotonDragon = document.getElementById("botonDragon");
 let ModalConfirmar = document.getElementById("modalConfirmar");
 
-BotonDragon.addEventListener("click", () => {
-  // El rival solo vive en localStorage (no en el backend): si no lo volvemos a
-  // guardar aca, al volver de elegir dragon se relee el "dragon_enemigo" de
-  // localStorage tal cual estaba ANTES de la pelea, con vida llena.
-  localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
+if (dragonDeRelevo) {
+  // En esta pelea ya usaste tu cambio de dragon: solo se permite uno. El boton
+  // DRAGON queda gris y sin listener (es un <div>, no un <button> con disabled).
+  BotonDragon.classList.add("opcionDeshabilitada");
+} else {
+  BotonDragon.addEventListener("click", () => {
+    // El rival solo vive en localStorage (no en el backend): si no lo volvemos a
+    // guardar aca, al volver de elegir dragon se relee el "dragon_enemigo" de
+    // localStorage tal cual estaba ANTES de la pelea, con vida llena.
+    localStorage.setItem("dragon_enemigo", JSON.stringify(dragonEnemigo));
 
-  // El dragon que elijas en el inventario tiene que entrar a la pelea con el
-  // mismo % de vida que le quedaba a este. Guardamos ese % para que el
-  // inventario lo aplique sobre el dragon nuevo al confirmar la eleccion.
-  const vidaMax = dragon.vidaMax || dragon.vidaInicial || dragon.vida;
-  const porcentajeVida = vidaMax > 0 ? dragon.vida / vidaMax : 0;
-  localStorage.setItem("porcentajeVidaCambio", String(porcentajeVida));
+    // Guardamos cual es el dragon que venis usando. El relevo NO se compromete
+    // aca: se decide en el inventario al confirmar la eleccion. Si elegis un
+    // dragon DISTINTO estando en combate -> cuenta como relevo (penalizado). Si
+    // volves a elegir ESTE mismo (te arrepentiste) -> no cuenta ni penaliza. El
+    // flag "peleaIniciada" (lo setea el primer ataque) le dice al inventario si
+    // ya estas en combate.
+    localStorage.setItem("dragonActivoId", String(iddragon));
 
-  postEvent("actualizarVida", { idpartida, iddragon, vida: dragon.vida }, () => {
-    localStorage.setItem("origenInventario", "pelea");
-    window.location.href = "../inventario/inventario.html";
+    postEvent("actualizarVida", { idpartida, iddragon, vida: dragon.vida }, () => {
+      localStorage.setItem("origenInventario", "pelea");
+      window.location.href = "../inventario/inventario.html";
+    });
   });
-});
+}
 
 ModalConfirmar.addEventListener("click", () => {
+  // Huir termina la pelea: limpiar el estado del cambio para que el proximo
+  // combate (incluido el boss, que reusa instanceId) arranque de cero.
+  limpiarEstadoCambio();
   postEvent("actualizarVida", { idpartida, iddragon, vida: dragon.vida }, () => {
     window.location.href =
       "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
@@ -330,7 +401,9 @@ function mostrarInfoAtaque(i) {
   const etiqueta =
     mult > 1 ? "Muy eficaz" : mult < 1 ? "Poco eficaz" : "Eficacia normal";
   const clase = mult > 1 ? "efBueno" : mult < 1 ? "efMalo" : "efNeutro";
-  infoEfecto.textContent = `${etiqueta} ×${mult}`;
+  let textoEfecto = `${etiqueta} ×${mult}`;
+  if (dragonDeRelevo) textoEfecto += " · Relevo -30%";
+  infoEfecto.textContent = textoEfecto;
   infoEfecto.className = `infoEfecto ${clase}`;
 }
 
@@ -352,6 +425,7 @@ function checkFinDeBatalla() {
 
   if (dragon.vida <= 0) {
     batallaTerminada = true;
+    limpiarEstadoCambio();
     deshabilitarAtaques();
     bloquearboton();
     BotonAdopcion.onclick = (e) => e.preventDefault();
@@ -387,6 +461,7 @@ function checkFinDeBatalla() {
 
   if (dragonEnemigo.vida <= 0) {
     batallaTerminada = true;
+    limpiarEstadoCambio();
     deshabilitarAtaques();
     bloquearboton();
     BotonAdopcion.onclick = (e) => e.preventDefault();
@@ -421,6 +496,9 @@ function checkFinDeBatalla() {
 
       expGanada = Math.max(10, Math.round(expGanada * factorNivel * factorTipo));
       if (dragonEnemigo.esBoss) expGanada = Math.round(expGanada * 2.5);
+      // Ganar con el dragon de relevo da menos XP: cambiar de dragon tiene costo.
+      if (dragonDeRelevo)
+        expGanada = Math.max(10, Math.round(expGanada * FACTOR_XP_RELEVO));
 
       postEvent(
         "actualizarVida",
@@ -512,12 +590,24 @@ function ataqueUsuario(i) {
   turnoUsuario = false;
   deshabilitarAtaques();
 
+  // Primer ataque del combate: a partir de aca cambiar de dragon ya cuesta (el
+  // que entre lo hace de relevo). Se persiste por si cambias y volves a la pelea.
+  if (!peleaIniciada) {
+    peleaIniciada = true;
+    localStorage.setItem(
+      "peleaIniciada",
+      JSON.stringify({ instanceId: dragonEnemigo.instanceId }),
+    );
+  }
+
   mostrarGifAtaque(stageChimuelo, gifChimuelo, dragon, i);
 
   let danoBase = ataque.dano ?? 0;
   let fuerzaBase = dragon.fuerza ?? 0;
   let mult = multiplicadorTipo(dragon.tipo, dragonEnemigo.tipo);
   let danoTotal = Math.round((danoBase + fuerzaBase) * mult);
+  // El dragon de relevo pega mas flojo (contrapeso de entrar a vida llena).
+  if (dragonDeRelevo) danoTotal = Math.round(danoTotal * FACTOR_DANO_RELEVO);
   dragonEnemigo.vida -= danoTotal;
   if (dragonEnemigo.vida < 0) dragonEnemigo.vida = 0;
 
@@ -606,9 +696,16 @@ function terminarTurno2() {
   }, 1500);
 
   if (!yaAdoptado && !esBoss && dragonEnemigo.vida <= umbralAdopcion) {
+    // Transicion bloqueado -> habilitado: avisar una sola vez con el cartel (y
+    // solo si el rival sigue vivo: si quedo en 0 es victoria, no adopcion).
+    if (!adopcionHabilitada && !batallaTerminada && dragonEnemigo.vida > 0) {
+      mostrarAvisoAdopcion();
+    }
+    adopcionHabilitada = true;
     desbloquearBoton();
     BotonAdopcion.onclick = null;
     BotonAdopcion.onclick = () => {
+      limpiarEstadoCambio();
       localStorage.setItem("dragon_eliminado", dragonEnemigo.instanceId);
       localStorage.setItem("vidaFinalRival", dragonEnemigo.vida);
       // Guardar la vida restante del dragon usuario: el boton ADOPTAR navega sin

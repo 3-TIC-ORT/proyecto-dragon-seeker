@@ -33,6 +33,35 @@ header {
   top: 0;
   z-index: 10;
   padding: clamp(0.6rem, 1.6vh, 1rem);
+  /* Volver al mapa a la izquierda, contador de curaciones a la derecha. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* Cupo de curaciones rapidas. Verde mientras quede; rojo cuando se agota. */
+.contadorCuraciones {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5em 1em;
+  border-radius: var(--radio);
+  background: rgba(46, 125, 50, 0.85);
+  color: #ffffff;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.contadorCuraciones.sinCuraciones {
+  background: rgba(192, 57, 43, 0.9);
+  border-color: #ffb3a7;
+}
+
+.contadorCuraciones[hidden] {
+  display: none;
 }
 
 /* Boton volver al mapa (flecha como en Figma 393:1575) */
@@ -269,6 +298,47 @@ header {
   letter-spacing: 0.04em;
 }
 
+/* Dragon que estas usando en el combate: borde tenue para ubicarlo de un vistazo
+   (es el que podes volver a elegir sin que cuente como relevo). */
+.dragonEnCombate {
+  box-shadow: 0 0 0 3px rgba(140, 200, 255, 0.85);
+}
+
+.badgeEnCombate {
+  align-self: flex-start;
+  margin-bottom: 0.2em;
+  padding: 0.1em 0.6em;
+  border-radius: 999px;
+  background: #4a90d9;
+  color: #ffffff;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Aviso del costo del relevo: barra arriba de la lista cuando cambias en combate. */
+.avisoRelevo {
+  position: relative;
+  z-index: 1;
+  width: var(--ancho-panel);
+  margin: 0 auto 1rem;
+  padding: 0.7em 1.1em;
+  border-radius: var(--radio-grande, 14px);
+  background: #c0392b;
+  color: #fff;
+  border: 2px solid #ffb3a7;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.avisoRelevo[hidden] {
+  display: none;
+}
+
 /* Feedback al curar: destello verde y vuelta a la normalidad. */
 .recienCurado {
   animation: destelloCurado 1.2s ease-out;
@@ -314,6 +384,16 @@ header {
 
 .botonCurar:active {
   transform: translateY(1px);
+}
+
+/* Sin cupo de curaciones rapidas: boton gris, no clickeable (hay que ir a la casita). */
+.botonCurarSinCupo,
+.botonCurarSinCupo:hover {
+  background: #d9d9d9;
+  color: #777;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
 }
 
 /* Boton "Elegir dragon": naranja, abajo a la derecha, aparece al seleccionar */

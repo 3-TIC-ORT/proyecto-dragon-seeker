@@ -21,13 +21,38 @@ if (botonMapa && enPelea) {
 
 const containerDragon = document.getElementById("dragonContainer");
 const botonElegir = document.getElementById("botonElegir");
+const contadorCuraciones = document.getElementById("contadorCuraciones");
 let tarjetaSeleccionada = null;
+
+// Cupo de curaciones rapidas (boton Curar). El backend manda cuantas quedan; al
+// llegar a 0 no se puede curar desde el inventario hasta renovar en la casita.
+let curacionesRestantes = null;
+let curacionesMax = null;
 
 const idpartida = Number(localStorage.getItem("partida"));
 postEvent("obtenerdragonesUsuario", { idpartida }, (data) => {
   dragones = data.dragones;
+  curacionesRestantes = data.curacionesRestantes;
+  curacionesMax = data.curacionesMax;
+  actualizarContadorCuraciones();
   mostrarDragones();
 });
+
+// Muestra el cupo de curaciones rapidas en el header (oculto durante la pelea,
+// donde no se puede curar). Al llegar a 0 avisa que hay que ir a la casita.
+function actualizarContadorCuraciones() {
+  if (!contadorCuraciones) return;
+  if (enPelea || curacionesRestantes == null) {
+    contadorCuraciones.hidden = true;
+    return;
+  }
+  contadorCuraciones.hidden = false;
+  const sinCupo = curacionesRestantes <= 0;
+  contadorCuraciones.classList.toggle("sinCuraciones", sinCupo);
+  contadorCuraciones.textContent = sinCupo
+    ? `Curaciones rápidas 0/${curacionesMax} · curá en la casita para renovar`
+    : `Curaciones rápidas ${curacionesRestantes}/${curacionesMax}`;
+}
 
 // Relaciones de tipo (mismas que en la pelea) para recomendar el dragon que mas
 // conviene contra el rival actual.
@@ -52,6 +77,29 @@ const rival = JSON.parse(localStorage.getItem("dragon_enemigo") || "null");
 const eligiendoParaPelea =
   !!rival &&
   ["pelea", "encuentro"].includes(localStorage.getItem("origenInventario"));
+
+// "En combate" = venis de una pelea YA EMPEZADA (tiraste un ataque). Solo en ese
+// caso traer un dragon DISTINTO cuenta como relevo (entra a vida llena pero pega
+// mas flojo y da menos XP). El flag peleaIniciada lo setea la pelea, scopeado al
+// rival. dragonActivoId es el dragon que venias usando: volver a elegirlo cancela
+// el cambio (no cuenta como relevo).
+const peleaIniciadaStore = JSON.parse(
+  localStorage.getItem("peleaIniciada") || "null",
+);
+const enCombate =
+  enPelea &&
+  !!rival &&
+  !!peleaIniciadaStore &&
+  peleaIniciadaStore.instanceId === rival.instanceId;
+const dragonActivoId = Number(localStorage.getItem("dragonActivoId"));
+
+// Aviso del costo del relevo (solo si estas en combate y podes traer relevo).
+const avisoRelevo = document.getElementById("avisoRelevo");
+if (avisoRelevo && enCombate) {
+  avisoRelevo.textContent =
+    "Estás en combate: traer un dragón distinto cuenta como relevo. Entra con vida llena, pero sus golpes son 30% menos efectivos y ganás menos XP. Si te arrepentís, volvé a elegir el dragón que venías usando y no cuenta como cambio.";
+  avisoRelevo.hidden = false;
+}
 
 // Indice del dragon que mas conviene contra el rival: mejor efectividad de tipo,
 // solo entre los adoptados y con vida; desempata por nivel y luego por vida.
@@ -124,6 +172,13 @@ function mostrarDragones() {
       tarjeta.classList.add("recomendado");
     }
 
+    // Dragon que venis usando en el combate: elegirlo de nuevo NO cuenta como
+    // relevo (es la salida si te arrepentiste de cambiar).
+    const esActivo = enCombate && dragon.id === dragonActivoId;
+    if (esActivo) {
+      tarjeta.classList.add("dragonEnCombate");
+    }
+
     // Cartel de estado: distingue sin vida / critico / herido.
     let avisoHTML = "";
     if (sinVida) {
@@ -159,6 +214,7 @@ function mostrarDragones() {
       </div>
       <div class="info">
         ${esRecomendado ? '<span class="badgeRecomendado">Recomendado</span>' : ""}
+        ${esActivo ? '<span class="badgeEnCombate">En combate · volver sin costo</span>' : ""}
         <h4 class="nombre">${dragon.nombre}</h4>
         <p class="nivel">Lv ${dragon.nivel}</p>
         <p class="tipo">${habilitado ? dragon.tipo : "No adoptado"}</p>
@@ -167,7 +223,9 @@ function mostrarDragones() {
       </div>
       ${
         necesitaCura && !enPelea
-          ? `<button type="button" class="botonCurar" data-iddragon="${dragon.id}">Curar</button>`
+          ? curacionesRestantes <= 0
+            ? `<button type="button" class="botonCurar botonCurarSinCupo" disabled title="Sin curaciones rápidas. Curá en la casita.">Sin curaciones</button>`
+            : `<button type="button" class="botonCurar" data-iddragon="${dragon.id}">Curar</button>`
           : ""
       }
     `;
@@ -207,32 +265,40 @@ function elegirDragon() {
   localStorage.removeItem("origenInventario");
 
   if (origen === "pelea") {
-    // Cambio de dragon en medio de una pelea: el nuevo dragon entra con el
-    // mismo % de vida que le quedaba al que estaba peleando antes de cambiarlo.
-    const porcentajeVida = Number(localStorage.getItem("porcentajeVidaCambio"));
-    localStorage.removeItem("porcentajeVidaCambio");
+    // Cambio de dragon durante una pelea. El relevo (penalizacion) se decide
+    // ACA, al confirmar la eleccion, no al apretar DRAGON:
+    //  - RELEVO = estas en combate (ya peleaste) y elegis un dragon DISTINTO.
+    //    Entra a vida LLENA, pero la pelea lo penaliza (golpes -30%, menos XP) y
+    //    es tu unico cambio del combate (se marca cambioDePelea).
+    //  - NO es relevo si todavia no empezaste a pelear (cambio previo, corregir
+    //    el matchup) o si volves a elegir el MISMO dragon (te arrepentiste). En
+    //    esos casos entra con su vida actual y no cuenta como cambio.
+    // La vida restante de ambos se conserva: el saliente ya se persistio al
+    // cambiar y el que entra se persiste al terminar la pelea.
+    const vidaMax = dragon.vidaMax || dragon.vida;
+    const volverAlMismo = dragon.id === dragonActivoId;
+    const esRelevo = enCombate && !volverAlMismo;
 
-    if (Number.isFinite(porcentajeVida)) {
-      const vidaMax = dragon.vidaMax || dragon.vida;
-      const vidaAjustada = Math.max(
-        0,
-        Math.min(vidaMax, Math.round(vidaMax * porcentajeVida)),
+    if (esRelevo) {
+      localStorage.setItem(
+        "cambioDePelea",
+        JSON.stringify({ instanceId: rival.instanceId }),
       );
-      dragon = { ...dragon, vida: vidaAjustada, vidaInicial: vidaMax };
-
-      postEvent(
-        "actualizarVida",
-        { idpartida, iddragon: dragon.id, vida: vidaAjustada },
-        () => {
-          localStorage.setItem("dragonardo", JSON.stringify(dragon));
-          window.location.href = "../pelea/peleadesplegada.html";
-        },
-      );
-      return;
     }
 
-    localStorage.setItem("dragonardo", JSON.stringify(dragon));
-    window.location.href = "../pelea/peleadesplegada.html";
+    const vida = esRelevo
+      ? vidaMax
+      : Math.max(0, Math.min(vidaMax, dragon.vida ?? vidaMax));
+    dragon = { ...dragon, vida, vidaInicial: vidaMax };
+
+    postEvent(
+      "actualizarVida",
+      { idpartida, iddragon: dragon.id, vida },
+      () => {
+        localStorage.setItem("dragonardo", JSON.stringify(dragon));
+        window.location.href = "../pelea/peleadesplegada.html";
+      },
+    );
     return;
   }
 
@@ -258,9 +324,24 @@ function onClickTarjeta(e) {
 }
 
 // PROVISORIO (revertir cuando este el curandero/medico posta): cura un dragon
-// restaurando su vida al maximo en el backend y refresca la lista.
+// restaurando su vida al maximo en el backend y refresca la lista. Gasta una
+// curacion rapida del cupo de la partida (el backend lo controla y devuelve las
+// restantes); si no quedan, no cura y avisa que hay que ir a la casita.
 function curarDragon(iddragon) {
+  // Corte temprano del lado del cliente (el backend igual valida): sin cupo, no
+  // mandamos el pedido y avisamos.
+  if (curacionesRestantes <= 0) {
+    alert("Te quedaste sin curaciones rápidas. Curá en la casita para renovarlas.");
+    return;
+  }
   postEvent("curarDragon", { idpartida, iddragon }, (res) => {
+    // El backend siempre informa el cupo restante (incluso al fallar): lo reflejamos.
+    if (res && typeof res.curacionesRestantes === "number") {
+      curacionesRestantes = res.curacionesRestantes;
+      if (typeof res.curacionesMax === "number") curacionesMax = res.curacionesMax;
+      actualizarContadorCuraciones();
+    }
+
     if (res && res.exito) {
       const d = dragones.find((x) => x.id === iddragon);
       if (d) d.vida = res.progreso.vida;
@@ -278,6 +359,9 @@ function curarDragon(iddragon) {
         setTimeout(() => tarjeta.classList.remove("recienCurado"), 1200);
       }
     } else {
+      // Sin cupo u otro fallo: refrescamos para que los botones Curar pasen a
+      // "Sin curaciones", y avisamos.
+      mostrarDragones();
       alert(res?.mensaje || "No se pudo curar el dragón.");
     }
   });
