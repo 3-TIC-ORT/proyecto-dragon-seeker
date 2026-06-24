@@ -27,8 +27,11 @@ body::before {
 }
 
 header {
-  position: relative;
-  z-index: 2;
+  /* Sticky para que "Volver al mapa" quede a la vista en todo el scroll, sin
+     tener que subir hasta arriba. Queda por encima de las tarjetas (z-index 1). */
+  position: sticky;
+  top: 0;
+  z-index: 10;
   padding: clamp(0.6rem, 1.6vh, 1rem);
 }
 

@@ -611,6 +611,11 @@ function terminarTurno2() {
     BotonAdopcion.onclick = () => {
       localStorage.setItem("dragon_eliminado", dragonEnemigo.instanceId);
       localStorage.setItem("vidaFinalRival", dragonEnemigo.vida);
+      // Guardar la vida restante del dragon usuario: el boton ADOPTAR navega sin
+      // pasar por checkFinDeBatalla, asi que su vida nunca se persistia y en el
+      // inventario figuraba a vida llena. Con esto adopcion.js la persiste tal
+      // cual quedo en la pelea (queda herido, igual que el adoptado).
+      localStorage.setItem("dragonardo", JSON.stringify(dragon));
     };
   } else {
     bloquearboton();

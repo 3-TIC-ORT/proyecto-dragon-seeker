@@ -98,7 +98,12 @@ export class zonaBoss extends Phaser.Scene {
     this.bossGroup = this.physics.add.group();
     this.physics.add.collider(this.bossGroup, decoracion);
 
-    this.battleCooldown = false;
+    // Arranca en cooldown y solo se habilita cuando el player NO esta sobre el
+    // boss (ver update). Asi, al retomar la partida o huir de la pelea, aunque
+    // respawnees encima del boss NO te reengancha al instante: hay que alejarse
+    // primero. bossSpawned evita resetear el cooldown antes de que el boss exista.
+    this.battleCooldown = true;
+    this.bossSpawned = false;
 
     // ✅ pedir y spawnear el boss
     postEvent("obtenerBossMapa", { mapa: 1 }, (res) => {
@@ -133,6 +138,10 @@ export class zonaBoss extends Phaser.Scene {
         null,
         this,
       );
+
+      // El boss ya esta en escena: a partir de aca update puede rehabilitar el
+      // encuentro cuando el player se aleje del boss.
+      this.bossSpawned = true;
     });
 
     // ✅ guardar estado al cerrar/recargar
@@ -189,5 +198,17 @@ export class zonaBoss extends Phaser.Scene {
     }
   }
 
-  update() {}
+  update() {
+    // Rehabilita el encuentro con el boss recien cuando el player ya no esta
+    // encima (mismo patron que battleCooldown en Game.js). Evita el re-trigger
+    // automatico al respawnear sobre el boss tras huir o retomar la partida.
+    if (
+      this.battleCooldown &&
+      this.bossSpawned &&
+      this.bossGroup &&
+      !this.physics.overlap(this.player, this.bossGroup)
+    ) {
+      this.battleCooldown = false;
+    }
+  }
 }
