@@ -179,10 +179,12 @@ body {
   top: 50%;
   transform: translateY(-50%);
   font-size: var(--fs-xs);
-  color: #2c7a0b;
+  color: #ffffff;
   z-index: 2;
   font-weight: 700;
   white-space: nowrap;
+  /* Sombra para que el blanco se lea sobre el relleno claro/amarillo. */
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
 /* ---- Footer: dialogo + menu ---- */

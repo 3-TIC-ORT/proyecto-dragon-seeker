@@ -544,10 +544,12 @@ export class Game extends Phaser.Scene {
     this.zonaBoss.setVisible(false);
 
     //puerta de acceso a la zonaBoss (requiere nivel promedio mínimo)
-    this.nearZonaBoss = false;
+    // Arranca en cooldown (igual que battleCooldown): al huir de la pelea del
+    // boss respawneas sobre esta puerta y, sin esto, el overlap se redisparaba al
+    // instante -> "el boss te vuelve a agarrar". Se rehabilita al alejarte (update).
+    this.zonaBossCooldown = true;
 
     this.physics.add.overlap(this.player, this.zonaBoss, () => {
-      this.nearZonaBoss = true;
       if (this.cambiandoEscena || this.dialogo.abierto || this.zonaBossCooldown)
         return;
       this.zonaBossCooldown = true; // se activa al dispararse, se resetea al alejarse
@@ -821,11 +823,16 @@ export class Game extends Phaser.Scene {
   }
 
   update() {
-    if (!this.nearZonaBoss) {
-      // si te alejaste, reseteamos para que al volver pueda dispararse de nuevo
+    // Se rehabilita la puerta de la zona del jefe recien cuando el player NO esta
+    // encima del trigger (mismo patron que battleCooldown). Asi, al volver de la
+    // pelea del boss respawneando sobre la puerta, no se redispara al instante.
+    if (
+      this.zonaBossCooldown &&
+      this.zonaBoss &&
+      !this.physics.overlap(this.player, this.zonaBoss)
+    ) {
       this.zonaBossCooldown = false;
     }
-    this.nearZonaBoss = false;
 
     if (this.dialogo.abierto) {
       this.dialogo.manejarInput(this.cursors, this.keyE);

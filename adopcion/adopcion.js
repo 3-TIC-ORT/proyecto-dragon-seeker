@@ -121,6 +121,11 @@ function adoptarDragon() {
   };
 
   const idpartida = Number(localStorage.getItem("partida"));
+
+  // El dragon con el que peleaste, capturado ANTES de que mas abajo se pise
+  // "dragonardo" con el recien adoptado. Tras adoptar se lo cura y se le da XP.
+  const dragonUsuario = JSON.parse(localStorage.getItem("dragonardo") || "null");
+
   postEvent(
     "adoptarDragon",
     { partida: idpartida, dragon: dragonEnemigo.id, estado },
@@ -130,17 +135,59 @@ function adoptarDragon() {
         return;
       }
 
-      localStorage.setItem("dragonardo", JSON.stringify(dragonEnemigo));
-      localStorage.setItem(
-        "resultado",
-        JSON.stringify({
-          tipo: "exito",
-          titulo: `¡Adoptaste a ${dragonEnemigo.nombre}!`,
-          detalle: "Ahora forma parte de tu equipo.",
-          sprite: `../BACKEND/${dragonEnemigo.imagen}`,
-        }),
+      finalizarAdopcion(idpartida, dragonUsuario);
+    },
+  );
+}
+
+// Cierre de la adopcion: a diferencia del dragon adoptado (que conserva la poca
+// vida con la que quedo), el dragon con el que peleaste se CURA al maximo porque
+// la pelea ya termino, y ademas se lleva algo de experiencia (bastante menos que
+// ganando el combate). Recien despues se muestra la pantalla de resultado.
+function finalizarAdopcion(idpartida, dragonUsuario) {
+  const irAResultado = (extraDetalle = "") => {
+    localStorage.setItem("dragonardo", JSON.stringify(dragonEnemigo));
+    localStorage.setItem(
+      "resultado",
+      JSON.stringify({
+        tipo: "exito",
+        titulo: `¡Adoptaste a ${dragonEnemigo.nombre}!`,
+        detalle: "Ahora forma parte de tu equipo." + extraDetalle,
+        sprite: `../BACKEND/${dragonEnemigo.imagen}`,
+      }),
+    );
+    window.location.href = "../logros/resultado.html";
+  };
+
+  // Caso raro (sin dragon activo): adoptar igual y seguir sin curar/XP.
+  if (!dragonUsuario || dragonUsuario.id == null) {
+    irAResultado();
+    return;
+  }
+
+  // XP de adopcion: escala suave con el nivel del adoptado, pero mucho menor que
+  // la de ganar una pelea (que parte de 30 + nivelRival*20).
+  const nivelAdoptado = dragonEnemigo.nivel ?? 1;
+  const expAdopcion = 15 + (nivelAdoptado - 1) * 5;
+
+  postEvent(
+    "sumarexperiencia",
+    { iddragon: dragonUsuario.id, cantidad: expAdopcion, idpartida },
+    (xpResp) => {
+      let extra = `\n${dragonUsuario.nombre} ganó +${expAdopcion} XP.`;
+      const subioNivel =
+        typeof xpResp?.mensaje === "string" &&
+        xpResp.mensaje.toLowerCase().includes("subiste");
+      if (subioNivel && xpResp?.progreso?.nivel) {
+        extra += `\nAlcanzó el nivel ${xpResp.progreso.nivel}.`;
+      }
+
+      // Curar al maximo al dragon con el que peleaste (la pelea ya termino).
+      postEvent(
+        "curarDragon",
+        { idpartida, iddragon: dragonUsuario.id },
+        () => irAResultado(extra),
       );
-      window.location.href = "../logros/resultado.html";
     },
   );
 }
