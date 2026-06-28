@@ -31,7 +31,13 @@ let curacionesMax = null;
 
 const idpartida = Number(localStorage.getItem("partida"));
 postEvent("obtenerdragonesUsuario", { idpartida }, (data) => {
-  dragones = data.dragones;
+  // Ocultamos del inventario los dragones sin arte propio: los placeholders
+  // genericos (img/N.png) de mapas 2/3 que todavia no estan en juego. Solo se
+  // muestran los que tienen su SVG. Cuando alguno reciba su imagen real (.svg),
+  // reaparece solo sin tocar nada mas.
+  dragones = (data.dragones || []).filter(
+    (d) => typeof d.imagen === "string" && d.imagen.toLowerCase().endsWith(".svg"),
+  );
   curacionesRestantes = data.curacionesRestantes;
   curacionesMax = data.curacionesMax;
   actualizarContadorCuraciones();
