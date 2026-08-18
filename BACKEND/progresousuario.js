@@ -237,3 +237,16 @@ export function curarDragones(idpartida) {
   guardar(lista);
   return { exito: true, mensaje: "Dragones curados" };
 }
+
+export function marcarTieneCodigoX(idpartida) {
+  const lista = leer();
+  let reg = lista.find((x) => x.partida === idpartida && x.dragon === 0);
+  if (!reg) {
+    reg = { partida: idpartida, dragon: 0, tieneCodigoX: true };
+    lista.push(reg);
+  } else {
+    reg.tieneCodigoX = true;
+  }
+  guardar(lista);
+  return { exito: true };
+}

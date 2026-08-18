@@ -12,7 +12,11 @@ export class zonaBoss extends Phaser.Scene {
   preload() {
     this.load.image("todos_los_conjuntos", "assets/todos_los_conjuntos.png");
     this.load.image("camino_normal", "assets/camino_normal.png");
-    this.load.image("arbol", "assets/arbol.png");
+    this.load.image("arbol_dorado", "assets/arbol_dorado.png");
+    this.load.image(
+      "arbusto_dorado_flores",
+      "assets/Arbusto_dorado_flores.png",
+    );
 
     this.load.tilemapTiledJSON("zonaBoss", "assets/zonaBoss.json");
 
@@ -29,6 +33,8 @@ export class zonaBoss extends Phaser.Scene {
         frameHeight: 128,
       },
     );
+
+    this.load.image("coke", "assets/coke.png");
   }
 
   create(data) {
@@ -39,10 +45,14 @@ export class zonaBoss extends Phaser.Scene {
       "TODOS los conjuntos de patrones",
       "todos_los_conjuntos",
     );
-    const ts2 = zonaBoss.addTilesetImage("arbol", "arbol");
+    const ts2 = zonaBoss.addTilesetImage("arbol dorado", "arbol_dorado");
     const ts3 = zonaBoss.addTilesetImage("Camino normal +", "camino_normal");
+    const ts4 = zonaBoss.addTilesetImage(
+      "Arbusto dorado flores",
+      "arbusto_dorado_flores",
+    );
 
-    const allTilesets = [ts1, ts2, ts3];
+    const allTilesets = [ts1, ts2, ts3, ts4];
 
     const suelo = zonaBoss.createLayer("suelo", allTilesets, 0, 0);
     const camino_normal = zonaBoss.createLayer(
@@ -71,6 +81,8 @@ export class zonaBoss extends Phaser.Scene {
     // Spawn del jugador en la posición recibida desde Mapa1
     this.player = new Player(this, startX, startY, this.cursors);
     this.player.setDepth(1);
+
+    const codigoX = this.physics.add.sprite(1568, 544, "coke");
 
     //worldbounds
     this.physics.world.setBounds(
@@ -106,7 +118,7 @@ export class zonaBoss extends Phaser.Scene {
     this.bossSpawned = false;
 
     // ✅ pedir y spawnear el boss
-    postEvent("obtenerBossMapa", { mapa: 1 }, (res) => {
+    /*postEvent("obtenerBossMapa", { mapa: 1 }, (res) => {
       console.log("DEBUG respuesta obtenerBossMapa:", JSON.stringify(res));
       if (!res.exito) {
         console.log("DEBUG no exito, mensaje:", res.mensaje);
@@ -142,25 +154,31 @@ export class zonaBoss extends Phaser.Scene {
       // El boss ya esta en escena: a partir de aca update puede rehabilitar el
       // encuentro cuando el player se aleje del boss.
       this.bossSpawned = true;
-    });
+    });*/
 
-    // ✅ guardar estado al cerrar/recargar
-    window.addEventListener("beforeunload", () => {
-      guardarEstado(3, this.player);
-    });
+    //letra
+    this.physics.add.overlap(this.player, codigoX, () => {
+      codigoX.disableBody(true, true);
 
-    //puerta
-    const doorTrigger = zonaBoss.findObject(
-      "puertaMapa1",
-      (obj) => obj.name === "doorMap",
-    );
-
-    this.door = this.physics.add.sprite(doorTrigger.x, doorTrigger.y, null);
-    this.door.setSize(doorTrigger.width, doorTrigger.height);
-    this.door.setVisible(false);
-
-    this.physics.add.overlap(this.player, this.door, () => {
-      this.scene.start("Game", { x: 2932, y: 416 }); // posición cuando sale del mapa 2
+      postEvent(
+        "marcarTieneCodigoX",
+        { idpartida: Number(localStorage.getItem("partida")) },
+        () => {
+          localStorage.setItem(
+            "resultado",
+            JSON.stringify({
+              tipo: "exito",
+              titulo: "¡Encontraste la letra de Dragon Seekers!",
+              detalle: "Ve a por las demás.\n\nGracias por jugar.",
+              sprite: "../../../../../../BACKEND/img/15.png",
+              juegoGanado: true,
+              textoBoton: "VOLVER AL INICIO",
+              destino: "http://127.0.0.1:5501/menu/splash.html",
+            }),
+          );
+          window.location.href = "../../../../logros/resultado.html"; // ajustá la ruta si es distinta
+        },
+      );
     });
   }
 

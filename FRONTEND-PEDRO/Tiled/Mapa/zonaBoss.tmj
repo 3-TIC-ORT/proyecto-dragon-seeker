@@ -321,7 +321,7 @@
         {
          "columns":4,
          "firstgid":1,
-         "image":"..\/Mapa\/TODOS los conjuntos de patrones.aseprite",
+         "image":"TODOS los conjuntos de patrones.aseprite",
          "imageheight":224,
          "imagewidth":128,
          "margin":0,
@@ -334,7 +334,7 @@
         {
          "columns":4,
          "firstgid":29,
-         "image":"..\/Mapa\/arbol.png",
+         "image":"arbol.png",
          "imageheight":128,
          "imagewidth":128,
          "margin":0,
@@ -347,7 +347,7 @@
         {
          "columns":1,
          "firstgid":45,
-         "image":"..\/Mapa\/camino_normal.png",
+         "image":"camino_normal.png",
          "imageheight":32,
          "imagewidth":32,
          "margin":0,
@@ -360,7 +360,7 @@
         {
          "columns":4,
          "firstgid":46,
-         "image":"arbol dorado.png",
+         "image":"..\/ZonaBoss\/arbol dorado.png",
          "imageheight":128,
          "imagewidth":128,
          "margin":0,
@@ -373,7 +373,7 @@
         {
          "columns":1,
          "firstgid":62,
-         "image":"Arbusto dorado flores.png",
+         "image":"..\/ZonaBoss\/Arbusto dorado flores.png",
          "imageheight":32,
          "imagewidth":32,
          "margin":0,

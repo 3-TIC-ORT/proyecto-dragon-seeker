@@ -35,8 +35,10 @@ if (dragonEnemigo && dragonEnemigo.esBoss === true) {
 // Mostrar el dragon que se esta por adoptar (nombre + sprite real)
 const nombreDragonEl = document.getElementById("nombreDragon");
 const spriteEl = document.querySelector(".dragon .sprite");
-if (dragonEnemigo && nombreDragonEl) nombreDragonEl.innerText = dragonEnemigo.nombre;
-if (dragonEnemigo && spriteEl) spriteEl.src = `../BACKEND/${dragonEnemigo.imagen}`;
+if (dragonEnemigo && nombreDragonEl)
+  nombreDragonEl.innerText = dragonEnemigo.nombre;
+if (dragonEnemigo && spriteEl)
+  spriteEl.src = `../BACKEND/${dragonEnemigo.imagen}`;
 
 function obtenerLongitudPorVida() {
   const vida = Number(localStorage.getItem("vidaFinalRival"));
@@ -124,7 +126,9 @@ function adoptarDragon() {
 
   // El dragon con el que peleaste, capturado ANTES de que mas abajo se pise
   // "dragonardo" con el recien adoptado. Tras adoptar se lo cura y se le da XP.
-  const dragonUsuario = JSON.parse(localStorage.getItem("dragonardo") || "null");
+  const dragonUsuario = JSON.parse(
+    localStorage.getItem("dragonardo") || "null",
+  );
 
   postEvent(
     "adoptarDragon",
@@ -154,6 +158,7 @@ function finalizarAdopcion(idpartida, dragonUsuario) {
         titulo: `¡Adoptaste a ${dragonEnemigo.nombre}!`,
         detalle: "Ahora forma parte de tu equipo." + extraDetalle,
         sprite: `../BACKEND/${dragonEnemigo.imagen}`,
+        captura: true,
       }),
     );
     window.location.href = "../logros/resultado.html";

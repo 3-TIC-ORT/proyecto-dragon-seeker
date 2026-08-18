@@ -1,6 +1,9 @@
 // Pantalla de resultado reutilizable. Lee localStorage.resultado:
 //   { tipo: "exito"|"fracaso", titulo, detalle, sprite?, destino? }
 // Muestra el mensaje y, al CONTINUAR, va a `destino` (por defecto, el mapa).
+
+let acertijoMostrado = false;
+
 const URL_MAPA =
   "http://127.0.0.1:5501/FRONTEND-PEDRO/Phaser/RPG%20prueba/RPG%201/index.html";
 
@@ -44,6 +47,23 @@ if (datos) {
 }
 
 document.getElementById("btnContinuar").addEventListener("click", () => {
+  if (datos && datos.captura === true && !acertijoMostrado) {
+    acertijoMostrado = true;
+
+    document.getElementById("titulo").textContent = "Un mensaje misterioso...";
+    document.getElementById("detalle").textContent =
+      "Donde los árboles guardan silencio y el oro no es metal, allí duerme lo que buscás.";
+
+    const img = document.getElementById("sprite");
+    if (img) img.hidden = true;
+
+    const badge = document.getElementById("nivelBadge");
+    if (badge) badge.hidden = true;
+
+    document.getElementById("btnContinuar").textContent = "Mapa";
+    return;
+  }
+
   localStorage.removeItem("resultado");
   window.location.href = destino;
 });

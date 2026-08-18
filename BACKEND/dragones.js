@@ -166,7 +166,7 @@ export function obtenerBossMapa(idzona) {
   return { exito: true, boss };
 }
 
-export function verificarAccesoZonaBoss(idpartida, nivelMinimoPromedio = 3) {
+/*export function verificarAccesoZonaBoss(idpartida, nivelMinimoPromedio = 3) {
   const data = leerdragones();
   const progreso = leerprogreso();
 
@@ -196,5 +196,20 @@ export function verificarAccesoZonaBoss(idpartida, nivelMinimoPromedio = 3) {
     promedio: Math.round(promedio * 10) / 10,
     nivelMinimo: nivelMinimoPromedio,
     cantidadDragones: dragonesPropios.length,
+  };
+}*/
+export function verificarAccesoZonaBoss(idpartida) {
+  const progreso = leerprogreso();
+
+  const dragonesCapturados = progreso.filter(
+    (p) => p.partida === idpartida && p.habilitado === true,
+  );
+
+  const puedePasar = dragonesCapturados.length > 1;
+
+  return {
+    exito: true,
+    puedePasar,
+    cantidadDragones: dragonesCapturados.length,
   };
 }

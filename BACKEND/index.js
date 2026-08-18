@@ -15,6 +15,7 @@ import {
   actualizarVida,
   curarDragones,
   curarDragon,
+  marcarTieneCodigoX,
 } from "./progresousuario.js";
 import {
   elegirataqueenemigo,
@@ -277,6 +278,10 @@ subscribePOSTEvent("obtenerBossMapa", (query) => {
 subscribePOSTEvent("verificarAccesoZonaBoss", (data) => {
   const { idpartida } = data;
   return verificarAccesoZonaBoss(Number(idpartida));
+});
+
+subscribePOSTEvent("marcarTieneCodigoX", (data) => {
+  return marcarTieneCodigoX(Number(data.idpartida));
 });
 
 console.log("Servidor iniciado");
