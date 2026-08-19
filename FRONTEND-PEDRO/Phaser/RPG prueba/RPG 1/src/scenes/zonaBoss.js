@@ -34,7 +34,14 @@ export class zonaBoss extends Phaser.Scene {
       }
     );
 
-    this.load.image("coke", "assets/coke.png");
+    this.load.spritesheet(
+      "codigoX",
+      "../../../../../../BACKEND/img/sobreSprite.png",
+      {
+        frameWidth: 64, // ajustá si el tamaño real es distinto
+        frameHeight: 64,
+      }
+    );
   }
 
   create(data) {
@@ -81,8 +88,6 @@ export class zonaBoss extends Phaser.Scene {
     // Spawn del jugador en la posición recibida desde Mapa1
     this.player = new Player(this, startX, startY, this.cursors);
     this.player.setDepth(1);
-
-    const codigoX = this.physics.add.sprite(1568, 544, "coke");
 
     //worldbounds
     this.physics.world.setBounds(
@@ -157,6 +162,24 @@ export class zonaBoss extends Phaser.Scene {
     });*/
 
     //letra
+    // animación del sobre
+    if (!this.anims.exists("codigoX_idle")) {
+      this.anims.create({
+        key: "codigoX_idle",
+        frames: this.anims.generateFrameNumbers("codigoX", {
+          start: 0,
+          end: 9,
+        }),
+        frameRate: 8,
+        repeat: -1,
+      });
+    }
+
+    const codigoX = this.physics.add.sprite(1568, 544, "codigoX");
+    codigoX.body.setAllowGravity(false);
+    codigoX.body.moves = false;
+    codigoX.play("codigoX_idle");
+
     this.physics.add.overlap(this.player, codigoX, () => {
       codigoX.disableBody(true, true);
 
@@ -168,15 +191,15 @@ export class zonaBoss extends Phaser.Scene {
             "resultado",
             JSON.stringify({
               tipo: "exito",
-              titulo: "¡La palabra es creatividad!",
+              titulo: "La palabra es gusta",
               detalle: "Ve a por las demás.\n\nGracias por jugar.",
-              sprite: "../../../../../../BACKEND/img/15.png",
+              sprite: "../../../../../../BACKEND/img/sobre_animado.gif",
               juegoGanado: true,
-              textoBoton: "VOLVER AL INICIO",
-              destino: "http://127.0.0.1:5501/menu/splash.html",
+              textoBoton: "IR A LAS PARTIDAS",
+              destino: "http://127.0.0.1:5501/menu/partida.html",
             })
           );
-          window.location.href = "../../../../logros/resultado.html"; // ajustá la ruta si es distinta
+          window.location.href = "../../../../logros/resultado.html";
         }
       );
     });
