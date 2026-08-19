@@ -15,7 +15,7 @@ export class zonaBoss extends Phaser.Scene {
     this.load.image("arbol_dorado", "assets/arbol_dorado.png");
     this.load.image(
       "arbusto_dorado_flores",
-      "assets/Arbusto_dorado_flores.png",
+      "assets/Arbusto_dorado_flores.png"
     );
 
     this.load.tilemapTiledJSON("zonaBoss", "assets/zonaBoss.json");
@@ -31,7 +31,7 @@ export class zonaBoss extends Phaser.Scene {
       {
         frameWidth: 128,
         frameHeight: 128,
-      },
+      }
     );
 
     this.load.image("coke", "assets/coke.png");
@@ -43,13 +43,13 @@ export class zonaBoss extends Phaser.Scene {
     //creacion de las capas
     const ts1 = zonaBoss.addTilesetImage(
       "TODOS los conjuntos de patrones",
-      "todos_los_conjuntos",
+      "todos_los_conjuntos"
     );
     const ts2 = zonaBoss.addTilesetImage("arbol dorado", "arbol_dorado");
     const ts3 = zonaBoss.addTilesetImage("Camino normal +", "camino_normal");
     const ts4 = zonaBoss.addTilesetImage(
       "Arbusto dorado flores",
-      "arbusto_dorado_flores",
+      "arbusto_dorado_flores"
     );
 
     const allTilesets = [ts1, ts2, ts3, ts4];
@@ -59,14 +59,14 @@ export class zonaBoss extends Phaser.Scene {
       "Camino normal",
       allTilesets,
       0,
-      0,
+      0
     );
     const decoracion = zonaBoss.createLayer("decoracion", allTilesets, 0, 0);
     const hojasArboles = zonaBoss.createLayer(
       "hojas arboles",
       allTilesets,
       0,
-      0,
+      0
     );
     hojasArboles.setDepth(2.5);
     const pasto = zonaBoss.createLayer("pasto", allTilesets, 0, 0);
@@ -89,7 +89,7 @@ export class zonaBoss extends Phaser.Scene {
       0,
       0,
       zonaBoss.widthInPixels,
-      zonaBoss.heightInPixels,
+      zonaBoss.heightInPixels
     );
 
     //camara
@@ -98,7 +98,7 @@ export class zonaBoss extends Phaser.Scene {
       0,
       0,
       zonaBoss.widthInPixels,
-      zonaBoss.heightInPixels,
+      zonaBoss.heightInPixels
     );
     this.cameras.main.setRoundPixels(true);
 
@@ -168,16 +168,16 @@ export class zonaBoss extends Phaser.Scene {
             "resultado",
             JSON.stringify({
               tipo: "exito",
-              titulo: "¡Encontraste la letra de Dragon Seekers!",
+              titulo: "¡La palabra es creatividad!",
               detalle: "Ve a por las demás.\n\nGracias por jugar.",
               sprite: "../../../../../../BACKEND/img/15.png",
               juegoGanado: true,
               textoBoton: "VOLVER AL INICIO",
               destino: "http://127.0.0.1:5501/menu/splash.html",
-            }),
+            })
           );
           window.location.href = "../../../../logros/resultado.html"; // ajustá la ruta si es distinta
-        },
+        }
       );
     });
   }
@@ -185,7 +185,7 @@ export class zonaBoss extends Phaser.Scene {
   bossEncuentro(player, bossSprite) {
     console.log(
       "DEBUG bossEncuentro disparado. battleCooldown =",
-      this.battleCooldown,
+      this.battleCooldown
     );
     if (this.battleCooldown) return;
     this.battleCooldown = true;
@@ -194,7 +194,7 @@ export class zonaBoss extends Phaser.Scene {
 
     localStorage.setItem(
       "dragon_enemigo",
-      JSON.stringify({ ...bossSprite.info, instanceId: bossSprite.instanceId }),
+      JSON.stringify({ ...bossSprite.info, instanceId: bossSprite.instanceId })
     );
     localStorage.removeItem("dragon_eliminado");
 

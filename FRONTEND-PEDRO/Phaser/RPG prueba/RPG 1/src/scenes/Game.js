@@ -19,7 +19,7 @@ export class Game extends Phaser.Scene {
 
       // filtra los dragones que están en mapa 1
       this.dragonesSeleccionados = dragones.filter(
-        (d) => d.mapa === 1 && !d.especial,
+        (d) => d.mapa === 1 && !d.especial
       );
 
       // solo marca que los dragones están listos, no spawnea
@@ -41,7 +41,7 @@ export class Game extends Phaser.Scene {
     this.load.image("cp_camino_ciudad", "assets/cp_camino_ciudad.png");
     this.load.image(
       "casa_doble_naturaleza",
-      "assets/casa_doble_naturaleza.png",
+      "assets/casa_doble_naturaleza.png"
     );
     this.load.image("casa", "assets/casa.png");
     this.load.image("camino_normal", "assets/camino_normal.png");
@@ -49,7 +49,9 @@ export class Game extends Phaser.Scene {
     this.load.image("arbol", "assets/arbol.png");
     this.load.image("huevoDragon", "assets/huevoDragon.png");
     this.load.image("cartel_curadero", "assets/cartel curadero.png");
-    this.load.image("carteles", "assets/carteles.png");
+    this.load.image("carteles", "assets/Cartel_indicadores_bosque.png");
+    this.load.image("carteles1", "assets/Cartel_indicadores_bosque1.png");
+    this.load.image("carteles2", "assets/Cartel_indicadores_bosque2.png");
 
     this.load.tilemapTiledJSON("map", "assets/mapa1.json");
 
@@ -66,7 +68,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "oso",
@@ -74,7 +76,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "escarcha",
@@ -82,7 +84,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 38,
         frameHeight: 37,
-      },
+      }
     );
     this.load.spritesheet(
       "burbu",
@@ -90,7 +92,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "chimuelo",
@@ -98,7 +100,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "amarillo",
@@ -106,7 +108,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "llamafuria",
@@ -114,7 +116,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "bengal",
@@ -122,7 +124,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "burpi",
@@ -130,7 +132,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 37,
-      },
+      }
     );
     this.load.spritesheet(
       "golemVerde",
@@ -138,7 +140,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "rocabrava",
@@ -146,7 +148,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 37,
-      },
+      }
     );
     this.load.spritesheet(
       "tormato",
@@ -154,7 +156,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "truenoz",
@@ -162,7 +164,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      },
+      }
     );
     this.load.spritesheet(
       "tsunami",
@@ -170,7 +172,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 37,
-      },
+      }
     );
     this.load.spritesheet(
       "yetihelado",
@@ -178,7 +180,7 @@ export class Game extends Phaser.Scene {
       {
         frameWidth: 38,
         frameHeight: 37,
-      },
+      }
     );
 
     //asignacopn del spirte al viejo
@@ -226,21 +228,35 @@ export class Game extends Phaser.Scene {
     //creacion de las capas
     const ts1 = map.addTilesetImage(
       "TODOS los conjuntos de patrones",
-      "todos_los_conjuntos",
+      "todos_los_conjuntos"
     );
     const ts2 = map.addTilesetImage("Arbol con manzanas", "arbol_manzanas");
     const ts3 = map.addTilesetImage("Casa", "casa");
     const ts4 = map.addTilesetImage("Arbol 128x128", "arbol");
     const ts5 = map.addTilesetImage(
       "Casa doble naturaleza",
-      "casa_doble_naturaleza",
+      "casa_doble_naturaleza"
     );
     const ts6 = map.addTilesetImage("Camino normal +", "camino_normal");
     const ts7 = map.addTilesetImage("CP Camino Ciudad", "cp_camino_ciudad");
     const ts8 = map.addTilesetImage("cartel curadero", "cartel_curadero");
-    const ts9 = map.addTilesetImage("carteles", "carteles");
+    const ts9 = map.addTilesetImage("Cartel indicadores bosque", "carteles");
+    const ts10 = map.addTilesetImage("Cartel indicadores bosque1", "carteles1");
+    const ts11 = map.addTilesetImage("Cartel indicadores bosque2", "carteles2");
 
-    const allTilesets = [ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8, ts9];
+    const allTilesets = [
+      ts1,
+      ts2,
+      ts3,
+      ts4,
+      ts5,
+      ts6,
+      ts7,
+      ts8,
+      ts9,
+      ts10,
+      ts11,
+    ];
 
     const suelo = map.createLayer("suelo", allTilesets, 0, 0);
     const caminoCiud = map.createLayer("camino ciudad", allTilesets, 0, 0);
@@ -251,7 +267,7 @@ export class Game extends Phaser.Scene {
       "cartel curadero",
       allTilesets,
       0,
-      0,
+      0
     );
 
     cartel_curadero.setDepth(2);
@@ -264,13 +280,13 @@ export class Game extends Phaser.Scene {
       "corral dragones",
       allTilesets,
       0,
-      0,
+      0
     );
     const puertasVisibles = map.createLayer(
       "puertas visibles",
       allTilesets,
       0,
-      0,
+      0
     );
     const casa_inferior = map.createLayer("casa_inferior", allTilesets, 0, 0);
     const carteles = map.createLayer("carteles", allTilesets, 0, 0);
@@ -278,7 +294,7 @@ export class Game extends Phaser.Scene {
       "carteles_inferior",
       allTilesets,
       0,
-      0,
+      0
     );
 
     //movimiento
@@ -300,15 +316,15 @@ export class Game extends Phaser.Scene {
 
     this.spawnZone = map.findObject(
       "spawn dragons",
-      (obj) => obj.name === "spawn_dragons",
+      (obj) => obj.name === "spawn_dragons"
     );
     this.spawnZone2 = map.findObject(
       "spawn dragons",
-      (obj) => obj.name === "spawn_dragons2",
+      (obj) => obj.name === "spawn_dragons2"
     );
     this.spawnZone3 = map.findObject(
       "spawn dragons",
-      (obj) => obj.name === "spawn_dragons3",
+      (obj) => obj.name === "spawn_dragons3"
     );
 
     console.log("spawnZone:", this.spawnZone);
@@ -383,7 +399,7 @@ export class Game extends Phaser.Scene {
         if (this.dragonesListos) {
           this.procesarEstadoInicial();
         }
-      },
+      }
     );
 
     // ✅ guardar estado al cerrar/recargar
@@ -412,7 +428,7 @@ export class Game extends Phaser.Scene {
         obj.x + obj.width / 2,
         obj.y + obj.height / 2,
         obj.width,
-        obj.height,
+        obj.height
       );
       this.physics.add.existing(rect, true); // true = estático
       colisionesGroup.add(rect);
@@ -477,7 +493,7 @@ export class Game extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
 
     this.botonSalir.on("pointerover", () =>
-      this.botonSalir.setColor("#ffd83d"),
+      this.botonSalir.setColor("#ffd83d")
     );
     this.botonSalir.on("pointerout", () => this.botonSalir.setColor("#ffffff"));
     this.botonSalir.on("pointerdown", () => this.cerrarSesion());
@@ -496,10 +512,10 @@ export class Game extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
 
     this.botonPartidas.on("pointerover", () =>
-      this.botonPartidas.setColor("#ffd83d"),
+      this.botonPartidas.setColor("#ffd83d")
     );
     this.botonPartidas.on("pointerout", () =>
-      this.botonPartidas.setColor("#ffffff"),
+      this.botonPartidas.setColor("#ffffff")
     );
     this.botonPartidas.on("pointerdown", () => this.irAPartidas());
 
@@ -536,19 +552,19 @@ export class Game extends Phaser.Scene {
         () => {
           // ✅ recién cuando el backend confirmó, cambiamos de escena
           this.scene.start("Casa", { x: 368, y: 576 });
-        },
+        }
       );
     });
 
     //trigger para pasar a la zonaBoss
     const triggerZonaBoss = map.findObject(
       "zonaBoss",
-      (obj) => obj.name === "zonaBoss",
+      (obj) => obj.name === "zonaBoss"
     );
     this.zonaBoss = this.physics.add.sprite(
       triggerZonaBoss.x,
       triggerZonaBoss.y,
-      null,
+      null
     );
     this.zonaBoss.setSize(triggerZonaBoss.width, triggerZonaBoss.height);
     this.zonaBoss.setVisible(false);
@@ -599,16 +615,16 @@ export class Game extends Phaser.Scene {
                 },
                 () => {
                   this.scene.start("zonaBoss", { x: 32, y: 544 });
-                },
+                }
               );
             },
-            () => {},
+            () => {}
           );
         } else {
           this.dialogo.aviso(
             //`Necesitás nivel promedio ${res.nivelMinimo} (tenés ${res.promedio}).`,
             "Para entrar al bosque dorado necesitas capturar un dragon",
-            () => {},
+            () => {}
           );
         }
       });
@@ -620,7 +636,7 @@ export class Game extends Phaser.Scene {
       this.dragons,
       this.dragonEnemigo,
       null,
-      this,
+      this
     );
 
     this.cokeGiven = false;
@@ -634,7 +650,7 @@ export class Game extends Phaser.Scene {
       this.minero,
       this.tryGiveCoke,
       null,
-      this,
+      this
     );
 
     // Aviso unico de desbloqueo de la zona del jefe: la primera vez que el nivel
@@ -649,10 +665,10 @@ export class Game extends Phaser.Scene {
           if (res && res.exito && res.puedePasar) {
             localStorage.setItem(flagBoss, "1");
             this.dialogo.aviso(
-              "¡Desbloqueaste el Bosque Dorado! Buscá el portal del Bosque en el mapa para conseguir tu premio.",
+              "¡Desbloqueaste el Bosque Dorado! Buscá el portal del Bosque en el mapa para conseguir tu tesoro."
             );
           }
-        },
+        }
       );
     }
   }
@@ -673,7 +689,7 @@ export class Game extends Phaser.Scene {
 
       dragonesGuardados.forEach((ds) => {
         const dragonInfo = this.dragonesSeleccionados?.find(
-          (d) => d.id === ds.id,
+          (d) => d.id === ds.id
         );
         if (!dragonInfo) return;
         const dragon = new NPC(this, ds.x, ds.y, this.keyMap[dragonInfo.id]);
@@ -743,7 +759,7 @@ export class Game extends Phaser.Scene {
           dragonesSpawneados,
         },
       },
-      callback,
+      callback
     );
   }
 
@@ -784,7 +800,7 @@ export class Game extends Phaser.Scene {
     // pasamos info + instanceId a la pantalla de batalla
     localStorage.setItem(
       "dragon_enemigo",
-      JSON.stringify({ ...dragon.info, instanceId: dragon.instanceId }),
+      JSON.stringify({ ...dragon.info, instanceId: dragon.instanceId })
     );
 
     // limpiamos cualquier valor previo: solo se setea si ganás o capturás
